@@ -9,7 +9,8 @@
     "version": "auto-changelog -p && git add CHANGELOG.md",
     "build": "webpack -d --watch",
     "prod": "webpack -p",
-    "test": "jest"
+    "test": "jest",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
   },
   "author": "Wojciech Połowniak",
   "license": "MIT",
@@ -29,6 +30,7 @@
     "jest": "^23.3.0",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
+    "pre-commit": "^1.2.2",
     "ts-jest": "^23.0.0",
     "ts-loader": "^4.4.1",
     "ts-node": "^7.0.0",
@@ -49,5 +51,6 @@
       "tsx",
       "js"
     ]
-  }
+  },
+  "pre-commit": [ "precommit-msg", "test" ]
 }
