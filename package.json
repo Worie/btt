@@ -1,19 +1,53 @@
 {
   "name": "btt",
-  "version": "0.0.1",
-  "description": "BetterTouchTool management in JavaScript",
-  "main": "index.js",
+  "version": "1.0.0",
+  "description": "Manage your BetterTouchTool in JavaScript, easly.",
+  "main": "./dist/index.js",
+  "types": "./btt/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Worie/btt.git"
+    "docts": "docts",
+    "version": "auto-changelog -p && git add CHANGELOG.md",
+    "build": "webpack -d --watch",
+    "prod": "webpack -p",
+    "test": "jest"
   },
   "author": "Wojciech Połowniak",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Worie/btt/issues"
+  "dependencies": {
+    "@types/uuid": "^3.4.3",
+    "camelcase": "^5.0.0",
+    "child_process": "^1.0.2",
+    "detect-node": "^2.0.3",
+    "uuid": "^3.2.1"
   },
-  "homepage": "https://github.com/Worie/btt#readme"
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/jest": "^23.1.4",
+    "@types/mocha": "^5.2.4",
+    "@types/node": "^10.3.4",
+    "chai": "^4.1.2",
+    "jest": "^23.3.0",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2",
+    "ts-jest": "^23.0.0",
+    "ts-loader": "^4.4.1",
+    "ts-node": "^7.0.0",
+    "typedoc": "^0.11.1",
+    "typedoc-webpack-plugin": "^1.1.4",
+    "typescript": "^2.9.1",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.3",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  }
 }

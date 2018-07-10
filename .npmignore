@@ -1,0 +1,10 @@
+tsconfig.json
+docs
+examples
+test
+src
+definitions.d.ts
+webpack.config.js
+.DS_Store
+.npmignore
+.git
