@@ -3,3 +3,4 @@
 
 export * from '../src/index';
 import '../definitions/global';
+import '../src/types'; 
