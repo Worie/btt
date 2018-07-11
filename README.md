@@ -92,7 +92,7 @@ For more advanced examples you can visit [the example section](#)
 
 ## Docs
 
-You can visit the docs [here](#).
+You can visit the docs [here](https://worie.github.io/btt/).
 
 ## Notice
 
