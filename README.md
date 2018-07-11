@@ -71,8 +71,8 @@ btt.addEventListener('oneFingerForceClick', (ev) => {
   // create a list of actions that you want to perform on single finger force click
   const actionsToInvoke = [
     btt.showHUD({
-      title: 'Awesome!',
-      details: 'I triggered!',
+      title: 'Wow!',
+      details: 'I triggered! 😍',
     }),
   ];
   

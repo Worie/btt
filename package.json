@@ -50,7 +50,14 @@
       "ts",
       "tsx",
       "js"
-    ]
+    ],
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ],
+    "coverageDirectory": "./coverage"
   },
   "pre-commit": [ "precommit-msg", "test" ]
 }
