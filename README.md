@@ -88,7 +88,7 @@ btt.removeEventListener('oneFingerForceClick', callbackFuntion);
 
 ```
 
-For more advanced examples you can visit [the example section](#)
+For more advanced examples you can visit [the example section](examples)
 
 ## Docs
 
