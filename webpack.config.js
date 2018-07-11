@@ -28,7 +28,7 @@ module.exports = {
   plugins: [
     new TypedocWebpackPlugin({
       ignoreCompilerErrors: true,
-      out: './../docs',
+      out: './../docs/docs',
       module: 'commonjs',
       target: 'es5',
       exclude: '**/node_modules/**/*.*',
