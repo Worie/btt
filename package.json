@@ -59,5 +59,8 @@
     ],
     "coverageDirectory": "./coverage"
   },
-  "pre-commit": [ "precommit-msg", "test" ]
+  "pre-commit": [
+    "precommit-msg",
+    "test"
+  ]
 }

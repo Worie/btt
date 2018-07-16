@@ -1,6 +1,6 @@
 import { FTrigger } from './common/trigger';
 import { FWidget } from './common/widget';
-import * as State from './common/state';
+import VariableStore from './common/state';
 import * as Types from '../types';
 import * as CommonUtils from './common/util';
 import { Action } from './common/action';
@@ -38,7 +38,7 @@ import AShowWebView from './common/actions/showWebView';
  */
 export class Btt {
   // state, manages BTT variables
-  public state: Types.IState;
+  public state: VariableStore;
 
   // stores Trigger factory
   public Trigger: FTrigger;
@@ -65,7 +65,7 @@ export class Btt {
     this.Trigger = new FTrigger(config);
 
     // initialize the state (variable management)
-    this.state = State.init(config);
+    this.state = new VariableStore(config);
   }
 
   /**

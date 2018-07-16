@@ -1,12 +1,21 @@
-/**
- * Provides an abstraction over BetterTouchTool variables
- * is meant to has similar methods to ES6 Map instance
- */
-
 import * as CommonUtils from '../common/util';
 import * as Types from '../../types';
 
-export function init(instanceConfig: Types.IBTTConfig) {
+/**
+ * This class is responsible for managing BetterTouchTool variables.
+ * It has similar usage to the ES6 Map object, but due to implementation specifics 
+ * every method retunrs a promise.
+ */
+export default class VariableStore {
+  private config: Types.IBTTConfig;
+
+  /**
+   * Used to instanitilize the variable store with given BTT config
+   * @param config 
+   */
+  constructor(config: Types.IBTTConfig) {
+    this.config = config;
+  }
 
   /**
    * Sets the variable name to specific value
@@ -14,7 +23,7 @@ export function init(instanceConfig: Types.IBTTConfig) {
    * @param value new value of the variable
    * @param isPersistent whether the variable should persist after BTT reboot
    */
-  const set = async (key: string, value: string | number, isPersistent?: boolean) => {
+  public set(key: string, value: string | number, isPersistent?: boolean) {
     if (typeof value !== 'number' && typeof value !== 'string') {
       throw new Error('You can only set the variable value to string or number');
     }
@@ -28,22 +37,22 @@ export function init(instanceConfig: Types.IBTTConfig) {
   
     const method: string = `set_${persistent}${variableType}_variable`;
   
-    return CommonUtils.makeAction(method, { variableName: key, to: value }, instanceConfig);  
-  };
+    return CommonUtils.makeAction(method, { variableName: key, to: value }, this.config);  
+  }
 
   /**
    * Retrieves BTT variable
    * @param key a variable name to retrieve
    * @param mode string or number. Providing this parameter makes this method more efficient
    */
-  const get = async (key: string, mode?: 'string' | 'number'): Promise<number | string> => {
+  public async get(key: string, mode?: 'string' | 'number'): Promise<number | string> {
     const getStringVariable = async () => {
-      const response = await CommonUtils.makeAction(`get_string_variable`, { variableName: key}, instanceConfig);
+      const response = await CommonUtils.makeAction(`get_string_variable`, { variableName: key}, this.config);
       return response.text();
     };
 
     const getNumberVariable = async () => {
-      const response = await CommonUtils.makeAction(`get_number_variable`, { variableName: key}, instanceConfig);
+      const response = await CommonUtils.makeAction(`get_number_variable`, { variableName: key}, this.config);
       return response.text();
     };
     
@@ -62,19 +71,13 @@ export function init(instanceConfig: Types.IBTTConfig) {
    * @param key a variable name that you want to delete
    * @param persistent whether persistent or regular variable should be deleted
    */
-  const del = async (key: string, persistent?: boolean) => {
+  public async delete(key: string, persistent?: boolean) {
     if (persistent) {
-      set(key, '', true);
-      set(key, -1, true);
+      this.set(key, '', true);
+      this.set(key, -1, true);
     } else {
-      set(key, '');
-      set(key, -1);
+      this.set(key, '');
+      this.set(key, -1);
     }
   };
-
-  return {
-    set,
-    get,
-    delete: del,
-  } as Types.IState;
 }
