@@ -1,9 +1,9 @@
 {
   "name": "btt",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Manage your BetterTouchTool in JavaScript, easly.",
   "main": "./dist/index.js",
-  "types": "./btt/index.d.ts",
+  "types": "./dist/src/index.d.ts",
   "scripts": {
     "docts": "docts",
     "version": "auto-changelog -p && git add CHANGELOG.md",
