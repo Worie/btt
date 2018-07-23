@@ -31,7 +31,7 @@ module.exports = {
       out: './../docs/btt',
       module: 'commonjs',
       target: 'es5',
-      exclude: '**/node_modules/**/*.*',
+      exclude: ['**/node_modules/**/*.*,', './docs'],
       experimentalDecorators: true,
       excludeExternals: true,
       excludePrivate: true,
