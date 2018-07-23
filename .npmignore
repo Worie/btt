@@ -2,7 +2,7 @@ tsconfig.json
 docs
 examples
 test
-src
+./src
 definitions.d.ts
 webpack.config.js
 .DS_Store
