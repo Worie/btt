@@ -1,6 +1,6 @@
 {
   "name": "btt",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Manage your BetterTouchTool in JavaScript, easly.",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",

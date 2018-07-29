@@ -38,3 +38,28 @@ const widget = btt.Widget.get({
 setInterval(() => {
   widget.update();
 }, 1000);
+
+// you could also create a new widget on the fly, in the runtime!
+const newWidget= btt.Widget.create({
+  name: 'toucbar widget name',
+  mode: 'node',
+  // if you use the package on the frontend, you'd need to prive path option manually
+  // path: '/Users/Worie/.nvm/versions/node/v9.2.0/bin/node'
+  alwaysShow: false,
+  script: `console.log('Hello world!')`,
+  appearance: {
+    iconHeight : 22,
+    iconWidth : 22,
+    padding : -5,
+    freeSpaceAfterButton : 5.000000, 
+    buttonColor : "0.000000, 0.000000, 0.000000, 255.000000",
+    alternateBackgroundColor : "128.829533, 128.829533, 128.829533, 255.000000"
+  },
+});
+
+// now you can update it as you did previously
+newWidget.update(() => {
+  return {
+    text: 'updated!',
+  };
+});
