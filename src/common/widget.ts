@@ -96,5 +96,58 @@ export class FWidget {
    */
   public get(config: Types.IWidgetConfig): Widget {
     return new Widget(this.config, config);
-  } 
+  }
+
+  /**
+   * Creates a new BetterTouchTool touchbar widget and returns its instance
+   * @param options: Types.ITouchbarWidgetCreateConfig
+   */
+  public async create(options: Types.ITouchbarWidgetCreateConfig): Promise<any> {    
+    const uuid = CommonUtils.generateUuidForString(JSON.stringify(options));
+
+    const binaryPath = CommonUtils.getNodeBinaryPath();
+
+    if (!binaryPath && !options.path) {
+      console.error('Sorry, you have to provide the node/bash binary path manually in the params');
+      return;
+    }
+
+    // path to the executable, with slashes escaped
+    const escapedPath = (options.path ? options.path : binaryPath).replace(/\//g, '\/');
+    
+    // btt format for executable path 
+    const shellScriptWidgetGestureConfig = `${escapedPath}:::${(options.mode === 'node' ? '-e' : '-c')}`;
+
+    // real payload that'll create a widget
+    const BTTPayload: any = {
+      "BTTWidgetName" : options.name,
+      "BTTTriggerType" : Types.TOUCHBAR_WIDGETS.CREATE,
+      "BTTTriggerClass" : "BTTTriggerTypeTouchBar",
+      "BTTPredefinedActionType" : -1,
+      "BTTPredefinedActionName" : "No Action",
+      "BTTShellScriptWidgetGestureConfig" : shellScriptWidgetGestureConfig,
+      "BTTEnabled2" : 1,
+      "BTTUUID" : uuid,
+      "BTTEnabled" : 1,
+      "BTTOrder" : 9999,
+      "BTTTriggerConfig" : {
+        "BTTTouchBarItemIconHeight" : options.appearance.iconHeight,
+        "BTTTouchBarItemIconWidth" : options.appearance.iconWidth,
+        "BTTTouchBarItemPadding" : options.appearance.padding,
+        "BTTTouchBarFreeSpaceAfterButton" : String(options.appearance.freeSpaceAfterButton),
+        "BTTTouchBarButtonColor" : options.appearance.buttonColor,
+        "BTTTouchBarAlwaysShowButton" : String(Number(options.alwaysShow)),
+        "BTTTouchBarShellScriptString" : options.script,
+        "BTTTouchBarAlternateBackgroundColor" : options.appearance.alternateBackgroundColor
+      },
+    };
+    
+    // make the request to the BTT API to create new widget
+    await CommonUtils.makeAction('add_new_trigger', {
+      json: JSON.stringify(BTTPayload),
+    }, this.config);
+
+    // get the instance representing the newly created widget
+    return new Widget(this.config, { uuid, default: undefined });
+  }
 }

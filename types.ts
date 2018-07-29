@@ -179,6 +179,10 @@ export enum TRACKPAD_TRIGGERS {
   FIVE_FINGER_FORCE_CLICK = 172,
 }
 
+export enum TOUCHBAR_WIDGETS {
+  CREATE = 642,
+}
+
 export enum KEYBOARD_MODIFIERS {
   
 }
@@ -241,6 +245,22 @@ export interface IFloatingHTMLConfig {
 export interface IEventCallback { 
   actions: ActionJSON[],
   comment: string;
+}
+
+export interface ITouchbarWidgetCreateConfig {
+  name: string; // 'toucbar widget name',
+  mode: 'node' | 'bash';
+  path: string;
+  alwaysShow: boolean;
+  script: string; // "console.log('foo');",
+  appearance: {
+    iconHeight: number; // 22,
+    iconWidth: number; // 22,
+    padding: number; // -5,
+    freeSpaceAfterButton: number; // "5.000000",
+    buttonColor: string; // "0.000000, 0.000000, 0.000000, 255.000000",
+    alternateBackgroundColor: string; // "128.829533, 128.829533, 128.829533, 255.000000"
+  },
 }
 
 export type ActionJSON = Record<string, any>;

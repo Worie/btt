@@ -5,13 +5,18 @@ import * as uuidv5 from 'uuid/v5';
 
 let fetch: any;
 let deleteTriggerFn: any; // could be "method" = 'webserver' | 'url scheme'
+let getBinaryPath: any;
+
+const NAMESPACE = '87a84aef-11fe-4dce-8d00-429cea46f345';
 
 if (DetectNode) {
   fetch = require('node-fetch-polyfill');
   deleteTriggerFn = require('../backend/util').deleteTrigger;
+  getBinaryPath = require('../backend/util').nodeBinaryPath;
 } else {
   fetch = window.fetch;
   deleteTriggerFn = require('../frontend/util').deleteTrigger;
+  getBinaryPath = (): any => undefined;
 }
 
 export function deleteTrigger(uuid: string): void {
@@ -180,6 +185,20 @@ function getTriggerClassProperty(value: number): string {
  * @param text 
  * @param namespace 
  */
-export function generateUuidForString(text: string, namespace: string): string {
+export function generateUuidForString(text: string, namespace: string = NAMESPACE): string {
   return uuidv5(String(text), namespace);
+}
+
+/**
+ * Returns the current UUID representing the namespace of the package
+ */
+export function getNamespace(): string {
+  return NAMESPACE;
+}
+
+/**
+ * Returns the path for the current node binary (or undefined on frontend)
+ */
+export function getNodeBinaryPath(): string {
+  return getBinaryPath();
 }
