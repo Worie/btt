@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import * as Path from 'path';
 
 /**
  * Returns mdls name using mdls command (backend dependant)
@@ -15,4 +16,12 @@ export function getMdlsName(applicationPath: string): string {
  */
 export function deleteTrigger(uuid: string): void {
   execSync(`open 'btt://delete_trigger/?uuid=${uuid}'`);
+}
+
+/**
+ * Returns path for current binary 
+ */
+export function nodeBinaryPath(): string {
+  const path: string = Path.join(execSync('npm bin -g').toString(), 'node');
+  return path;
 }
