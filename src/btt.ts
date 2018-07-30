@@ -3,7 +3,6 @@ import { FWidget } from './common/widget';
 import VariableStore from './common/state';
 import * as Types from '../types';
 import * as CommonUtils from './common/util';
-import { Action } from './common/action';
 
 import AHapticFeedback from './common/actions/hapticFeedback';
 import ASendText from './common/actions/sendText';
@@ -31,23 +30,7 @@ import AShowHUD from './common/actions/showHUD';
 import AMoveMouse from './common/actions/moveMouse';
 import AShowWebView from './common/actions/showWebView';
 import AExecuteScript from './common/actions/executeScript';
-
-// do magic
-const generatePayload = (bttConfig: Types.IBTTConfig, callback: Function) => {
-  const payload: string = JSON.stringify({
-    bttConfig: JSON.stringify(bttConfig),
-    cb: callback.toString(),
-  });
-
-  const base64Payload: string = Buffer.from(payload).toString('base64');
-
-  const data = {
-    payload: base64Payload,
-  };
-  
-  return JSON.stringify(data);
-};
-
+import EventManager from './common/events';
 
 /**
  * Class used to manage the BTT webserver 
@@ -66,8 +49,8 @@ export class Btt {
   // stores the config from the constructor
   private config: Types.IBTTConfig;
 
-  // namespace for uuid/v5
-  private static namespace: string = CommonUtils.getNamespace();
+  // event manager
+  private event: EventManager;
 
   /**
    * Creates BTT instance which communicates with BetterTouchTool built in webserver
@@ -83,160 +66,80 @@ export class Btt {
 
     // initialize the state (variable management)
     this.state = new VariableStore(config);
+
+    // initialize event manager
+    this.event = new EventManager(config);
   }
-
-  /**
-   * Adds event listener to BTT. Keep in mind this is persistent, so if you call this method twice, 
-   * two entries will be added to BTT. Closing the browser / node process won't make the listeners die
-   * @param eventType string, created from action enum identifier
-   * @param cb IEventCallback
-   */
-  public addAction(eventType: string, cb: (e: Types.IEventCallback) => {}, options?: any): void {
-    const actions: Action[] = [];
-    let comment: string = '';
-
-    const event: Types.IEventCallback = {
-      actions,
-      comment,
-    };
-
-    cb(event);
-
-    // do something with those actions and eventType and the event that we got
-    const batchAction: any = CommonUtils.buildActionSequence(event.actions);
-
-    const listenerJSON: any = CommonUtils.buildTriggerAction(eventType, batchAction, {
-      comment: event.comment,
-    }); 
-
-    // set up ids
-    const listenerUuid: string = CommonUtils.generateUuidForString(
-      `${eventType}:${String(cb)}`,
-      Btt.namespace
-    );
-
-    listenerJSON['BTTUUID'] = listenerUuid;
-    listenerJSON['BTTAdditionalActions'] = listenerJSON['BTTAdditionalActions'].map((action: any) => {
-      return {
-        ...action,
-        "BTTUUID": CommonUtils.generateUuidForString(JSON.stringify(action), listenerUuid),
-      };
-    });
-
-    
-
-    // end set up ids
-
-    this.do('add_new_trigger', {
-      json: JSON.stringify({
-        ...listenerJSON,
-        ...options,
-      })
-    });
-  }
-
-
-  /**
-   * Removes event listener
-   * @param eventType string, created from action enum identifier
-   * @param cb IEventCallback
-   */
-  public removeAction(eventType: string, cb: (e: any) => {}): void {    
-    // get the id from event type, callback and everything
-    const triggerID: string = CommonUtils.generateUuidForString(
-      `${eventType}:${String(cb)}`,
-      Btt.namespace
-    );
-  
-    CommonUtils.deleteTrigger(triggerID);
-  }
-
-  /**
-   * 
-   * @param eventType 
-   * @param cb 
-   */
-  public addEventListener(eventType: string, cb: (e: any) => {}): void {
-    if (!this.config.eventServer) {
-      console.warn('You must provide event server URL to use this feature');
-      return;
-    }
-
-    const data = generatePayload(this.config, cb);
-
-    const triggerID: string = CommonUtils.generateUuidForString(
-      `${eventType}:${data}}`,
-      Btt.namespace
-    );
-
-    const { port, domain } = this.config.eventServer;
-
-    // add script
-    const code = `
-      const http = require('http');
-      
-      const postData = JSON.stringify(${data});
-    
-      const options = {
-        hostname: '${domain}',
-        port: ${port},
-        path: '/dynamic',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-      
-      const req = http.request(options, (res) => {
-        res.setEncoding('utf8');
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          console.log(data);
-        });
-      });
-      
-      req.write(postData);
-      req.end();`;
-
-  
-      this.addAction(
-        eventType, 
-        (ev: Types.IEventCallback): any => {
-          const actions = [
-            this.executeScript(code),
-          ];
-          
-          ev.actions.push(...actions);
-        },
-        { 'BTTUUID': triggerID },
-      );
-  };
-  
-  /**
-   * 
-   * @param eventType 
-   * @param cb 
-   */
-  public removeEventListener(eventType: string, cb: (e: any) => {}): void {
-    const data = generatePayload(this.config, cb);
-
-    // get the id from event type, callback and everything
-    const triggerID: string = CommonUtils.generateUuidForString(
-      `${eventType}:${data}}`,
-      Btt.namespace
-    );
-  
-    CommonUtils.deleteTrigger(triggerID);
-  };
 
   /**
    * Sends a request to real BTT built in webserver with given data translated as GET query params
    */
-  public do(action: string, data: Record<string, any>): Promise<any> {
+  public do(
+    action: string,
+    data: Record<string, any>
+  ): Promise<any> {
     return CommonUtils.makeAction(action, data, this.config);
+  }
+
+  /**
+   * Creates actual event listener that'll be run upon certain event type detection.
+   * The code will be invoked in btt-node-server, and this method is dependand on this project
+   * 
+   * Keep in mind that this is persisent - it'll exist until you manually delete it.
+   * 
+   * @param eventType event type of specific action (for example, oneFingerForceClick)
+   * @param cb callback function that'll be invoked upon event detection
+   */
+  public addEventListener(
+    eventType: string,
+    cb: (e: any) => {}
+  ): void {
+    return this.event.addEventListener(eventType, cb);
+  }
+
+  /**
+   * Removes previously created event listener
+   * 
+   * @param eventType event type of specific action (for example, oneFingerForceClick)
+   * @param cb callback function that'll be invoked upon event detection
+   */
+  public removeEventListener(
+    eventType: string,
+    cb: (e: any) => {}
+  ): void {
+    return this.event.removeEventListener(eventType, cb);
+  }
+
+  /**
+   * Adds a trigger action to the BetterTouchTool. Keep in mind, that the callback function that
+   * you'll pass to this function will be invoked upon registering the action in the BetterTouchTool,
+   * not after you trigger the specific eventType! 
+   * 
+   * Keep in mind that this is persisent - it'll exist until you manually delete it.
+   * 
+   * @param eventType event type of specific action (for example, oneFingerForceClick)
+   * @param cb callback function that'll define what actions should be executed
+   * @param options additional options if you want to override the JSON somehow to fit your needs
+   */
+  public addTriggerAction(
+    eventType: string,
+    cb: (e: Types.IEventCallback) => {},
+    options?: any
+  ): void {
+    return this.event.addTriggerAction(eventType, cb, options);
+  }
+
+  /**
+   * Removes a trigger of specified ID from the BetterTouchTool
+   * 
+   * @param eventType event type of specific action (for example, oneFingerForceClick)
+   * @param cb a callback that was intended to run
+   */
+  public removeTriggerAction(
+    eventType: string,
+    cb: (e: any) => {}
+  ): void {    
+    return this.event.removeTriggerAction(eventType, cb);
   }
 
   /** ACTIONS */
@@ -370,8 +273,8 @@ export class Btt {
   /**
    * Moves mouse to specified position
    */
-  public moveMouse(config: Types.IMoveMouseConfig) {
-    return new AMoveMouse(this.config, config);
+  public moveMouse(moveMouseConfig: Types.IMoveMouseConfig) {
+    return new AMoveMouse(this.config, moveMouseConfig);
   }
 
   /**

@@ -202,3 +202,29 @@ export function getNamespace(): string {
 export function getNodeBinaryPath(): string {
   return getBinaryPath();
 }
+
+/**
+ * Generates a payload, later interpreted by btt-node-server
+ * @param bttConfig config of certain btt instance
+ * @param callback function to invoke
+ */
+export function generatePayload(
+  bttConfig: Types.IBTTConfig,
+  callback: Function
+): string{
+  // create a payload object out of given params
+  const payload: string = JSON.stringify({
+    bttConfig: JSON.stringify(bttConfig),
+    cb: callback.toString(),
+  });
+
+  // holds base64 representation of the payload
+  const base64Payload: string = Buffer.from(payload).toString('base64');
+
+  // creates a data that is ready to use in POST request
+  const data = {
+    payload: base64Payload,
+  };
+  
+  return JSON.stringify(data);
+};
