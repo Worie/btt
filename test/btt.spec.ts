@@ -1,4 +1,4 @@
-import { Btt } from '../src/index';
+import { Btt } from '../src';
 
 describe('btt', () => {
   const btt = new Btt({

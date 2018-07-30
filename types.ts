@@ -4,6 +4,13 @@ export interface IBTTConfig {
   protocol: string;
   sharedKey?: string;
   version?: string;
+  eventServer?: IServerDefinition;
+  nodeBinaryPath?: string;
+}
+
+export interface IServerDefinition {
+  domain: string;
+  port: number;
 }
 
 export interface ITriggerConfig {
@@ -72,6 +79,7 @@ export enum ACTION {
   RESTART_BTT = 55,
   QUIT_BTT = 56,
   SWITCH_TO_PRESET = 139,
+  EXECUTE_SCRIPT = 206,
 }
 
 // TRACKPAD RELATED TRIGGERS

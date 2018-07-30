@@ -30,6 +30,23 @@ import ASendShortcut from './common/actions/sendShortcut';
 import AShowHUD from './common/actions/showHUD';
 import AMoveMouse from './common/actions/moveMouse';
 import AShowWebView from './common/actions/showWebView';
+import AExecuteScript from './common/actions/executeScript';
+
+// do magic
+const generatePayload = (bttConfig: Types.IBTTConfig, callback: Function) => {
+  const payload: string = JSON.stringify({
+    bttConfig: JSON.stringify(bttConfig),
+    cb: callback.toString(),
+  });
+
+  const base64Payload: string = Buffer.from(payload).toString('base64');
+
+  const data = {
+    payload: base64Payload,
+  };
+  
+  return JSON.stringify(data);
+};
 
 
 /**
@@ -50,7 +67,7 @@ export class Btt {
   private config: Types.IBTTConfig;
 
   // namespace for uuid/v5
-  private static namespace: string = '87a84aef-11fe-4dce-8d00-429cea46f345';
+  private static namespace: string = CommonUtils.getNamespace();
 
   /**
    * Creates BTT instance which communicates with BetterTouchTool built in webserver
@@ -74,7 +91,7 @@ export class Btt {
    * @param eventType string, created from action enum identifier
    * @param cb IEventCallback
    */
-  public addEventListener(eventType: string, cb: (e: Types.IEventCallback) => {}): void {
+  public addAction(eventType: string, cb: (e: Types.IEventCallback) => {}, options?: any): void {
     const actions: Action[] = [];
     let comment: string = '';
 
@@ -106,10 +123,15 @@ export class Btt {
       };
     });
 
+    
+
     // end set up ids
 
     this.do('add_new_trigger', {
-      json: JSON.stringify(listenerJSON)
+      json: JSON.stringify({
+        ...listenerJSON,
+        ...options,
+      })
     });
   }
 
@@ -119,7 +141,7 @@ export class Btt {
    * @param eventType string, created from action enum identifier
    * @param cb IEventCallback
    */
-  public removeEventListener(eventType: string, cb: (e: any) => {}): void {    
+  public removeAction(eventType: string, cb: (e: any) => {}): void {    
     // get the id from event type, callback and everything
     const triggerID: string = CommonUtils.generateUuidForString(
       `${eventType}:${String(cb)}`,
@@ -128,6 +150,87 @@ export class Btt {
   
     CommonUtils.deleteTrigger(triggerID);
   }
+
+  /**
+   * 
+   * @param eventType 
+   * @param cb 
+   */
+  public addEventListener(eventType: string, cb: (e: any) => {}): void {
+    if (!this.config.eventServer) {
+      console.warn('You must provide event server URL to use this feature');
+      return;
+    }
+
+    const data = generatePayload(this.config, cb);
+
+    const triggerID: string = CommonUtils.generateUuidForString(
+      `${eventType}:${data}}`,
+      Btt.namespace
+    );
+
+    const { port, domain } = this.config.eventServer;
+
+    // add script
+    const code = `
+      const http = require('http');
+      
+      const postData = JSON.stringify(${data});
+    
+      const options = {
+        hostname: '${domain}',
+        port: ${port},
+        path: '/dynamic',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      
+      const req = http.request(options, (res) => {
+        res.setEncoding('utf8');
+        let data = '';
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+        res.on('end', () => {
+          console.log(data);
+        });
+      });
+      
+      req.write(postData);
+      req.end();`;
+
+  
+      this.addAction(
+        eventType, 
+        (ev: Types.IEventCallback): any => {
+          const actions = [
+            this.executeScript(code),
+          ];
+          
+          ev.actions.push(...actions);
+        },
+        { 'BTTUUID': triggerID },
+      );
+  };
+  
+  /**
+   * 
+   * @param eventType 
+   * @param cb 
+   */
+  public removeEventListener(eventType: string, cb: (e: any) => {}): void {
+    const data = generatePayload(this.config, cb);
+
+    // get the id from event type, callback and everything
+    const triggerID: string = CommonUtils.generateUuidForString(
+      `${eventType}:${data}}`,
+      Btt.namespace
+    );
+  
+    CommonUtils.deleteTrigger(triggerID);
+  };
 
   /**
    * Sends a request to real BTT built in webserver with given data translated as GET query params
@@ -155,6 +258,20 @@ export class Btt {
       shortcut,
       applicationPath,
       mdlsName,
+    );
+  }
+
+  /**
+   * Executes passed nodejs script. Requires manual specificying of node executable binary if used on frontend
+   * 
+   * @param code a code to run
+   */
+  public executeScript(
+    code: string,
+  ) {
+    return new AExecuteScript(
+      this.config,
+      code,
     );
   }
 

@@ -1,5 +1,5 @@
 import * as Types from '../../../types';
-import { Action } from '../../common/action';
+import { Action } from '../action';
 
 /**
  * This action is responsible for toggling the mute state of your Mac

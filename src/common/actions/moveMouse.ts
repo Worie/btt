@@ -1,6 +1,6 @@
 
 import * as Types from '../../../types';
-import { Action } from '../../common/action';
+import { Action } from '../action';
 
 /**
  * This action is responsible for moving mouse to specified position on the same monitor

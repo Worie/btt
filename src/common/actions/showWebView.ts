@@ -1,5 +1,5 @@
 import * as Types from '../../../types';
-import { Action } from '../../common/action';
+import { Action } from '../action';
 import * as uuidv4 from 'uuid/v4';
 
 /**

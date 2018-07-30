@@ -22,6 +22,6 @@ export function deleteTrigger(uuid: string): void {
  * Returns path for current binary 
  */
 export function nodeBinaryPath(): string {
-  const path: string = Path.join(execSync('npm bin -g').toString(), 'node');
+  const path: string = Path.join(execSync('npm bin -g').toString().trim(), 'node');
   return path;
 }

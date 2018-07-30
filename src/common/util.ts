@@ -114,7 +114,7 @@ export function buildTriggerAction(eventName: string, batchAction: any, options:
   const triggerType: number = getTriggerIdByEventName(eventName);
 
   if (typeof triggerType === 'undefined') {
-    return;
+    throw new Error(`Trying to use an event that does not exist: ${eventName}`)
   }
 
   const json: any = {

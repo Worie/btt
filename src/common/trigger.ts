@@ -1,4 +1,4 @@
-import * as CommonUtils from '../common/util';
+import * as CommonUtils from './util';
 import * as Types from '../../types';
 
 export class Trigger {

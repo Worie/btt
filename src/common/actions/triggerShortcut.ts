@@ -1,6 +1,6 @@
-import { mapShortcutNotationToBTT } from '../../common/keys';
+import { mapShortcutNotationToBTT } from '../keys';
 import * as Types from '../../../types';
-import { Action } from '../../common/action';
+import { Action } from '../action';
 
 /**
  * This action is responsible for triggering a keyboard shortcut - for example, cmd+space for spotlight 

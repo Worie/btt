@@ -1,7 +1,7 @@
 import * as Types from '../../../types';
-import { Action } from '../../common/action';
+import { Action } from '../action';
 import * as DetectNode from 'detect-node';
-import { mapShortcutNotationToBTT } from '../../common/keys';
+import { mapShortcutNotationToBTT } from '../keys';
 
 let getMdlsName: any;
 

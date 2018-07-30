@@ -1,5 +1,5 @@
 import * as Types from "../../types";
-import * as CommonUtils from '../common/util';
+import * as CommonUtils from './util';
 import * as Url from 'url';
 
 /**
