@@ -88,11 +88,19 @@ btt.removeTriggerAction('oneFingerForceClick', callbackFuntion);
 
 // you can also define real callbacks that'll be triggered once certain event happens!
 // however, that requires the btt-node-server project. Have a look at the docs or example section to learn more
-btt.addEventListener('threeFingerDoubleTap', (ev) => {
+btt.addEventListener('threeFingerDoubleTap', async (ev) => {
   const intervalID = setInterval(() => {
     btt.showHUD({ title: 'It works!'}).invoke();
   }, 1000);
 
+  // will stop the interval after 10 seconds
+  await new Promise((res, rej) => {
+    setTimeout(() => {
+      clearTimeout(intervalID);
+      res();
+    }, 10000);
+  });
+  
   // the value you return will be returned by the btt-node-server 
   return { messsage: 'Hello world!' };
 });
@@ -101,7 +109,7 @@ btt.addEventListener('threeFingerDoubleTap', (ev) => {
 // surely, you can use removeEventListener, similary to native JS method implementation
 ```
 
-For more advanced examples you can visit [the example section](examples)
+For more advanced examples you can visit [the example section](https://github.com/Worie/btt/tree/master/examples)
 
 ## Docs
 
@@ -116,8 +124,9 @@ So depending on your BTT version some actions may be glitchy. Do not hestitate t
 
 * [btt](https://github.com/Worie/btt) - BetterTouchTool management in JS
 * [btt-json-loader](https://github.com/Worie/btt-json-loader) - JSON loader for BTT
-* [btt-node](https://github.com/Worie/btt-node) Premature version of [btt](https://github.com/Worie/btt) - deprecated
+* [btt-node-server](https://github.com/Worie/btt-node-server) - Simple express server, required for advanced event listeners handling
 * [btt-touchbar-widgets](https://github.com/Worie/btt-touchbar-widgets) - Working touchbar widgets, based on [btt](https://github.com/Worie/btt)
+* [btt-node](https://github.com/Worie/btt-node) Premature version of [btt](https://github.com/Worie/btt) - deprecated
 
 ## License
 
