@@ -46,6 +46,8 @@ export interface IState {
 }
 
 export enum ACTION {
+  TOGGLE_TRUE_TONE = 257,
+  RUN_APPLESCRIPT_IN_BG = 172,
   SEND_SHORTCUT_TO_APP = 128,
   SEND_SHORTCUT = -1,
   NO_ACTION = -1,
@@ -255,8 +257,13 @@ export interface IEventCallback {
   comment: string;
 }
 
+export interface IShowNotificationConfig {
+  title: string;
+  content: string;
+}
+
 export interface ITouchbarWidgetCreateConfig {
-  name: string; // 'toucbar widget name',
+  name: string; // 'touchbar widget name',
   mode: 'node' | 'bash';
   path: string;
   alwaysShow: boolean;

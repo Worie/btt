@@ -16,6 +16,7 @@ This package is a handy wrapper over [BetterTouchTool](https://folivora.ai/) bui
 This package will allow you to automate you MacOS-running machine using JavaScript. You'll be able to:
 
 * Toggle your do-not-disturb state
+* Show a system notification
 * Toggle Night Shift
 * Sleep your computer after timeout
 * Create your own **touchbar widgets**

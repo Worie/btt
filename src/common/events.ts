@@ -1,7 +1,7 @@
 import * as Types from '../../types';
-import * as CommonUtils from '../common/util';
-import { Action } from '../common/action';
-import AExecuteScript from '../common/actions/executeScript';
+import * as CommonUtils from './util';
+import { Action } from './action';
+import AExecuteScript from './actions/executeScript';
 
 /**
  * This class holds methods related to the wide term "events"
@@ -27,6 +27,7 @@ export default class EventManager {
   /**
    * Adds event listener to BTT. Keep in mind this is persistent, so if you call this method twice, 
    * two entries will be added to BTT. Closing the browser / node process won't make the listeners die
+   * 
    * @param eventType string, created from action enum identifier
    * @param cb IEventCallback
    */
@@ -75,6 +76,7 @@ export default class EventManager {
 
   /**
    * Removes event listener
+   * 
    * @param eventType string, created from action enum identifier
    * @param cb IEventCallback
    */

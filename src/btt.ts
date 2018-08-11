@@ -31,6 +31,8 @@ import AMoveMouse from './common/actions/moveMouse';
 import AShowWebView from './common/actions/showWebView';
 import AExecuteScript from './common/actions/executeScript';
 import EventManager from './common/events';
+import AShowNotification from './common/actions/showNotification';
+import AToggleTrueTone from './common/actions/toggleTrueTone';
 
 /**
  * Class used to manage the BTT webserver 
@@ -183,6 +185,13 @@ export class Btt {
    */
   public toggleDnD() {
     return new AToggleDnD(this.config);
+  }
+
+  /**
+   * Toggles do not disturb mode
+   */
+  public toggleTrueTone() {
+    return new AToggleTrueTone(this.config);
   }
 
   /**
@@ -345,6 +354,13 @@ export class Btt {
    */
   public restart() {
     return new ARestartBTT(this.config);
+  }
+
+  /**
+   * Shows system wide notification. Keep in mind that it's presence depends on the DnD state in the system.
+   */
+  public showNotification(config: Types.IShowNotificationConfig) {
+    return new AShowNotification(this.config, config);
   }
 
   /**

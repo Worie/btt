@@ -12,6 +12,9 @@
     "typeRoots": [
       "definitions/"
     ],
+    "exclude": [
+      "dist/**/*"
+    ],
     "indentSize": 2,
     "tabSize": 2
   }

@@ -36,12 +36,12 @@ const myCallback = (ev) => {
 // this will register a trigger in the BetterTouchTool.
 // Keep in mind, that it'll be persistent - meaning that if you don't delete it manually or 
 // via removeEventListener, this will be still in BetterTouchTool after you finish this script execution
-btt.addEventListener('threeFingerDoubleTap', myCallback);
+btt.addTriggerAction('threeFingerDoubleTap', myCallback);
 
 // remove the event listener after some timeout
 setTimeout(() => {
-  btt.removeEventListener('threeFingerDoubleTap', myCallback);
-  console.log('Listner removed.');
+  btt.removeTriggerAction('threeFingerDoubleTap', myCallback);
+  console.log('Listener removed.');
 }, 20000);
 
 console.log('Alright! This event listener will auto-remove itself after 20s. Use threeFingerDoubleTap gesture!');
