@@ -1,5 +1,6 @@
 const path = require('path');
 const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
@@ -20,6 +21,7 @@ module.exports = {
     ],
     extensions: [ '.tsx', '.ts', '.js' ]
   },
+  stats: 'errors-only',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
@@ -40,6 +42,9 @@ module.exports = {
       hideGenerator: true,
       name: 'btt',
       mode: 'file',
-    }, './src')
+    }, './src'),
+    new FriendlyErrorsWebpackPlugin({
+      clearConsole: true,
+    }),
   ]
 };

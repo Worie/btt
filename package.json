@@ -1,6 +1,6 @@
 {
   "name": "btt",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Manage your BetterTouchTool in JavaScript, easly.",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
@@ -27,6 +27,7 @@
     "@types/mocha": "^5.2.4",
     "@types/node": "^10.3.4",
     "chai": "^4.1.2",
+    "friendly-errors-webpack-plugin": "^1.7.0",
     "jest": "^23.3.0",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
