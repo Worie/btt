@@ -34,6 +34,8 @@ import EventManager from './common/events';
 import AShowNotification from './common/actions/showNotification';
 import AToggleTrueTone from './common/actions/toggleTrueTone';
 
+import Action from './common/actions/util/action-factory';
+
 /**
  * Class used to manage the BTT webserver 
  * @constructor IBTTConfig
@@ -94,7 +96,7 @@ export class Btt {
    */
   public addEventListener(
     eventType: string,
-    cb: (e: any) => {}
+    cb: (e: any) => {},
   ): void {
     return this.event.addEventListener(eventType, cb);
   }
@@ -107,7 +109,7 @@ export class Btt {
    */
   public removeEventListener(
     eventType: string,
-    cb: (e: any) => {}
+    cb: (e: any) => {},
   ): void {
     return this.event.removeEventListener(eventType, cb);
   }
@@ -126,7 +128,7 @@ export class Btt {
   public addTriggerAction(
     eventType: string,
     cb: (e: Types.IEventCallback) => {},
-    options?: any
+    options?: any,
   ): void {
     return this.event.addTriggerAction(eventType, cb, options);
   }
@@ -139,7 +141,7 @@ export class Btt {
    */
   public removeTriggerAction(
     eventType: string,
-    cb: (e: any) => {}
+    cb: (e: Types.IEventCallback) => {},
   ): void {    
     return this.event.removeTriggerAction(eventType, cb);
   }
@@ -153,75 +155,53 @@ export class Btt {
    * @param applicationPath absolute path pointing to the app which should recieve shortcut
    * @param applicationPath required for BTT to recognize the app, whithin browser env must be provided manually
    */
-  public sendShortcut(
-    shortcut: string,
-    applicationPath: string,
-    mdlsName?: string,
-  ) {
-    return new ASendShortcut(
-      this.config,
-      shortcut,
-      applicationPath,
-      mdlsName,
-    );
-  }
+  @Action(ASendShortcut)
+  public sendShortcut: (shortcut: string, applicationPath: string, mdlsName?: string) => ASendShortcut;
 
   /**
    * Executes passed nodejs script. Requires manual specificying of node executable binary if used on frontend
    * 
    * @param code a code to run
    */
-  public executeScript(
-    code: string,
-  ) {
-    return new AExecuteScript(
-      this.config,
-      code,
-    );
-  }
+  @Action(AExecuteScript)
+  public executeScript: (code: string) => AExecuteScript;
 
   /**
    * Toggles do not disturb mode
    */
-  public toggleDnD() {
-    return new AToggleDnD(this.config);
-  }
+  @Action(AToggleDnD)
+  public toggleDnD: () => AToggleDnD
 
   /**
    * Toggles do not disturb mode
    */
-  public toggleTrueTone() {
-    return new AToggleTrueTone(this.config);
-  }
-
+  @Action(AToggleTrueTone)
+  public toggleTrueTone: () => AToggleTrueTone;
+  
   /**
    * Toggles night shift
    */
-  public toggleNightShift() {
-    return new AToggleNightShift(this.config);
-  }
+  @Action(AToggleNightShift)
+  public toggleNightShift: () => AToggleNightShift;
 
   /**
    * Triggers system wide keyboard shortcut
    * @param shortcut key identifiers separated by space
    */
-  public triggerShortcut(shortcut: string) {
-    return new ATriggerShortcut(this.config, shortcut);
-  }
+  @Action(ATriggerShortcut) 
+  public triggerShortcut: (shortcut: string) => ATriggerShortcut;
 
   /**
    * Shows HUD with given config
    */
-  public showHUD(config: Types.IShowHUDConfig) {
-    return new AShowHUD(this.config, config);
-  }
+  @Action(AShowHUD)
+  public showHUD: (config: Types.IShowHUDConfig) => AShowHUD;
 
   /**
    * Sends / Types / Inserts / Pastes custom text
    */
-  public sendText(config: Types.ISendTextConfig) {
-    return new ASendText(this.config, config);
-  }
+  @Action(ASendText)
+  public sendText: (config: Types.ISendTextConfig) => ASendText;
 
   /**
    * Triggers a haptic response. Takes a number as a param due to BTT lack of information
@@ -230,44 +210,38 @@ export class Btt {
    * 
    * @param hapticMode a number representing each mode.
    */
-  public hapticFeedback(hapticMode: number) {
-    return new AHapticFeedback(this.config, hapticMode);
-  }
+  @Action(AHapticFeedback)
+  public hapticFeedback: (mode: number) => AHapticFeedback;
 
   /**
    * Open an application on the given path
    */
-  public launchApplication(applicationPath: string) {
-    return new ALaunchApplication(this.config, applicationPath);
-  }
+  @Action(ALaunchApplication)
+  public launchApplication: (applicationPath: string) => ALaunchApplication;
 
   /**
    * Toggles the visibility of given application
    */
-  public toggleApplication(applicationPath: string) {
-    return new AToggleApplication(this.config, applicationPath);
-  }
+  @Action(AToggleApplication)
+  public toggleApplication: (applicationPath: string) => AToggleApplication;
 
   /**
    * Toggles the mute state in the system
    */
-  public mute() {
-    return new AMute(this.config);
-  }
+  @Action(AMute)
+  public mute: () => AMute;
 
   /**
    * Starts Siri
    */
-  public startSiri() {
-    return new AStartSiri(this.config);
-  }
+  @Action(AStartSiri)
+  public startSiri: () => AStartSiri;
 
   /**
    * Toggles the BetterTouchTool gesture recognition
    */
-  public toggle() {
-    return new AToggleBTT(this.config);
-  }
+  @Action(AToggleBTT)
+  public toggle: () => AToggleBTT;
 
   /**
    * Delays the next action. For most cases manually managing the execution of actions in JavaScript
@@ -275,98 +249,84 @@ export class Btt {
    * 
    * @param timeout - time in miliseconds during any action execution will be delayed
    */
-  public delayNextAction(timeout: number) {
-    return new ADelayNextAction(this.config, timeout);
-  }
+  @Action(ADelayNextAction)
+  public delayNextAction: (timeout: number) => ADelayNextAction;
 
   /**
    * Moves mouse to specified position
    */
-  public moveMouse(moveMouseConfig: Types.IMoveMouseConfig) {
-    return new AMoveMouse(this.config, moveMouseConfig);
-  }
+  @Action(AMoveMouse)
+  public moveMouse: (config: Types.IMoveMouseConfig) => AMoveMouse;
 
   /**
    * Toggles the mouse speed between a regular and speeded up one
    */
-  public toggleMouseSpeed() {
-    return new AToggleMouseSpeed(this.config);
-  }
+  @Action(AToggleMouseSpeed)
+  public toggleMouseSpeed: () => AToggleMouseSpeed;
 
   /**
    * Toggles mouse cursor visibility
    */
-  public toggleMouseCursor() {
-    return new AToggleMouseCursor(this.config);
-  }
+  @Action(AToggleMouseCursor)
+  public toggleMouseCursor: () => AToggleMouseCursor;
 
   /**
    * Toggles between the big and regular mouse cursor size
    */
-  public toggleMouseSize() {
-    return new AToggleMouseSize(this.config);
-  }
+  @Action(AToggleMouseSize)
+  public toggleMouseSize: () => AToggleMouseSize;
 
   /**
    * Toggles the system dark mode 
    */
-  public toggleDarkMode() {
-    return new AToggleDarkMode(this.config);
-  }
+  @Action(AToggleDarkMode)
+  public toggleDarkMode: () => AToggleDarkMode;
 
   /**
    * Opens a web view
    */
-  public showWebView(config: Types.IShowWebViewConfig) {
-    return new AShowWebView(this.config, config);
-  }
+  @Action(AShowWebView)
+  public showWebView: () => AShowWebView;
 
   /**
    * Locks the screen
    */
-  public lockScreen() {
-    return new ALockScreen(this.config);
-  }
+  @Action(ALockScreen)
+  public lockScreen: () => ALockScreen;
 
   /**
    * Logouts current user
    */
-  public logout() {
-    return new ALogout(this.config);
-  }
+  @Action(ALogout)
+  public logout: () => ALogout;
 
   /**
    * Sleeps computer display
    */
-  public sleepDisplay() {
-    return new ASleepDisplay(this.config);
-  }
+  @Action(ASleepDisplay)
+  public sleepDisplay: () => ASleepDisplay;
 
   /**
    * Sleeps computer
    */
-  public sleepComputer() {
-    return new ASleepComputer(this.config);
-  }
+  @Action(ASleepComputer)
+  public sleepComputer: () => ASleepComputer;
 
   /**
    * Restarts BetterTouchTool
    */
-  public restart() {
-    return new ARestartBTT(this.config);
-  }
+  @Action(ARestartBTT)
+  public restart: () => ARestartBTT;
 
   /**
    * Shows system wide notification. Keep in mind that it's presence depends on the DnD state in the system.
    */
-  public showNotification(config: Types.IShowNotificationConfig) {
-    return new AShowNotification(this.config, config);
-  }
+  @Action(AShowNotification)
+  public showNotification: () => AShowNotification;
 
   /**
    * Quits BetterTouchTool
    */
-  public quit() {
-    return new AQuitBTT(this.config);
-  }
+  @Action(AQuitBTT)
+  public quit: () => AQuitBTT;
 }

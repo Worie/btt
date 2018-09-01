@@ -6,14 +6,12 @@ import * as CommonUtils from '../util';
  * This action is responsible for executing a node script
  */
 export default class AExecuteScript extends Action { 
-  // reference name
-  public static alias: string = 'executeScript';
-
+  protected id: number = Types.ACTION.EXECUTE_SCRIPT;
   /**
    * Returns a json of the current action. 
    * url and invoke properties of this class depend on this
    */
-  public get json(): any {
+  public get data(): any {
     const code: string = this.arguments[0];
 
     const binaryPath = CommonUtils.getNodeBinaryPath();
@@ -30,11 +28,8 @@ export default class AExecuteScript extends Action {
     const shellScriptActionConfig = `${escapedPath}:::-e:::esdsaijdoai`;
 
     return {
-      "BTTPredefinedActionType" : Types.ACTION.EXECUTE_SCRIPT,
       "BTTShellTaskActionScript" : code,
       "BTTShellTaskActionConfig" : shellScriptActionConfig,
-      "BTTEnabled2" : 1,
-      "BTTEnabled" : 1,
     };
   }
 }

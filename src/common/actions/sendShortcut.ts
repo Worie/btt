@@ -14,15 +14,14 @@ if (DetectNode) {
 /**
  * This action is responsible for sending shortcut to specific application
  */
-export default class ASendShortcut extends Action { 
-  // reference name
-  public static alias: string = 'sendShortcut';
+export default class ASendShortcut extends Action {
+  protected id: number = Types.ACTION.SEND_SHORTCUT_TO_APP;
 
   /**
    * Returns a json of the current action. 
    * url and invoke properties of this class depend on this
    */
-  public get json(): any {
+  public get data(): any {
     const shortcut: string = this.arguments[0];
     const applicationPath: string = this.arguments[1];
     const mdlsName: string = this.arguments[2];
@@ -37,12 +36,9 @@ export default class ASendShortcut extends Action {
     }
 
     return {
-      "BTTPredefinedActionType" : Types.ACTION.SEND_SHORTCUT_TO_APP,
       "BTTShortcutApp" : applicationPath,
       "BTTShortcutToSend" : shortcutToSend,
       "BTTShortcutAppUnderCursor": mdlsValue.replace('/', '\\/'),
-      "BTTEnabled2" : 1,
-      "BTTEnabled" : 1,
     };
   }
 }

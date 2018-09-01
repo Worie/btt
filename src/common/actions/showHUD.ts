@@ -5,15 +5,14 @@ import { Action } from '../action';
  * This action is responsible for showing a BetterTouchTool HUD. 
  * The HUD cannot be blocked by do-not-disturb mode or anything and it cannot be closed - it'll fade out on its own
  */
-export default class AShowHUD extends Action { 
-  // reference name
-  public static alias: string = 'showHUD';
+export default class AShowHUD extends Action {
+  protected id: number = Types.ACTION.SHOW_HUD;
 
   /**
    * Returns a json of the current action. 
    * url and invoke properties of this class depend on this
    */
-  public get json(): any {
+  public get data(): any {
     const config: Types.IShowHUDConfig = this.arguments[0];
     
     const { title, details, duration, background, direction } = config;
@@ -30,10 +29,7 @@ export default class AShowHUD extends Action {
     };
     
     const result: any = {
-      "BTTPredefinedActionType" : Types.ACTION.SHOW_HUD,
       "BTTHUDActionConfiguration" : JSON.stringify(BTTAdditionalConfig),
-      "BTTEnabled2" : 1,
-      "BTTEnabled" : 1,
     };
   
     return result;

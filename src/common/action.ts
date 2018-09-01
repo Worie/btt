@@ -9,8 +9,7 @@ import * as Url from 'url';
 export abstract class Action {
   protected config: Types.IBTTConfig;
   protected arguments: any[] = [];
-  
-  public static alias: string = '';
+  protected id: number;
   
   /**
    * A constructor for abstract Action class
@@ -23,6 +22,36 @@ export abstract class Action {
     this.config = config;
     this.arguments = args;
   }
+
+  /**
+   * Returns JSON structure for the current action. 
+   * Must be overriden by instances
+   */
+  public get json(): Record<string, any> {
+    return {
+      ...this.baseData,
+      ...this.data,
+    };
+  }
+  
+  /**
+   * Intended to be overriden by action implementation
+   * If left as is, simply uses the id of the action and produces required json
+   */
+  protected get data(): Record<string, any> {
+    return this.baseData;
+  }
+  
+  /**
+   * Returns the base data of every JSON, required for BTT to see the changes
+   */
+  private get baseData(): Record<string, any> {
+    return {
+      "BTTPredefinedActionType" : this.id,
+      "BTTEnabled2" : 1,
+      "BTTEnabled" : 1,
+    }
+  };
   
   /**
    * Returns the url of the given action, that this library generates
@@ -35,14 +64,6 @@ export abstract class Action {
 
     url = Url.resolve(url, `?${this.params}`);
     return url;
-  }
-
-  /**
-   * Returns JSON structure for the current action. 
-   * Must be overriden by instances
-   */
-  public get json(): any {
-    return;
   }
 
   /**

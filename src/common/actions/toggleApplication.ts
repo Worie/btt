@@ -14,14 +14,12 @@ if (DetectNode) {
  * This action is responsible for toggling the visibility of specified application
  */
 export default class AToggleApplication extends Action { 
-  // reference name
-  public static alias: string = 'toggleApplication';
-
+  protected id: number = Types.ACTION.TOGGLE_APPLICATION;
   /**
    * Returns a json of the current action. 
    * url and invoke properties of this class depend on this
    */
-  public get json(): any {
+  public get data(): any {
     const applicationPath: string = this.arguments[1];
     const mdlsName: string = this.arguments[2];
 
@@ -33,10 +31,7 @@ export default class AToggleApplication extends Action {
     }
 
     return {
-      "BTTPredefinedActionType" : Types.ACTION.TOGGLE_APPLICATION,
       "BTTAppToShowOrHide": mdlsValue,
-      "BTTEnabled2" : 1,
-      "BTTEnabled" : 1,
     };
   }
 }
