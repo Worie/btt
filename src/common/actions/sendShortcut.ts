@@ -1,5 +1,6 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
+
 import * as DetectNode from 'detect-node';
 import { mapShortcutNotationToBTT } from '../keys';
 
@@ -14,13 +15,9 @@ if (DetectNode) {
 /**
  * This action is responsible for sending shortcut to specific application
  */
-export default class ASendShortcut extends Action {
-  protected id: number = Types.ACTION.SEND_SHORTCUT_TO_APP;
+export default class ASendShortcut extends BaseAction {
+  protected id: EActions = EActions.SEND_SHORTCUT_TO_APP;
 
-  /**
-   * Returns a json of the current action. 
-   * url and invoke properties of this class depend on this
-   */
   public get data(): any {
     const shortcut: string = this.arguments[0];
     const applicationPath: string = this.arguments[1];

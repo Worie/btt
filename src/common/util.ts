@@ -1,7 +1,11 @@
 import * as DetectNode from 'detect-node';
-import * as Types from '../../types';
+import { EActions, ETrackpadTriggers, EMouseTriggers } from 'types/enum';
 import * as CamelCase from 'camelcase';
+import * as Types from 'types/types';
 import * as uuidv5 from 'uuid/v5';
+import * as Keys from 'common/keys';
+
+// @TODO: Clean up utils - this is the most messy place atm
 
 let fetch: any;
 let deleteTriggerFn: any; // could be "method" = 'webserver' | 'url scheme'
@@ -34,20 +38,30 @@ export function getUrl(config: Partial<Types.IBTTConfig>): string {
 /**
  * Sends a request to real BTT built in webserver with given data translated as GET query params
  */
-export function makeAction(
+export async function makeAction(
   action: string, 
   data: Record<string, any>,
   config: Types.IBTTConfig,
 ): Promise<any> {
-  try {
     const parameters = params(data, config.sharedKey);
     const url = getUrl(config);
     const urlToFetch = buildFullUrl(action, parameters, url);
     
-    return fetch(urlToFetch);
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+      const result = await fetch(urlToFetch)  
+      return result;
+    } catch (err) {
+      return new Error(
+        `
+        Fetch to BetterTouchTool webserver API failed. See the details:
+        
+        Action: ${action}
+        Parameters: ${JSON.stringify(data, null, 2)}
+        Url: ${url}
+        
+        Error message: ${err}`,
+      );
+    }
 }
 
 /**
@@ -92,12 +106,12 @@ export function buildActionSequence(actions: any[]): any {
       return {
         ...action,
         "BTTOrder": index, 
-        "BTTGestureNotes" : 'Trigger created using JS package "btt"', // reconsider where to put that
+        "BTTGestureNotes" : 'Created via https://github.com/Worie/btt', // reconsider where to put that
       };
     });
 
   return {
-    "BTTPredefinedActionType" : Types.ACTION.NO_ACTION,
+    "BTTPredefinedActionType" : EActions.NO_ACTION,
     "BTTEnabled2" : 1,
     "BTTEnabled" : 1,
     "BTTAdditionalActions": jsons,
@@ -112,17 +126,32 @@ export function buildActionSequence(actions: any[]): any {
  */
 export function buildTriggerAction(eventName: string, batchAction: any, options: any = {}) { 
   const triggerType: number = getTriggerIdByEventName(eventName);
+  const isValidShorcut: boolean = Keys.isValidShortcut(eventName);
 
-  if (typeof triggerType === 'undefined') {
-    throw new Error(`Trying to use an event that does not exist: ${eventName}`)
+  if (typeof triggerType === 'undefined' && !isValidShorcut) {
+    throw new Error(`Trying to use an event that does not exist, nor is a shortcut: ${eventName}`)
   }
 
   const json: any = {
     "BTTTriggerType": triggerType,
-    "BTTTriggerClass" : getTriggerClassProperty(triggerType), // @TODO
+    "BTTTriggerClass" : getTriggerClassProperty(triggerType || eventName),
     "BTTOrder": 99999,
     "BTTGestureNotes" : options.comment || 'Trigger created using JS package "BTT"',
     ...batchAction,
+  };
+
+  if (isValidShorcut) {
+    // @TODO: add support for differenting keys via location
+    /**
+     * "BTTTriggerConfig" : {
+     *  "BTTLeftRightModifierDifferentiation" : 1
+     * }
+     */
+    return Object.assign({}, json, {
+      "BTTShortcutModifierKeys" : Keys.createBitmaskForShortcut(eventName, false),
+      "BTTAdditionalConfiguration" : String(Keys.createBitmaskForShortcut(eventName, true)),
+      "BTTShortcutKeyCode": Keys.getKeyCode(eventName.split('+').pop())
+    });
   }
 
   return json;
@@ -148,7 +177,7 @@ function getTriggerMap(): Map<string, number> {
   const triggerMap: Map<string, number> = new Map();
 
   const triggerEnums: any[] = [
-    Types.TRACKPAD_TRIGGERS,
+    ETrackpadTriggers,
   ];
 
   triggerEnums.forEach((e: any) => {
@@ -169,15 +198,14 @@ function getTriggerMap(): Map<string, number> {
  * Returns the trigger class proprerty, required for trigger actions to work
  * @param value 
  */
-function getTriggerClassProperty(value: number): string {
-  if (value in Types.TRACKPAD_TRIGGERS) {
+function getTriggerClassProperty(value: number | string): string {
+  if (value in ETrackpadTriggers) {
     return "BTTTriggerTypeTouchpadAll";
+  } else if (value in EMouseTriggers) {
+    return "BTTTriggerTypeMagicMouse";
+  } else if (Keys.isValidShortcut(value as string)) {
+    return "BTTTriggerTypeKeyboardShortcut";
   }
-  //  else if (value in Types.KEYBOARD_TRIGGERS) {
-  //   return "BTTTriggerTypeKeyboardShortcut";
-  // } else if (value in Types.MOUSE_TRIGGERS) {
-  //   return "BTTTriggerTypeMagicMouse";
-  // }
 }
 
 /**

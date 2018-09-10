@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for toggling between fast and regular mouse speed
  */
-export default class AToggleMouseSpeed extends Action { 
-  protected id: number = Types.ACTION.TOGGLE_MOUSE_SPEED;
+export default class AToggleMouseSpeed extends BaseAction { 
+  protected id: EActions = EActions.TOGGLE_MOUSE_SPEED;
 }

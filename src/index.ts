@@ -1,2 +1,2 @@
 export { Btt } from './btt';
-export * from '../types';
+export * from 'types/types';

@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for logging out the current user
  */
-export default class ALogout extends Action { 
-  protected id: number = Types.ACTION.LOGOUT;
+export default class ALogout extends BaseAction { 
+  protected id: EActions = EActions.LOGOUT;
 }

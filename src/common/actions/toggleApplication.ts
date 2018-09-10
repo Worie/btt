@@ -1,5 +1,6 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
+
 import * as DetectNode from 'detect-node';
 
 let getMdlsName: any;
@@ -13,12 +14,9 @@ if (DetectNode) {
 /**
  * This action is responsible for toggling the visibility of specified application
  */
-export default class AToggleApplication extends Action { 
-  protected id: number = Types.ACTION.TOGGLE_APPLICATION;
-  /**
-   * Returns a json of the current action. 
-   * url and invoke properties of this class depend on this
-   */
+export default class AToggleApplication extends BaseAction { 
+  protected id: EActions = EActions.TOGGLE_APPLICATION;
+  
   public get data(): any {
     const applicationPath: string = this.arguments[1];
     const mdlsName: string = this.arguments[2];

@@ -3,8 +3,9 @@
  * For "typings structure" refer to the https://github.com/Microsoft/TypeScript/issues/13462#issuecomment-295685298
  */
 
-import * as CommonUtils from '../common/util';
-import * as Types from '../../types';
+import * as CommonUtils from 'common/util';
+import { ETouchBarWidgets } from 'types/enum';
+import * as Types from 'types/types';
 
 export class Widget {
   // stores the uuid of the existing btt widget
@@ -121,7 +122,7 @@ export class FWidget {
     // real payload that'll create a widget
     const BTTPayload: any = {
       "BTTWidgetName" : options.name,
-      "BTTTriggerType" : Types.TOUCHBAR_WIDGETS.CREATE,
+      "BTTTriggerType" : ETouchBarWidgets.CREATE,
       "BTTTriggerClass" : "BTTTriggerTypeTouchBar",
       "BTTPredefinedActionType" : -1,
       "BTTPredefinedActionName" : "No Action",

@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for quitting the BetterTouchTool completely
  */
-export default class AQuitBTT extends Action {
-  protected id: number = Types.ACTION.QUIT_BTT;
+export default class AQuitBTT extends BaseAction {
+  protected id: EActions = EActions.QUIT_BTT;
 }

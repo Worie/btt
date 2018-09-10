@@ -1,17 +1,14 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
+import * as Types from 'types/types';
 
 /**
  * This action is responsible for showing a BetterTouchTool HUD. 
  * The HUD cannot be blocked by do-not-disturb mode or anything and it cannot be closed - it'll fade out on its own
  */
-export default class AShowHUD extends Action {
-  protected id: number = Types.ACTION.SHOW_HUD;
+export default class AShowHUD extends BaseAction {
+  protected id: EActions = EActions.SHOW_HUD;
 
-  /**
-   * Returns a json of the current action. 
-   * url and invoke properties of this class depend on this
-   */
   public get data(): any {
     const config: Types.IShowHUDConfig = this.arguments[0];
     

@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for toggling the Dark Mode on the target Mac
  */
-export default class AToggleDarkMode extends Action {
-  protected id: number = Types.ACTION.TOGGLE_DARK_MODE;
+export default class AToggleDarkMode extends BaseAction {
+  protected id: EActions = EActions.TOGGLE_DARK_MODE;
 }

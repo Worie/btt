@@ -1,9 +1,11 @@
 const path = require('path');
 const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const UglifyJSWebpackPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
+  target: 'node', // this may break the whole package ... but is needed for BTT runtime for example ;o 
   module: {
     rules: [
       {
@@ -17,7 +19,7 @@ module.exports = {
   resolve: {
     modules: [
         path.resolve(__dirname, 'node_modules'),
-        path.resolve(__dirname, 'src'),
+        path.resolve(__dirname, './src'),
     ],
     extensions: [ '.tsx', '.ts', '.js' ]
   },
@@ -28,6 +30,7 @@ module.exports = {
     libraryTarget: 'commonjs',
   },
   plugins: [
+    new UglifyJSWebpackPlugin(),
     new TypedocWebpackPlugin({
       ignoreCompilerErrors: true,
       out: './../docs/btt',

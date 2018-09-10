@@ -1,6 +1,8 @@
 interface IKey {
   key: string;
   code: number;
+  locationMask?: number;
+  modifierValue?: number;
 }
 
 export const KEYS: IKey[] = [{
@@ -131,10 +133,13 @@ export const KEYS: IKey[] = [{
   "code": 42
 }, {
   "key": "LShift",
-  "code": 56
+  "code": 56,
+  "modifierValue": 1 << 17,
+  "locationMask": 0x00000002,
 }, {
   "key": "Shift",
-  "code": 56
+  "code": 56,
+  "modifierValue": 1 << 17,
 }, {
   "key": "`",
   "code": 50
@@ -170,34 +175,58 @@ export const KEYS: IKey[] = [{
   "code": 44
 }, {
   "key": "RShift",
-  "code": 60
+  "code": 60,
+  "modifierValue": 1 << 17,
+  "locationMask": 0x00000004,
 }, {
   "key": "Fn",
-  "code": 63
+  "code": 63,
+  "modifierValue": 1 << 23,
 }, {
   "key": "Ctrl",
-  "code": 59
+  "code": 59,
+  "modifierValue": 1 << 18,
+}, {
+  "key": "LCtrl",
+  "code": 59,
+  "modifierValue": 1 << 18,
+  "locationMask": 0x00000001,
+}, {
+  "key": "RCtrl",
+  "code": 59,
+  "modifierValue": 1 << 18,
+  "locationMask": 0x00002000,
 }, {
   "key": "LAlt",
-  "code": 58
+  "code": 58,
+  "modifierValue": 1 << 19,
+  "locationMask": 0x00000020,
 }, {
   "key": "Alt",
-  "code": 58
+  "code": 58,
+  "modifierValue": 1 << 19,
 }, {
   "key": "LCmd",
-  "code": 55
+  "code": 55,
+  "modifierValue": 1 << 20,
+  "locationMask": 0x00000008,
 }, {
   "key": "Cmd",
-  "code": 55
+  "code": 55,
+  "modifierValue": 1 << 20,
 }, {
   "key": "Space",
   "code": 49
 }, {
   "key": "RCmd",
-  "code": 54
+  "code": 54,
+  "modifierValue": 1 << 20,
+  "locationMask": 0x00000010,
 }, {
   "key": "RAlt",
-  "code": 61
+  "code": 61,
+  "modifierValue": 1 << 19,
+  "locationMask": 0x00000040,
 }, {
   "key": "Left",
   "code": 123
@@ -229,8 +258,7 @@ export function mapShortcutNotationToBTT(shortcut: string): string {
   
     // in case there was no such key, throw an error
     if (!matchedKey) {
-      const keys = KEYS.map((keyObj: IKey) => keyObj.key.toLowerCase());
-      console.error('Improper key requested. Available options:', `[${keys.join(', ')}]`);
+      console.error(`Improper key requested: "${key}"`);
       throw new Error();
     }
 
@@ -246,4 +274,63 @@ export function mapShortcutNotationToBTT(shortcut: string): string {
     .join(',');
 
   return BTTShortcutNotation;
+}
+
+export function isValidShortcut(combo: string) {
+  const keys = combo.split('+');
+  const stringConsistsOnlyValidKeys = keys.every(k => {
+    const keyHasBeenFound = KEYS.find(bttKeyObj => {
+      return bttKeyObj.key.toLowerCase() === k.toLowerCase();
+    });
+    return Boolean(keyHasBeenFound);
+  });
+
+  const keyObjectArray = keys.map(key => KEYS.find(k => k.key.toLowerCase() === key.toLowerCase()));
+
+  const stringConsistOnlyOneNonModifier = (
+    keyObjectArray.filter((keyObj: IKey) => {
+      return (typeof keyObj.modifierValue === 'undefined')
+    }).length === 1
+  );
+
+  return stringConsistsOnlyValidKeys && stringConsistOnlyOneNonModifier;
+}
+
+/**
+ * For details implementation look up to: https://community.folivora.ai/t/could-you-provide-a-formula-for-determining-keyboard-shortcuts-values/3606/2?u=worie
+ * @param shortcut 
+ * @param differentiateLeftRight 
+ */
+export function createBitmaskForShortcut(shortcut: string, differentiateLeftRight: boolean) {
+  const usedKeys = shortcut.split('+');
+
+  function modifyMask(cb: Function, bitmaskKey: keyof IKey) {
+    usedKeys.forEach((k) => {
+      const foundKey = KEYS.find((keyObj) => {
+        return keyObj.key.toLowerCase() === k.toLowerCase();
+      });
+  
+      if (foundKey && foundKey[bitmaskKey]) {
+        cb(foundKey[bitmaskKey]);
+      }
+    });
+  }
+
+  let bitmask = 0;
+
+  modifyMask((foundValue: number) => {
+    bitmask |= foundValue;
+  }, 'modifierValue');
+
+  if (differentiateLeftRight) {
+    modifyMask((foundValue: number) => {
+      bitmask += foundValue;
+    }, 'locationMask');
+  }
+
+  return bitmask;
+}
+
+export function getKeyCode(key: string) {
+  return KEYS.find(k => key.toLowerCase() === k.key.toLowerCase()).code;
 }

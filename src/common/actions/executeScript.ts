@@ -1,16 +1,14 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
-import * as CommonUtils from '../util';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
+
+import * as CommonUtils from 'common/util';
 
 /**
  * This action is responsible for executing a node script
  */
-export default class AExecuteScript extends Action { 
-  protected id: number = Types.ACTION.EXECUTE_SCRIPT;
-  /**
-   * Returns a json of the current action. 
-   * url and invoke properties of this class depend on this
-   */
+export default class AExecuteScript extends BaseAction { 
+  protected id: EActions = EActions.EXECUTE_SCRIPT;
+
   public get data(): any {
     const code: string = this.arguments[0];
 
@@ -25,10 +23,10 @@ export default class AExecuteScript extends Action {
     const escapedPath = binaryPath.replace(/\//g, '\/');
   
     // btt format for executable path 
-    const shellScriptActionConfig = `${escapedPath}:::-e:::esdsaijdoai`;
+    const shellScriptActionConfig = `${escapedPath}:::-e:::copy-shell`;
 
     return {
-      "BTTShellTaskActionScript" : code,
+      "BTTShellTaskActionScript" : code, 
       "BTTShellTaskActionConfig" : shellScriptActionConfig,
     };
   }

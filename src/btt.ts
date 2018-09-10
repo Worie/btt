@@ -1,40 +1,45 @@
-import { FTrigger } from './common/trigger';
-import { FWidget } from './common/widget';
-import VariableStore from './common/state';
-import * as Types from '../types';
-import * as CommonUtils from './common/util';
+import { FTrigger } from 'common/trigger';
+import { FWidget } from 'common/widget';
+import VariableStore from 'common/state';
 
-import AHapticFeedback from './common/actions/hapticFeedback';
-import ASendText from './common/actions/sendText';
-import ADelayNextAction from './common/actions/delayNextAction';
-import AToggleBTT from './common/actions/toggle';
-import AStartSiri from './common/actions/startSiri';
-import ALaunchApplication from './common/actions/launchApplication';
-import AToggleApplication from './common/actions/toggleApplication';
-import AMute from './common/actions/mute';
-import ATriggerShortcut from './common/actions/triggerShortcut';
-import AToggleNightShift from './common/actions/toggleNightShift';
-import AToggleDnD from './common/actions/toggleDnD';
-import AToggleMouseSize from './common/actions/toggleMouseSize';
-import AToggleMouseSpeed from './common/actions/toggleMouseSpeed';
-import AToggleMouseCursor from './common/actions/toggleMouseCursor';
-import AToggleDarkMode from './common/actions/toggleDarkMode';
-import ALockScreen from './common/actions/lockScreen';
-import ALogout from './common/actions/logout';
-import ASleepDisplay from './common/actions/sleepDisplay';
-import ASleepComputer from './common/actions/sleepComputer';
-import ARestartBTT from './common/actions/restart';
-import AQuitBTT from './common/actions/quit';
-import ASendShortcut from './common/actions/sendShortcut';
-import AShowHUD from './common/actions/showHUD';
-import AMoveMouse from './common/actions/moveMouse';
-import AShowWebView from './common/actions/showWebView';
-import AExecuteScript from './common/actions/executeScript';
-import EventManager from './common/events';
-import AShowNotification from './common/actions/showNotification';
-import AToggleTrueTone from './common/actions/toggleTrueTone';
+import * as Initializer from 'types/action-initializers';
+import * as Types from 'types/types';
 
-import Action from './common/actions/util/action-factory';
+import * as CommonUtils from 'common/util';
+
+import AHapticFeedback from 'common/actions/hapticFeedback';
+import ASendText from 'common/actions/sendText';
+import ASaveSelectedText from 'common/actions/saveSelectedText';
+import ADelayNextAction from 'common/actions/delayNextAction';
+import AToggleBTT from 'common/actions/toggle';
+import AStartSiri from 'common/actions/startSiri';
+import ALaunchApplication from 'common/actions/launchApplication';
+import AToggleApplication from 'common/actions/toggleApplication';
+import AMute from 'common/actions/mute';
+import ATriggerShortcut from 'common/actions/triggerShortcut';
+import AToggleNightShift from 'common/actions/toggleNightShift';
+import AToggleDnD from 'common/actions/toggleDnD';
+import AToggleMouseSize from 'common/actions/toggleMouseSize';
+import AToggleMouseSpeed from 'common/actions/toggleMouseSpeed';
+import AToggleMouseCursor from 'common/actions/toggleMouseCursor';
+import AToggleDarkMode from 'common/actions/toggleDarkMode';
+import ALockScreen from 'common/actions/lockScreen';
+import ALogout from 'common/actions/logout';
+import ASleepDisplay from 'common/actions/sleepDisplay';
+import ASleepComputer from 'common/actions/sleepComputer';
+import ARestartBTT from 'common/actions/restart';
+import AQuitBTT from 'common/actions/quit';
+import ASendShortcut from 'common/actions/sendShortcut';
+import AShowHUD from 'common/actions/showHUD';
+import AMoveMouse from 'common/actions/moveMouse';
+import AShowWebView from 'common/actions/showWebView';
+import AExecuteScript from 'common/actions/executeScript';
+import EventManager from 'common/events';
+import AShowNotification from 'common/actions/showNotification';
+import AToggleTrueTone from 'common/actions/toggleTrueTone';
+
+// decorator for creating actions
+import Action from 'common/actions/util/action-factory';
 
 /**
  * Class used to manage the BTT webserver 
@@ -156,7 +161,7 @@ export class Btt {
    * @param applicationPath required for BTT to recognize the app, whithin browser env must be provided manually
    */
   @Action(ASendShortcut)
-  public sendShortcut: (shortcut: string, applicationPath: string, mdlsName?: string) => ASendShortcut;
+  public sendShortcut: Initializer.SendShortcut;
 
   /**
    * Executes passed nodejs script. Requires manual specificying of node executable binary if used on frontend
@@ -164,44 +169,44 @@ export class Btt {
    * @param code a code to run
    */
   @Action(AExecuteScript)
-  public executeScript: (code: string) => AExecuteScript;
+  public executeScript: Initializer.ExecuteScript;
 
   /**
    * Toggles do not disturb mode
    */
   @Action(AToggleDnD)
-  public toggleDnD: () => AToggleDnD
+  public toggleDnD: Initializer.ToggleDnD;
 
   /**
    * Toggles do not disturb mode
    */
   @Action(AToggleTrueTone)
-  public toggleTrueTone: () => AToggleTrueTone;
+  public toggleTrueTone: Initializer.ToggleTrueTone;
   
   /**
    * Toggles night shift
    */
   @Action(AToggleNightShift)
-  public toggleNightShift: () => AToggleNightShift;
+  public toggleNightShift: Initializer.ToggleNightShift;
 
   /**
    * Triggers system wide keyboard shortcut
    * @param shortcut key identifiers separated by space
    */
   @Action(ATriggerShortcut) 
-  public triggerShortcut: (shortcut: string) => ATriggerShortcut;
+  public triggerShortcut: Initializer.TriggerShortcut;
 
   /**
    * Shows HUD with given config
    */
   @Action(AShowHUD)
-  public showHUD: (config: Types.IShowHUDConfig) => AShowHUD;
+  public showHUD: Initializer.ShowHUD;
 
   /**
    * Sends / Types / Inserts / Pastes custom text
    */
   @Action(ASendText)
-  public sendText: (config: Types.ISendTextConfig) => ASendText;
+  public sendText: Initializer.SendText;
 
   /**
    * Triggers a haptic response. Takes a number as a param due to BTT lack of information
@@ -211,37 +216,37 @@ export class Btt {
    * @param hapticMode a number representing each mode.
    */
   @Action(AHapticFeedback)
-  public hapticFeedback: (mode: number) => AHapticFeedback;
+  public hapticFeedback: Initializer.HapticFeedback;
 
   /**
    * Open an application on the given path
    */
   @Action(ALaunchApplication)
-  public launchApplication: (applicationPath: string) => ALaunchApplication;
+  public launchApplication: Initializer.LaunchApplication;
 
   /**
    * Toggles the visibility of given application
    */
   @Action(AToggleApplication)
-  public toggleApplication: (applicationPath: string) => AToggleApplication;
+  public toggleApplication: Initializer.ToggleApplication;
 
   /**
    * Toggles the mute state in the system
    */
   @Action(AMute)
-  public mute: () => AMute;
+  public mute: Initializer.Mute;
 
   /**
    * Starts Siri
    */
   @Action(AStartSiri)
-  public startSiri: () => AStartSiri;
+  public startSiri: Initializer.StartSiri;
 
   /**
    * Toggles the BetterTouchTool gesture recognition
    */
   @Action(AToggleBTT)
-  public toggle: () => AToggleBTT;
+  public toggle: Initializer.ToggleBTT;
 
   /**
    * Delays the next action. For most cases manually managing the execution of actions in JavaScript
@@ -250,83 +255,86 @@ export class Btt {
    * @param timeout - time in miliseconds during any action execution will be delayed
    */
   @Action(ADelayNextAction)
-  public delayNextAction: (timeout: number) => ADelayNextAction;
+  public delayNextAction: Initializer.DelayNextAction;
 
   /**
    * Moves mouse to specified position
    */
   @Action(AMoveMouse)
-  public moveMouse: (config: Types.IMoveMouseConfig) => AMoveMouse;
+  public moveMouse: Initializer.MoveMouse;
 
   /**
    * Toggles the mouse speed between a regular and speeded up one
    */
   @Action(AToggleMouseSpeed)
-  public toggleMouseSpeed: () => AToggleMouseSpeed;
+  public toggleMouseSpeed: Initializer.ToggleMouseSpeed;
 
   /**
    * Toggles mouse cursor visibility
    */
   @Action(AToggleMouseCursor)
-  public toggleMouseCursor: () => AToggleMouseCursor;
+  public toggleMouseCursor: Initializer.ToggleMouseCursor;
 
   /**
    * Toggles between the big and regular mouse cursor size
    */
   @Action(AToggleMouseSize)
-  public toggleMouseSize: () => AToggleMouseSize;
+  public toggleMouseSize: Initializer.ToggleMouseSize;
 
   /**
    * Toggles the system dark mode 
    */
   @Action(AToggleDarkMode)
-  public toggleDarkMode: () => AToggleDarkMode;
+  public toggleDarkMode: Initializer.ToggleDarkMode;
 
   /**
    * Opens a web view
    */
   @Action(AShowWebView)
-  public showWebView: () => AShowWebView;
+  public showWebView: Initializer.ShowWebView;
+
+  @Action(ASaveSelectedText)
+  public saveSelectedText: Initializer.SaveSelectedText;
 
   /**
    * Locks the screen
    */
   @Action(ALockScreen)
-  public lockScreen: () => ALockScreen;
+  public lockScreen: Initializer.LockScreen;
 
   /**
    * Logouts current user
    */
   @Action(ALogout)
-  public logout: () => ALogout;
+  public logout: Initializer.Logout;
 
   /**
    * Sleeps computer display
    */
   @Action(ASleepDisplay)
-  public sleepDisplay: () => ASleepDisplay;
+  public sleepDisplay: Initializer.SleepDisplay;
 
   /**
    * Sleeps computer
    */
   @Action(ASleepComputer)
-  public sleepComputer: () => ASleepComputer;
+  public sleepComputer: Initializer.SleepComputer;
 
   /**
    * Restarts BetterTouchTool
    */
   @Action(ARestartBTT)
-  public restart: () => ARestartBTT;
+  public restart: Initializer.RestartBTT;
 
   /**
    * Shows system wide notification. Keep in mind that it's presence depends on the DnD state in the system.
    */
   @Action(AShowNotification)
-  public showNotification: () => AShowNotification;
+  public showNotification: Initializer.ShowNotification;
 
   /**
    * Quits BetterTouchTool
    */
   @Action(AQuitBTT)
-  public quit: () => AQuitBTT;
+  public quit: Initializer.QuitBTT;
 }

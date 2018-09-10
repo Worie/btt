@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for toggling night shift
  */
-export default class AToggleNightShift extends Action { 
-  protected id: number = Types.ACTION.TOGGLE_NIGHT_SHIFT;
+export default class AToggleNightShift extends BaseAction { 
+  protected id: EActions = EActions.TOGGLE_NIGHT_SHIFT;
 }

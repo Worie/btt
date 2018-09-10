@@ -1,15 +1,16 @@
-import * as Types from "../../types";
-import * as CommonUtils from './util';
+import * as CommonUtils from 'common/util';
 import * as Url from 'url';
+import { EActions } from 'types/enum';
+import * as Types from 'types/types';
 
 /**
  *  Basic structure and methods for all Actions
  *  Every action implementation derives from this class, should not be called directly
  */
-export abstract class Action {
+export abstract class BaseAction {
   protected config: Types.IBTTConfig;
   protected arguments: any[] = [];
-  protected id: number;
+  protected id: EActions;
   
   /**
    * A constructor for abstract Action class

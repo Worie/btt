@@ -8,14 +8,19 @@
       "declaration": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
+      "baseUrl": "./src",
     },
     "typeRoots": [
-      "definitions/"
+      "../node_modules/@types",
+      "types",
+      "../dist/types"
     ],
+    "paths": {
+    },
     "exclude": [
       "dist/**/*"
     ],
     "indentSize": 2,
     "tabSize": 2
-  }
+}
   

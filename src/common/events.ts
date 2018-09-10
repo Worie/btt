@@ -1,7 +1,7 @@
-import * as Types from '../../types';
-import * as CommonUtils from './util';
-import { Action } from './action';
-import AExecuteScript from './actions/executeScript';
+import * as CommonUtils from 'common/util';
+import { BaseAction } from 'common/action';
+import AExecuteScript from 'common/actions/executeScript';
+import * as Types from 'types/types';
 
 /**
  * This class holds methods related to the wide term "events"
@@ -10,7 +10,7 @@ import AExecuteScript from './actions/executeScript';
  * creating advanced event listeners which are going to be evaluated on btt-node-server side
  */
 export default class EventManager {
-  // holkds btt instance config
+  // holds btt instance config
   private config: Types.IBTTConfig;
 
   // namespace for uuid/v5
@@ -32,7 +32,7 @@ export default class EventManager {
    * @param cb IEventCallback
    */
   public addTriggerAction(eventType: string, cb: (e: Types.IEventCallback) => {}, options?: any): void {
-    const actions: Action[] = [];
+    const actions: BaseAction[] = [];
     let comment: string = '';
 
     const event: Types.IEventCallback = {
@@ -177,7 +177,7 @@ export default class EventManager {
    * Runs the code in the current btt instance
    * @param code code to be run
    */
-  private executeScript(code: string): Action {
+  private executeScript(code: string): BaseAction {
     return new AExecuteScript(this.config, code);
   }
 }

@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for toggling do not disturb mode on target Mac
  */
-export default class AToggleDnD extends Action { 
-  protected id: number = Types.ACTION.TOGGLE_DND; 
+export default class AToggleDnD extends BaseAction { 
+  protected id: EActions = EActions.TOGGLE_DND; 
 }

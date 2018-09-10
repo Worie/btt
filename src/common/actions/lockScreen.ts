@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for locking the screen of your Mac
  */
-export default class ALockScreen extends Action { 
-  protected id: number = Types.ACTION.LOCK_SCREEN;
+export default class ALockScreen extends BaseAction { 
+  protected id: EActions = EActions.LOCK_SCREEN;
 }

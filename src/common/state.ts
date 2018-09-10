@@ -1,5 +1,5 @@
-import * as CommonUtils from './util';
-import * as Types from '../../types';
+import * as CommonUtils from 'common/util';
+import * as Types from 'types/types';
 
 /**
  * This class is responsible for managing BetterTouchTool variables.

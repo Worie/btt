@@ -1,9 +1,9 @@
-import * as Types from '../../../types';
-import { Action } from '../action';
+import { EActions } from 'types/enum';
+import { BaseAction } from 'common/action';
 
 /**
  * This action is responsible for toggling between big and regular mouse cursor
  */
-export default class AToggleMouseSize extends Action { 
-  protected id: number = Types.ACTION.TOGGLE_MOUSE_SIZE;
+export default class AToggleMouseSize extends BaseAction { 
+  protected id: EActions = EActions.TOGGLE_MOUSE_SIZE;
 }
