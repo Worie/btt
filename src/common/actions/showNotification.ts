@@ -1,6 +1,6 @@
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
-import * as Types from 'types/types';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
+import * as Types from '../../types/types';
 
 /**
  * This action will show a system notification with given title and content

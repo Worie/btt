@@ -1,5 +1,5 @@
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
 
 /**
  * This action is responsible for toggling the Dark Mode on the target Mac

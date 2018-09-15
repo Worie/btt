@@ -1,5 +1,5 @@
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
 
 /**
  * This action will delay any other action that'd be performed in BetterTouchTool

@@ -1,7 +1,7 @@
-import * as CommonUtils from 'common/util';
+import * as CommonUtils from './util';
 import * as Url from 'url';
-import { EActions } from 'types/enum';
-import * as Types from 'types/types';
+import { EActions } from '../types/enum';
+import * as Types from '../types/types';
 
 /**
  *  Basic structure and methods for all Actions

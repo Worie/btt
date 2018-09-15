@@ -1,6 +1,6 @@
-import { mapShortcutNotationToBTT } from 'common/keys';
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
+import { mapShortcutNotationToBTT } from '../keys';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
 
 /**
  * This action is responsible for triggering a keyboard shortcut - for example, cmd+space for spotlight 

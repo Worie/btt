@@ -1,7 +1,7 @@
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
 
-import * as CommonUtils from 'common/util';
+import * as CommonUtils from '../util';
 
 /**
  * This action is responsible for executing a node script
@@ -9,7 +9,7 @@ import * as CommonUtils from 'common/util';
 export default class AExecuteScript extends BaseAction { 
   protected id: EActions = EActions.EXECUTE_SCRIPT;
 
-  public get data(): any {
+  public get data(): Record<string, any> {
     const code: string = this.arguments[0];
 
     const binaryPath = CommonUtils.getNodeBinaryPath();

@@ -4,21 +4,17 @@
       "noImplicitAny": true,
       "module": "commonjs",
       "target": "ES2017",
-      // "allowJs": true,
       "declaration": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "baseUrl": "./src",
     },
     "typeRoots": [
       "../node_modules/@types",
-      "types",
-      "../dist/types"
     ],
-    "paths": {
-    },
     "exclude": [
-      "dist/**/*"
+      "dist/**/*",
+      "examples/**/*",
+      "test/**/*"
     ],
     "indentSize": 2,
     "tabSize": 2

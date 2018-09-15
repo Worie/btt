@@ -1,7 +1,7 @@
-import * as CommonUtils from 'common/util';
-import { BaseAction } from 'common/action';
-import AExecuteScript from 'common/actions/executeScript';
-import * as Types from 'types/types';
+import * as CommonUtils from './util';
+import { BaseAction } from './action';
+import AExecuteScript from './actions/executeScript';
+import * as Types from '../types/types';
 
 /**
  * This class holds methods related to the wide term "events"
@@ -31,7 +31,7 @@ export default class EventManager {
    * @param eventType string, created from action enum identifier
    * @param cb IEventCallback
    */
-  public addTriggerAction(eventType: string, cb: (e: Types.IEventCallback) => {}, options?: any): void {
+  public addTriggerAction(eventType: string, cb: (e: Types.IEventCallback) => any, options?: any): void {
     const actions: BaseAction[] = [];
     let comment: string = '';
 
@@ -80,7 +80,7 @@ export default class EventManager {
    * @param eventType string, created from action enum identifier
    * @param cb IEventCallback
    */
-  public removeTriggerAction(eventType: string, cb: (e: any) => {}): void {    
+  public removeTriggerAction(eventType: string, cb: (e: any) => any): void {    
     // get the id from event type, callback and everything
     const triggerID: string = CommonUtils.generateUuidForString(
       `${eventType}:${String(cb)}`,
@@ -95,7 +95,7 @@ export default class EventManager {
    * @param eventType 
    * @param cb 
    */
-  public addEventListener(eventType: string, cb: (e: any) => {}): void {
+  public addEventListener(eventType: string, cb: (e: any) => any): void {
     if (!this.config.eventServer) {
       console.warn('You must provide event server URL to use this feature');
       return;

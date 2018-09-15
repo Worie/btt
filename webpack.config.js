@@ -17,10 +17,6 @@ module.exports = {
   },
   externals: ['child_process', 'node-fetch-polyfill'],
   resolve: {
-    modules: [
-        path.resolve(__dirname, 'node_modules'),
-        path.resolve(__dirname, './src'),
-    ],
     extensions: [ '.tsx', '.ts', '.js' ]
   },
   stats: 'errors-only',

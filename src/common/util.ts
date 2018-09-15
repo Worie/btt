@@ -1,9 +1,9 @@
 import * as DetectNode from 'detect-node';
-import { EActions, ETrackpadTriggers, EMouseTriggers } from 'types/enum';
+import { EActions, ETrackpadTriggers, EMouseTriggers } from '../types/enum';
 import * as CamelCase from 'camelcase';
-import * as Types from 'types/types';
+import * as Types from '../types/types';
 import * as uuidv5 from 'uuid/v5';
-import * as Keys from 'common/keys';
+import * as Keys from '../common/keys';
 
 // @TODO: Clean up utils - this is the most messy place atm
 

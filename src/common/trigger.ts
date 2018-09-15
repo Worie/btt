@@ -1,5 +1,5 @@
-import * as CommonUtils from 'common/util';
-import * as Types from 'types/types';
+import * as CommonUtils from './util';
+import * as Types from '../types/types';
 
 export class Trigger {
   // holds the uuid of the newly created / initialized trigger

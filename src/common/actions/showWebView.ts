@@ -1,6 +1,6 @@
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
-import * as Types from 'types/types';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
+import * as Types from '../../types/types';
 
 import * as uuidv4 from 'uuid/v4';
 

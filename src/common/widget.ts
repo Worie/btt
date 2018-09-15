@@ -3,9 +3,9 @@
  * For "typings structure" refer to the https://github.com/Microsoft/TypeScript/issues/13462#issuecomment-295685298
  */
 
-import * as CommonUtils from 'common/util';
-import { ETouchBarWidgets } from 'types/enum';
-import * as Types from 'types/types';
+import * as CommonUtils from './util';
+import { ETouchBarWidgets } from '../types/enum';
+import * as Types from '../types/types';
 
 export class Widget {
   // stores the uuid of the existing btt widget

@@ -1,5 +1,5 @@
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
 
 import * as DetectNode from 'detect-node';
 import { mapShortcutNotationToBTT } from '../keys';

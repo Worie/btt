@@ -1,45 +1,45 @@
-import { FTrigger } from 'common/trigger';
-import { FWidget } from 'common/widget';
-import VariableStore from 'common/state';
+import { FTrigger } from './common/trigger';
+import { FWidget } from './common/widget';
+import VariableStore from './common/state';
 
-import * as Initializer from 'types/action-initializers';
-import * as Types from 'types/types';
+import * as Initializer from './types/action-initializers';
+import * as Types from './types/types';
 
-import * as CommonUtils from 'common/util';
+import * as CommonUtils from './common/util';
 
-import AHapticFeedback from 'common/actions/hapticFeedback';
-import ASendText from 'common/actions/sendText';
-import ASaveSelectedText from 'common/actions/saveSelectedText';
-import ADelayNextAction from 'common/actions/delayNextAction';
-import AToggleBTT from 'common/actions/toggle';
-import AStartSiri from 'common/actions/startSiri';
-import ALaunchApplication from 'common/actions/launchApplication';
-import AToggleApplication from 'common/actions/toggleApplication';
-import AMute from 'common/actions/mute';
-import ATriggerShortcut from 'common/actions/triggerShortcut';
-import AToggleNightShift from 'common/actions/toggleNightShift';
-import AToggleDnD from 'common/actions/toggleDnD';
-import AToggleMouseSize from 'common/actions/toggleMouseSize';
-import AToggleMouseSpeed from 'common/actions/toggleMouseSpeed';
-import AToggleMouseCursor from 'common/actions/toggleMouseCursor';
-import AToggleDarkMode from 'common/actions/toggleDarkMode';
-import ALockScreen from 'common/actions/lockScreen';
-import ALogout from 'common/actions/logout';
-import ASleepDisplay from 'common/actions/sleepDisplay';
-import ASleepComputer from 'common/actions/sleepComputer';
-import ARestartBTT from 'common/actions/restart';
-import AQuitBTT from 'common/actions/quit';
-import ASendShortcut from 'common/actions/sendShortcut';
-import AShowHUD from 'common/actions/showHUD';
-import AMoveMouse from 'common/actions/moveMouse';
-import AShowWebView from 'common/actions/showWebView';
-import AExecuteScript from 'common/actions/executeScript';
-import EventManager from 'common/events';
-import AShowNotification from 'common/actions/showNotification';
-import AToggleTrueTone from 'common/actions/toggleTrueTone';
+import AHapticFeedback from './common/actions/hapticFeedback';
+import ASendText from './common/actions/sendText';
+import ASaveSelectedText from './common/actions/saveSelectedText';
+import ADelayNextAction from './common/actions/delayNextAction';
+import AToggleBTT from './common/actions/toggle';
+import AStartSiri from './common/actions/startSiri';
+import ALaunchApplication from './common/actions/launchApplication';
+import AToggleApplication from './common/actions/toggleApplication';
+import AMute from './common/actions/mute';
+import ATriggerShortcut from './common/actions/triggerShortcut';
+import AToggleNightShift from './common/actions/toggleNightShift';
+import AToggleDnD from './common/actions/toggleDnD';  
+import AToggleMouseSize from './common/actions/toggleMouseSize';
+import AToggleMouseSpeed from './common/actions/toggleMouseSpeed';
+import AToggleMouseCursor from './common/actions/toggleMouseCursor';
+import AToggleDarkMode from './common/actions/toggleDarkMode';
+import ALockScreen from './common/actions/lockScreen';
+import ALogout from './common/actions/logout';
+import ASleepDisplay from './common/actions/sleepDisplay';
+import ASleepComputer from './common/actions/sleepComputer';
+import ARestartBTT from './common/actions/restart';
+import AQuitBTT from './common/actions/quit';
+import ASendShortcut from './common/actions/sendShortcut';
+import AShowHUD from './common/actions/showHUD';
+import AMoveMouse from './common/actions/moveMouse';
+import AShowWebView from './common/actions/showWebView';
+import AExecuteScript from './common/actions/executeScript';
+import EventManager from './common/events';
+import AShowNotification from './common/actions/showNotification';
+import AToggleTrueTone from './common/actions/toggleTrueTone';
 
 // decorator for creating actions
-import Action from 'common/actions/util/action-factory';
+import Action from './common/actions/util/action-factory';
 
 /**
  * Class used to manage the BTT webserver 
@@ -132,7 +132,7 @@ export class Btt {
    */
   public addTriggerAction(
     eventType: string,
-    cb: (e: Types.IEventCallback) => {},
+    cb: (e: Types.IEventCallback) => any,
     options?: any,
   ): void {
     return this.event.addTriggerAction(eventType, cb, options);

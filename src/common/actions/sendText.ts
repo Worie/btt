@@ -1,6 +1,6 @@
-import { EActions } from 'types/enum';
-import { BaseAction } from 'common/action';
-import * as Types from 'types/types';
+import { EActions } from '../../types/enum';
+import { BaseAction } from '../action';
+import * as Types from '../../types/types';
 
 /**
  * This action is responsible for typing / pasting text wherever the user currently is

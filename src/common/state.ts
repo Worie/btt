@@ -1,5 +1,5 @@
-import * as CommonUtils from 'common/util';
-import * as Types from 'types/types';
+import * as CommonUtils from './util';
+import * as Types from '../types/types';
 
 /**
  * This class is responsible for managing BetterTouchTool variables.
@@ -71,7 +71,7 @@ export default class VariableStore {
    * @param key a variable name that you want to delete
    * @param persistent whether persistent or regular variable should be deleted
    */
-  public async delete(key: string, persistent?: boolean) {
+  public async del(key: string, persistent?: boolean) {
     if (persistent) {
       this.set(key, '', true);
       this.set(key, -1, true);
