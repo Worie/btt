@@ -141,17 +141,22 @@ export function buildTriggerAction(eventName: string, batchAction: any, options:
   };
 
   if (isValidShorcut) {
-    // @TODO: add support for differenting keys via location
-    /**
-     * "BTTTriggerConfig" : {
-     *  "BTTLeftRightModifierDifferentiation" : 1
-     * }
-     */
-    return Object.assign({}, json, {
+
+    Object.assign(json, {
       "BTTShortcutModifierKeys" : Keys.createBitmaskForShortcut(eventName, false),
       "BTTAdditionalConfiguration" : String(Keys.createBitmaskForShortcut(eventName, true)),
       "BTTShortcutKeyCode": Keys.getKeyCode(eventName.split('+').pop())
     });
+
+    if(Keys.isDifferentiating(eventName)) {
+      Object.assign(json, {
+        "BTTTriggerConfig" : {
+          "BTTLeftRightModifierDifferentiation" : 1
+        }
+      });
+    }
+
+    return json;
   }
 
   return json;

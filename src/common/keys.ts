@@ -140,6 +140,7 @@ export const KEYS: IKey[] = [{
   "key": "Shift",
   "code": 56,
   "modifierValue": 1 << 17,
+  "locationMask": 0x00000002,
 }, {
   "key": "`",
   "code": 50
@@ -186,6 +187,7 @@ export const KEYS: IKey[] = [{
   "key": "Ctrl",
   "code": 59,
   "modifierValue": 1 << 18,
+  "locationMask": 0x00000001,
 }, {
   "key": "LCtrl",
   "code": 59,
@@ -205,6 +207,7 @@ export const KEYS: IKey[] = [{
   "key": "Alt",
   "code": 58,
   "modifierValue": 1 << 19,
+  "locationMask": 0x00000020,
 }, {
   "key": "LCmd",
   "code": 55,
@@ -214,6 +217,7 @@ export const KEYS: IKey[] = [{
   "key": "Cmd",
   "code": 55,
   "modifierValue": 1 << 20,
+  "locationMask": 0x00000008,
 }, {
   "key": "Space",
   "code": 49
@@ -333,4 +337,18 @@ export function createBitmaskForShortcut(shortcut: string, differentiateLeftRigh
 
 export function getKeyCode(key: string) {
   return KEYS.find(k => key.toLowerCase() === k.key.toLowerCase()).code;
+}
+
+/**
+ * Returns boolean whether this particular combo is requesting a location differentiation.
+ * Basically checks the first letter of the key for 'l' or 'r', excluding mentioned letters.
+ * @param combo 
+ */
+export function isDifferentiating(combo: string) {
+  return combo.split('+').some(key => {
+    return (
+      key.length > 1 && 
+      (key[0].toLocaleLowerCase() === 'l' || key[0].toLocaleLowerCase() === 'r') 
+    );
+  })
 }
