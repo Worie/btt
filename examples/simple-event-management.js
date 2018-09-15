@@ -38,10 +38,18 @@ const myCallback = (ev) => {
 // via removeEventListener, this will be still in BetterTouchTool after you finish this script execution
 btt.addTriggerAction('threeFingerDoubleTap', myCallback);
 
+// you can also register the key combos on the fly
+btt.addTriggerAction('cmd+shift+t', myCallback);
+
+// setting location of alt, ctrl shift or command is also possible by adding l/r prefixes
+btt.addTriggerAction('ralt+b', myCallback);
+
 // remove the event listener after some timeout
 setTimeout(() => {
   btt.removeTriggerAction('threeFingerDoubleTap', myCallback);
+  btt.removeTriggerAction('cmd+shift+t', myCallback);
+  btt.removeTriggerAction('ralt+b', myCallback);
   console.log('Listener removed.');
 }, 20000);
 
-console.log('Alright! This event listener will auto-remove itself after 20s. Use threeFingerDoubleTap gesture!');
+console.log('Alright! This event listener will auto-remove itself after 20s. Use threeFingerDoubleTap, cmd+shift+t or right alt + b gestures!');

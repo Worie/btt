@@ -282,6 +282,7 @@ export function mapShortcutNotationToBTT(shortcut: string): string {
 
 export function isValidShortcut(combo: string) {
   const keys = combo.split('+');
+  if (keys[0] === combo) { return false; }
   const stringConsistsOnlyValidKeys = keys.every(k => {
     const keyHasBeenFound = KEYS.find(bttKeyObj => {
       return bttKeyObj.key.toLowerCase() === k.toLowerCase();
