@@ -1,5 +1,5 @@
 import * as DetectNode from 'detect-node';
-import { EActions, ETrackpadTriggers, EMouseTriggers } from '../types/enum';
+import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers } from '../types/enum';
 import * as CamelCase from 'camelcase';
 import * as Types from '../types/types';
 import * as uuidv5 from 'uuid/v5';
@@ -11,7 +11,15 @@ let fetch: any;
 let deleteTriggerFn: any; // could be "method" = 'webserver' | 'url scheme'
 let getBinaryPath: any;
 
+const defaultComment = 'Created via https://github.com/Worie/btt';
+
 const NAMESPACE = '87a84aef-11fe-4dce-8d00-429cea46f345';
+
+enum EventType {
+  KEY_COMBO,
+  TRACKPAD,
+  SIRI_REMOTE,
+}
 
 if (DetectNode) {
   fetch = require('node-fetch-polyfill');
@@ -106,7 +114,7 @@ export function buildActionSequence(actions: any[]): any {
       return {
         ...action,
         "BTTOrder": index, 
-        "BTTGestureNotes" : 'Created via https://github.com/Worie/btt', // reconsider where to put that
+        "BTTGestureNotes" : defaultComment, // reconsider where to put that
       };
     });
 
@@ -136,7 +144,7 @@ export function buildTriggerAction(eventName: string, batchAction: any, options:
     "BTTTriggerType": triggerType,
     "BTTTriggerClass" : getTriggerClassProperty(triggerType || eventName),
     "BTTOrder": 99999,
-    "BTTGestureNotes" : options.comment || 'Trigger created using JS package "BTT"',
+    "BTTGestureNotes" : options.comment || defaultComment,
     ...batchAction,
   };
 
@@ -148,7 +156,7 @@ export function buildTriggerAction(eventName: string, batchAction: any, options:
       "BTTShortcutKeyCode": Keys.getKeyCode(eventName.split('+').pop())
     });
 
-    if(Keys.isDifferentiating(eventName)) {
+    if (Keys.isDifferentiating(eventName)) {
       Object.assign(json, {
         "BTTTriggerConfig" : {
           "BTTLeftRightModifierDifferentiation" : 1
@@ -163,6 +171,14 @@ export function buildTriggerAction(eventName: string, batchAction: any, options:
 }
 
 /**
+ * @TODO: implement
+ * @param eventName 
+ */
+function checkEventValidity(eventName: string): EventType {
+  return EventType.KEY_COMBO;
+}
+
+/**
  * Helper function for getting the real BTT-understandable integer
  * @param eventName eventName
  */
@@ -172,6 +188,7 @@ function getTriggerIdByEventName(eventName: string): number {
   if (TRIGGER_KEY) {
     return TRIGGER_KEY;
   }
+
   return;
 }
 
@@ -183,6 +200,7 @@ function getTriggerMap(): Map<string, number> {
 
   const triggerEnums: any[] = [
     ETrackpadTriggers,
+    ESiriRemoteTriggers
   ];
 
   triggerEnums.forEach((e: any) => {
@@ -208,6 +226,8 @@ function getTriggerClassProperty(value: number | string): string {
     return "BTTTriggerTypeTouchpadAll";
   } else if (value in EMouseTriggers) {
     return "BTTTriggerTypeMagicMouse";
+  } else if (value in ESiriRemoteTriggers) {
+    return "BTTTriggerTypeSiriRemote";
   } else if (Keys.isValidShortcut(value as string)) {
     return "BTTTriggerTypeKeyboardShortcut";
   }

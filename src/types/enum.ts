@@ -141,6 +141,9 @@ export enum ETrackpadTriggers {
   THREE_FINGER_FORCE_CLICK_RIGHT_HARDER = 193,
   FOUR_FINGER_FORCE_CLICK = 171,
   FIVE_FINGER_FORCE_CLICK = 172,
+}
+
+export enum ESiriRemoteTriggers {
   // siri remote - button related gestures
   SR_BUTTON_MENU = 325,
   SR_BUTTON_VOLUME_UP = 320,

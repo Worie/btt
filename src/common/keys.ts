@@ -280,7 +280,8 @@ export function mapShortcutNotationToBTT(shortcut: string): string {
   return BTTShortcutNotation;
 }
 
-export function isValidShortcut(combo: string) {
+export function isValidShortcut(input: string) {
+  const combo = String(input);
   const keys = combo.split('+');
   if (keys[0] === combo) { return false; }
   const stringConsistsOnlyValidKeys = keys.every(k => {
