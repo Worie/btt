@@ -215,22 +215,10 @@ export enum ETouchBarWidgets {
   CREATE = 642,
 }
 
-export enum EKeyboardModifiers {
+export enum EMouseTriggers {
   
 }
 
-export enum EMouseTriggers {
-  COMMAND = 1048576,
-  ALT = 524288,
-  CTRL = 262145,
-  FN = 8388608,
-  SHIFT = 131072,
-  // specific variants 
-  R_COMMAND = 1048592,
-  L_COMMAND = 1048584,
-  L_ALT = 524320,
-  R_ALT = 524352,
-  L_CTRL = 262145,
-  L_SHIFT = 131074,
-  R_SHIFT = 131076,
+export enum EMagicMouseTriggers {
+
 }

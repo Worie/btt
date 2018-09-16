@@ -5,7 +5,6 @@ const UglifyJSWebpackPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
-  target: 'node', // this may break the whole package ... but is needed for BTT runtime for example ;o 
   module: {
     rules: [
       {
@@ -15,7 +14,7 @@ module.exports = {
       }
     ]
   },
-  externals: ['child_process', 'node-fetch-polyfill'],
+  externals: ['child_process', 'node-fetch-polyfill', 'crypto'],
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]
   },

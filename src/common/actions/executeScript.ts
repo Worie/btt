@@ -23,7 +23,7 @@ export default class AExecuteScript extends BaseAction {
     const escapedPath = binaryPath.replace(/\//g, '\/');
   
     // btt format for executable path 
-    const shellScriptActionConfig = `${escapedPath}:::-e:::copy-shell`;
+    const shellScriptActionConfig = `${escapedPath}:::-e:::btt-generated-script`;
 
     return {
       "BTTShellTaskActionScript" : code, 

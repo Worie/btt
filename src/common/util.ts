@@ -1,5 +1,5 @@
 import * as DetectNode from 'detect-node';
-import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers, EOtherTriggers } from '../types/enum';
+import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers, EOtherTriggers, EMagicMouseTriggers } from '../types/enum';
 import * as CamelCase from 'camelcase';
 import * as Types from '../types/types';
 import * as uuidv5 from 'uuid/v5';
@@ -183,7 +183,11 @@ function checkEventValidity(eventName: string): EventType {
  * @param eventName eventName
  */
 function getTriggerIdByEventName(eventName: string): number {
-  const TRIGGER_KEY: number = getTriggerMap().get(eventName);
+  const triggerMap = getTriggerMap();
+  
+  const TRIGGER_KEY: number = (
+    triggerMap.get(eventName) || triggerMap.get(eventName.toLowerCase())
+  );
 
   if (TRIGGER_KEY) {
     return TRIGGER_KEY;
@@ -201,17 +205,21 @@ function getTriggerMap(): Map<string, number> {
   const triggerEnums: any[] = [
     ETrackpadTriggers,
     ESiriRemoteTriggers,
-    EOtherTriggers
+    EOtherTriggers,
+    EMagicMouseTriggers,
+    EMouseTriggers,
   ];
 
   triggerEnums.forEach((e: any) => {
     // filters the keys only to string representations
-    const keys: string[] = Object.keys(e).filter((key: string) => Number.isNaN(Number.parseInt(key)));
+    const keys: string[] = Object.keys(e)
+      .filter((key: string) => Number.isNaN(Number.parseInt(key)));
     
     // for each key in map, create an entry
     keys.forEach(key => {
       triggerMap.set(key, e[key]);
       triggerMap.set(CamelCase(key), e[key]);
+      triggerMap.set(key.toLowerCase(), e[key]);
     });
   });
   
@@ -226,6 +234,8 @@ function getTriggerClassProperty(value: number | string): string {
   if (value in ETrackpadTriggers) {
     return "BTTTriggerTypeTouchpadAll";
   } else if (value in EMouseTriggers) {
+    return "BTTTriggerTypeNormalMouse";
+  } else if (value in EMagicMouseTriggers) {
     return "BTTTriggerTypeMagicMouse";
   } else if (value in ESiriRemoteTriggers) {
     return "BTTTriggerTypeSiriRemote";

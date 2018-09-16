@@ -2,8 +2,6 @@ import { EActions } from '../../types/enum';
 import { BaseAction } from '../action';
 import * as Types from '../../types/types';
 
-import * as uuidv4 from 'uuid/v4';
-
 /**
  * This action is responsible for showing a web view of specified URL or inline code.
  */
@@ -32,7 +30,6 @@ export default class AShowWebView extends BaseAction {
     const result: any = {
       "BTTActionFloatingHTMLConfig" : JSON.stringify(BTTActionFloatingHTMLConfig),
       "BTTActionFloatingHTMLName": name,
-      "BTTUUID": uuidv4(),
     };
   
     if (url) {
