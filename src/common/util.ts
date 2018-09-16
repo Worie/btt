@@ -1,5 +1,5 @@
 import * as DetectNode from 'detect-node';
-import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers } from '../types/enum';
+import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers, EOtherTriggers } from '../types/enum';
 import * as CamelCase from 'camelcase';
 import * as Types from '../types/types';
 import * as uuidv5 from 'uuid/v5';
@@ -200,7 +200,8 @@ function getTriggerMap(): Map<string, number> {
 
   const triggerEnums: any[] = [
     ETrackpadTriggers,
-    ESiriRemoteTriggers
+    ESiriRemoteTriggers,
+    EOtherTriggers
   ];
 
   triggerEnums.forEach((e: any) => {
@@ -228,6 +229,8 @@ function getTriggerClassProperty(value: number | string): string {
     return "BTTTriggerTypeMagicMouse";
   } else if (value in ESiriRemoteTriggers) {
     return "BTTTriggerTypeSiriRemote";
+  } else if (value in EOtherTriggers) {
+    return "BTTTriggerTypeOtherTriggers";
   } else if (Keys.isValidShortcut(value as string)) {
     return "BTTTriggerTypeKeyboardShortcut";
   }
