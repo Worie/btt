@@ -54,8 +54,6 @@ export default class EventManager {
 
     Object.assign(listenerJSON, additionalJSON);
 
-    console.log(listenerJSON);
-
     // set up ids
     const listenerUuid: string = CommonUtils.generateUuidForString(
       `${eventType}:${String(cb)}`,
