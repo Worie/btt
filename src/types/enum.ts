@@ -144,7 +144,7 @@ export enum ETrackpadTriggers {
 }
 
 export enum EOtherTriggers {
-  NAMED_TRIGGER = 643,
+  NAMED_TRIGGER = 643,// @TODO: add notice mechanism
   DOUBLE_CLICK_MAIN_MENUBAR = 613,
   DOUBLE_CLICK_WINDOW_TITLEBAR = 600,
   LEFT_CLICK_FULLSCREEN_BUTTON = 623,
@@ -159,18 +159,16 @@ export enum EOtherTriggers {
   MIDDLE_CLICK_RED_WINDOW_BUTTON = 626,
   MIDDLE_CLICK_ORANGE_WINDOW_BUTTON = 625,
   MIDDLE_CLICK_GREEN_WINDOW_BUTTON = 628,
-  // this is commented out because at this point
-  // listeners can't really take params, and I'll need to think how to handle that
-  // LAUNCHING_ON_SERIAL_NUMBER = 641,
-  // MOVE_MOUSE_TO_TOP_LEFT_CORNER = 609,
-  // MOVE_MOUSE_TO_TOP_RIGHT_CORNER = 610,
-  // MOVE_MOUSE_TO_BOTTOM_LEFT_CORNER = 611,
-  // MOVE_MOUSE_TO_BOTTOM_RIGHT_CORNER = 612,
-  // RECIEVED_DISTRIBUTED_NOTIFICATION_WITH_NAME = 607,
-  // BLUETOOTH_DEVICE_CAME_CLOSE = 616,
-  // BLUETOOTH_DEVICE_MOVED_AWAY = 617,
-  // BLUETOOTH_DEVICE_OUT_OF_RANGE = 618,
-  // BLUETOOTH_DEVICE_BACK_IN_RANGE = 619,
+  LAUNCHING_ON_SERIAL_NUMBER = 641, // @TODO: add notice mechanism
+  MOVE_MOUSE_TO_TOP_LEFT_CORNER = 609, // @TODO: add notice mechanism
+  MOVE_MOUSE_TO_TOP_RIGHT_CORNER = 610, // @TODO: add notice mechanism
+  MOVE_MOUSE_TO_BOTTOM_LEFT_CORNER = 611, // @TODO: add notice mechanism
+  MOVE_MOUSE_TO_BOTTOM_RIGHT_CORNER = 612, // @TODO: add notice mechanism
+  RECIEVED_DISTRIBUTED_NOTIFICATION_WITH_NAME = 607, // @TODO: add notice mechanism
+  BLUETOOTH_DEVICE_CAME_CLOSE = 616, // @TODO: add notice mechanism
+  BLUETOOTH_DEVICE_MOVED_AWAY = 617, // @TODO: add notice mechanism
+  BLUETOOTH_DEVICE_OUT_OF_RANGE = 618, // @TODO: add notice mechanism
+  BLUETOOTH_DEVICE_BACK_IN_RANGE = 619, // @TODO: add notice mechanism
   BEFORE_MAC_GOES_TO_SLEEP = 605,
   AFTER_MAC_WAKES_FROM_SLEEP = 606,
 }

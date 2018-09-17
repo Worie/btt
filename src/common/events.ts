@@ -38,6 +38,7 @@ export default class EventManager {
     const event: Types.IEventCallback = {
       actions,
       comment,
+      additionalJSON: {},
     };
 
     cb(event);
@@ -48,6 +49,12 @@ export default class EventManager {
     const listenerJSON: any = CommonUtils.buildTriggerAction(eventType, batchAction, {
       comment: event.comment,
     }); 
+
+    const additionalJSON = this.translateObjectKeysToBttNotation(event.additionalJSON);
+
+    Object.assign(listenerJSON, additionalJSON);
+
+    console.log(listenerJSON);
 
     // set up ids
     const listenerUuid: string = CommonUtils.generateUuidForString(
@@ -179,5 +186,28 @@ export default class EventManager {
    */
   private executeScript(code: string): BaseAction {
     return new AExecuteScript(this.config, code);
+  }
+
+  /**
+   * 
+   * @param key 
+   */
+  private translateObjectKeysToBttNotation(object: Record<string,any>) {
+    Object.keys(object).forEach(key => {
+      if (typeof object[key] === 'object') {
+        this.translateObjectKeysToBttNotation(object[key]);
+      }
+      object[this.keyToBttNotation(key)] = object[key];
+      delete object[key];
+    });
+
+    return object;
+  }
+  
+  private keyToBttNotation(key: string) {
+    if (key.indexOf('BTT') === 0) {
+      return key;
+    }
+    return `BTT${key[0].toUpperCase()}${key.substring(1)}`;
   }
 }

@@ -6,6 +6,7 @@ export interface IBTTConfig {
   version?: string;
   eventServer?: IServerDefinition;
   nodeBinaryPath?: string;
+  blacklist?: string[];
 }
 
 export interface IServerDefinition {
@@ -86,6 +87,7 @@ export interface IFloatingHTMLConfig {
 export interface IEventCallback { 
   actions: ActionJSON[],
   comment: string;
+  additionalJSON: Record<string, any>;
 }
 
 export interface IShowNotificationConfig {
