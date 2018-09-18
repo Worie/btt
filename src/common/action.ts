@@ -1,11 +1,11 @@
-import * as CommonUtils from './util';
+import CommonUtils from './util';
 import * as Url from 'url';
 import { EActions } from '../types/enum';
 import * as Types from '../types/types';
 
 /**
- *  Basic structure and methods for all Actions
- *  Every action implementation derives from this class, should not be called directly
+ * Basic structure and methods for all Actions
+ * Every action implementation derives from this class, should not be called directly
  */
 export abstract class BaseAction {
   protected config: Types.IBTTConfig;
@@ -28,29 +28,29 @@ export abstract class BaseAction {
    * Returns JSON structure for the current action. 
    * Must be overriden by instances
    */
-  public get json(): Record<string, any> {
-    return {
+  public get json(): Types.IBetterTouchToolPayload {
+    return CommonUtils.translateObjectKeysToBttNotation({
       ...this.baseData,
       ...this.data,
-    };
+    });
   }
   
   /**
    * Intended to be overriden by action implementation
    * If left as is, simply uses the id of the action and produces required json
    */
-  protected get data(): Record<string, any> {
+  protected get data(): Partial<Types.IBetterTouchToolPayload> {
     return this.baseData;
   }
   
   /**
    * Returns the base data of every JSON, required for BTT to see the changes
    */
-  private get baseData(): Record<string, any> {
+  private get baseData(): Partial<Types.IBetterTouchToolPayload> {
     return {
-      "BTTPredefinedActionType" : this.id,
-      "BTTEnabled2" : 1,
-      "BTTEnabled" : 1,
+      PredefinedActionType : this.id,
+      Enabled2 : 1,
+      Enabled : 1,
     }
   };
   
@@ -59,7 +59,7 @@ export abstract class BaseAction {
    */
   public get url(): string {
     let url: string = Url.resolve(
-      CommonUtils.getUrl(this.config),
+      CommonUtils.getBaseUrl(this.config),
       'trigger_action/',
     );
 
@@ -73,7 +73,7 @@ export abstract class BaseAction {
   public async invoke(): Promise<any> {
     return CommonUtils.makeAction(
       'trigger_action', 
-      { json: JSON.stringify(this.json) },
+      { json: this.json },
       this.config
     );
   }

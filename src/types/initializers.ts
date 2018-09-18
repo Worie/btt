@@ -51,7 +51,7 @@ export type DelayNextAction = (timeout: number) => ADelayNextAction;
 export type ToggleBTT = () => AToggleBTT;
 export type StartSiri = () => AStartSiri;
 export type Mute = () => AMute;
-export type ToggleApplication = (applicationPath: string) => AToggleApplication;
+export type ToggleApplication = (applicationPath: string, binaryPath: string) => AToggleApplication;
 export type LaunchApplication = (applicationPath: string) => ALaunchApplication;
 export type SleepDisplay = () => ASleepDisplay;
 export type Logout = () => ALogout;

@@ -114,3 +114,5 @@ export interface ITouchbarWidgetCreateConfig {
 export type ActionJSON = Record<string, any>;
 
 export type IKeyCombo = string;
+
+export type IBetterTouchToolPayload = Record<string, any>;

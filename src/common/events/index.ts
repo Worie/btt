@@ -1,10 +1,11 @@
-import * as CommonUtils from '../util';
+import CommonUtils from '../util';
 import { BaseAction } from '../action';
 import AExecuteScript from '../actions/executeScript';
 import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers, EOtherTriggers, EMagicMouseTriggers } from '../../types/enum';
 import * as Keys from '../keys';
 import * as Types from '../../types/types';
 import EventPayloadTemplate from './payload';
+import * as _ from 'lodash';
 
 /**
  * This class holds methods related to the wide term "events"
@@ -19,7 +20,7 @@ export default class EventManager {
   private defaultComment = 'Created via https://github.com/Worie/btt';
 
   // namespace for uuid/v5
-  private namespace: string = CommonUtils.getNamespace();
+  private namespace: string = CommonUtils.namespace;
 
   /**
    * Initializes the event manager with specific btt config
@@ -57,26 +58,20 @@ export default class EventManager {
       eventType, 
       batchAction,
       { comment: event.comment }
-    ); 
-
-    const additionalJSON = CommonUtils.translateObjectKeysToBttNotation(event.additionalJSON);
-
-    Object.assign(listenerJSON, additionalJSON);
-
-    listenerJSON['BTTUUID'] = jsonUUID;
-    listenerJSON['BTTAdditionalActions'] = listenerJSON['BTTAdditionalActions'].map((action: any) => {
-      return {
-        ...action,
-        "BTTUUID": CommonUtils.generateUuidForString(JSON.stringify(action), jsonUUID),
-      };
+    );
+    
+    _.merge(listenerJSON, event.additionalJSON);
+  
+    listenerJSON.UUID = jsonUUID;
+    listenerJSON.AdditionalActions = listenerJSON.AdditionalActions.map((action: any) => {
+      return _.merge(action, {
+        UUID: CommonUtils.generateUuidForString(JSON.stringify(action), jsonUUID),
+      });
     });
 
-    // end set up ids
-
+    // and set up ids
     CommonUtils.makeAction('add_new_trigger', {
-      json: JSON.stringify({
-        ...listenerJSON,
-      })
+      json: _.cloneDeep(listenerJSON),
     }, this.config);
   }
 
@@ -123,7 +118,7 @@ export default class EventManager {
           ];
           
           ev.actions.push(...actions);
-          ev.additionalJSON = { 'BTTUUID': triggerID };
+          ev.additionalJSON = { UUID: triggerID };
         },
       );
   };
@@ -197,6 +192,7 @@ export default class EventManager {
    * @param value 
    */
   private getTriggerClassProperty(value: number | string): string {
+    // this is value -> do not use shorthand!
     if (value in ETrackpadTriggers) {
       return "BTTTriggerTypeTouchpadAll";
     } else if (value in EMouseTriggers) {
@@ -223,16 +219,16 @@ export default class EventManager {
       .map((action, index) => {
         return {
           ...action,
-          "BTTOrder": index, 
-          "BTTGestureNotes" : this.defaultComment, // reconsider where to put that
+          Order: index, 
+          GestureNotes: this.defaultComment, // reconsider where to put that
         };
       });
 
     return {
-      "BTTPredefinedActionType" : EActions.NO_ACTION,
-      "BTTEnabled2" : 1,
-      "BTTEnabled" : 1,
-      "BTTAdditionalActions": jsons,
+      PredefinedActionType: EActions.NO_ACTION,
+      Enabled2: 1,
+      Enabled: 1,
+      AdditionalActions: jsons,
     }
   }
 
@@ -252,26 +248,25 @@ export default class EventManager {
     }
 
     const json: any = {
-      "BTTTriggerType": triggerType,
-      "BTTTriggerClass" : this.getTriggerClassProperty(triggerType || eventName),
-      "BTTOrder": 99999,
-      "BTTGestureNotes" : options.comment || this.defaultComment,
+      TriggerType: triggerType,
+      TriggerClass: this.getTriggerClassProperty(triggerType || eventName),
+      Order: 99999,
+      GestureNotes: options.comment || this.defaultComment,
       ...batchAction,
     };
 
     if (isValidShorcut) {
-
       Object.assign(json, {
-        "BTTShortcutModifierKeys" : Keys.createBitmaskForShortcut(eventName, false),
-        "BTTAdditionalConfiguration" : String(Keys.createBitmaskForShortcut(eventName, true)),
-        "BTTShortcutKeyCode": Keys.getKeyCode(eventName.split('+').pop())
+        ShortcutModifierKeys: Keys.createBitmaskForShortcut(eventName, false),
+        AdditionalConfiguration: String(Keys.createBitmaskForShortcut(eventName, true)),
+        ShortcutKeyCode: Keys.getKeyCode(eventName.split('+').pop())
       });
 
       if (Keys.isDifferentiating(eventName)) {
         Object.assign(json, {
-          "BTTTriggerConfig" : {
-            "BTTLeftRightModifierDifferentiation" : 1
-          }
+          TriggerConfig: {
+            LeftRightModifierDifferentiation: 1,
+          },
         });
       }
 

@@ -5,7 +5,7 @@ import VariableStore from './common/state';
 import * as Initializer from './types/initializers';
 import * as Types from './types/types';
 
-import * as CommonUtils from './common/util';
+import CommonUtils from './common/util';
 
 import AHapticFeedback from './common/actions/hapticFeedback';
 import ASendText from './common/actions/sendText';

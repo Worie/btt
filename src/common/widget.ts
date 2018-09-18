@@ -3,7 +3,7 @@
  * For "typings structure" refer to the https://github.com/Microsoft/TypeScript/issues/13462#issuecomment-295685298
  */
 
-import * as CommonUtils from './util';
+import CommonUtils from './util';
 import { ETouchBarWidgets } from '../types/enum';
 import * as Types from '../types/types';
 
@@ -117,34 +117,34 @@ export class FWidget {
     const shellScriptWidgetGestureConfig = `${escapedPath}:::${(mode === 'node' ? '-e' : '-c')}`;
 
     // real payload that'll create a widget
-    const BTTPayload: any = {
-      "BTTWidgetName" : options.name,
-      "BTTTriggerType" : ETouchBarWidgets.CREATE,
-      "BTTTriggerClass" : "BTTTriggerTypeTouchBar",
-      "BTTPredefinedActionType" : -1,
-      "BTTPredefinedActionName" : "No Action",
-      "BTTShellScriptWidgetGestureConfig" : shellScriptWidgetGestureConfig,
-      "BTTEnabled2" : 1,
-      "BTTUUID" : uuid,
-      "BTTEnabled" : 1,
-      "BTTOrder" : 9999,
-      "BTTTriggerConfig" : {
-        "BTTTouchBarScriptUpdateInterval" : 0,
-        "BTTTouchBarAppleScriptStringRunOnInit" : false,
-        "BTTTouchBarItemIconHeight" : options.appearance.iconHeight,
-        "BTTTouchBarItemIconWidth" : options.appearance.iconWidth,
-        "BTTTouchBarItemPadding" : options.appearance.padding,
-        "BTTTouchBarFreeSpaceAfterButton" : String(options.appearance.freeSpaceAfterButton),
-        "BTTTouchBarButtonColor" : options.appearance.buttonColor,
-        "BTTTouchBarAlwaysShowButton" : String(Number(options.alwaysShow)),
-        "BTTTouchBarShellScriptString" : options.script,
-        "BTTTouchBarAlternateBackgroundColor" : options.appearance.alternateBackgroundColor
+    const bttPayload: any = {
+      WidgetName: options.name,
+      TriggerType: ETouchBarWidgets.CREATE,
+      TriggerClass: "BTTTriggerTypeTouchBar",
+      PredefinedActionType: -1,
+      PredefinedActionName: "No Action",
+      ShellScriptWidgetGestureConfig: shellScriptWidgetGestureConfig,
+      Enabled2: 1,
+      UUID: uuid,
+      Enabled: 1,
+      Order: 9999,
+      TriggerConfig: {
+        TouchBarScriptUpdateInterval: 0,
+        TouchBarAppleScriptStringRunOnInit: false,
+        TouchBarItemIconHeight: options.appearance.iconHeight,
+        TouchBarItemIconWidth: options.appearance.iconWidth,
+        TouchBarItemPadding: options.appearance.padding,
+        TouchBarFreeSpaceAfterButton: String(options.appearance.freeSpaceAfterButton),
+        TouchBarButtonColor: options.appearance.buttonColor,
+        TouchBarAlwaysShowButton: String(Number(options.alwaysShow)),
+        TouchBarShellScriptString: options.script,
+        TouchBarAlternateBackgroundColor: options.appearance.alternateBackgroundColor
       },
     };
     
     // make the request to the BTT API to create new widget
     await CommonUtils.makeAction('add_new_trigger', {
-      json: JSON.stringify(BTTPayload),
+      json: bttPayload,
     }, this.config);
 
     // get the instance representing the newly created widget

@@ -1,15 +1,6 @@
 import { EActions } from '../../types/enum';
 import { BaseAction } from '../action';
-
-import * as DetectNode from 'detect-node';
-
-let getMdlsName: any;
-
-if (DetectNode) {
-  getMdlsName = require('../../backend/util').getMdlsName;
-} else {
-  getMdlsName = (): null => undefined;
-}
+import CommonUtils from '../util';
 
 /**
  * This action is responsible for toggling the visibility of specified application
@@ -17,11 +8,11 @@ if (DetectNode) {
 export default class AToggleApplication extends BaseAction { 
   protected id: EActions = EActions.TOGGLE_APPLICATION;
   
-  public get data(): any {
-    const applicationPath: string = this.arguments[1];
-    const mdlsName: string = this.arguments[2];
-
-    const mdlsValue: string = getMdlsName(applicationPath) || mdlsName;
+  public get data() {
+    const applicationPath: string = this.arguments[0];
+    const binaryPath: string = this.arguments[1];
+  
+    const mdlsValue: string = CommonUtils.getMdlsName(applicationPath) || binaryPath;
       
     if (!mdlsValue) {
       console.error(`Sorry, you'll have to manually provide mdls name of the app for this action to work`);
@@ -29,7 +20,7 @@ export default class AToggleApplication extends BaseAction {
     }
 
     return {
-      "BTTAppToShowOrHide": mdlsValue,
+      AppToShowOrHide: mdlsValue,
     };
   }
 }

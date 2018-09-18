@@ -8,10 +8,10 @@ export function Action(actionClass: any): Function {
     return {
       value: (function (...args: any[]) {
         if (checkBlackListPresence(actionClass.name, this.config.blacklist)) {
-          console.error(`You can't use any of those actions: ${JSON.stringify(this.config.blacklist, null, 2)}`)
+          console.error(`You can't use any of these actions, due to explicit blacklisting: ${JSON.stringify(this.config.blacklist, null, 2)}`)
           throw new Error(`Attempted to use disallowed action.`);
         }
-        return new actionClass(this.config, ...args)
+        return new actionClass(this.config, ...args);
       }),
     };
   };

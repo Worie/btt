@@ -1,4 +1,4 @@
-import * as CommonUtils from './util';
+import CommonUtils from './util';
 import * as Types from '../types/types';
 
 /**

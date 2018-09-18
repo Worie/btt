@@ -8,14 +8,14 @@ import * as Types from '../../types/types';
 export default class AShowNotification extends BaseAction { 
   protected id: EActions = EActions.RUN_APPLESCRIPT_IN_BG;
 
-  public get data(): any {
+  public get data() {
 
     const config: Types.IShowNotificationConfig = this.arguments[0];
 
     return {
-      "BTTTriggerClass" : "BTTTriggerTypeKeyboardShortcut",
-      "BTTInlineAppleScript" : `display notification \"${config.content}\" with title \"${config.title}\"`,
-      "BTTAdditionalConfiguration" : "786432",
+      TriggerClass: "BTTTriggerTypeKeyboardShortcut",
+      InlineAppleScript: `display notification \"${config.content}\" with title \"${config.title}\"`,
+      AdditionalConfiguration: "786432",
     };
   }
 }

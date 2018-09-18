@@ -7,11 +7,11 @@ import { BaseAction } from '../action';
 export default class AHapticFeedback extends BaseAction { 
   protected id: EActions = EActions.TRIGGER_HAPTIC_ENGINE;
   
-  public get data(): any {
+  public get data() {
     const hapticMode: number = this.arguments[0];
     
     return {
-      "BTTHapticFeedbackAction" : hapticMode,
+      HapticFeedbackAction : hapticMode,
     };
   }
 }
