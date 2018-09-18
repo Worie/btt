@@ -1,9 +1,6 @@
 import * as DetectNode from 'detect-node';
-import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers, EOtherTriggers, EMagicMouseTriggers } from '../types/enum';
-import * as CamelCase from 'camelcase';
 import * as Types from '../types/types';
 import * as uuidv5 from 'uuid/v5';
-import * as Keys from '../common/keys';
 
 // @TODO: Clean up utils - this is the most messy place atm
 // @TODO: abstract util class -> all methods defined there
@@ -11,8 +8,6 @@ import * as Keys from '../common/keys';
 let fetch: any;
 let deleteTriggerFn: any; // could be "method" = 'webserver' | 'url scheme'
 let getBinaryPath: any;
-
-const defaultComment = 'Created via https://github.com/Worie/btt';
 
 const NAMESPACE = '87a84aef-11fe-4dce-8d00-429cea46f345';
 
@@ -99,147 +94,6 @@ export function params(data: Record<string, string>, sharedKey?: string): string
 }
 
 /**
- * Builds a JSON out of given array of action objects
- * @TODO: Move to event related module
- * @param actions 
- */
-export function buildActionSequence(actions: any[]): any {
-  const jsons: any = actions
-    .map(action => action.json)
-    .map((action, index) => {
-      return {
-        ...action,
-        "BTTOrder": index, 
-        "BTTGestureNotes" : defaultComment, // reconsider where to put that
-      };
-    });
-
-  return {
-    "BTTPredefinedActionType" : EActions.NO_ACTION,
-    "BTTEnabled2" : 1,
-    "BTTEnabled" : 1,
-    "BTTAdditionalActions": jsons,
-  }
-}
-
-/**
- * Builds trigger action, that can be added to BTT (event listener like)
- * @TODO: Move to event related module
- * @param eventName 
- * @param batchAction 
- * @param options 
- */
-export function buildTriggerAction(eventName: string, batchAction: any, options: any = {}) { 
-  const triggerType: number = getTriggerIdByEventName(eventName);
-  const isValidShorcut: boolean = Keys.isValidShortcut(eventName);
-
-  if (typeof triggerType === 'undefined' && !isValidShorcut) {
-    throw new Error(`Trying to use an event that does not exist, nor is a shortcut: ${eventName}`)
-  }
-
-  const json: any = {
-    "BTTTriggerType": triggerType,
-    "BTTTriggerClass" : getTriggerClassProperty(triggerType || eventName),
-    "BTTOrder": 99999,
-    "BTTGestureNotes" : options.comment || defaultComment,
-    ...batchAction,
-  };
-
-  if (isValidShorcut) {
-
-    Object.assign(json, {
-      "BTTShortcutModifierKeys" : Keys.createBitmaskForShortcut(eventName, false),
-      "BTTAdditionalConfiguration" : String(Keys.createBitmaskForShortcut(eventName, true)),
-      "BTTShortcutKeyCode": Keys.getKeyCode(eventName.split('+').pop())
-    });
-
-    if (Keys.isDifferentiating(eventName)) {
-      Object.assign(json, {
-        "BTTTriggerConfig" : {
-          "BTTLeftRightModifierDifferentiation" : 1
-        }
-      });
-    }
-
-    return json;
-  }
-
-  return json;
-}
-
-/**
- * Helper function for getting the real BTT-understandable integer
- * @TODO: Move to event related module
- * @param eventName eventName
- */
-function getTriggerIdByEventName(eventName: string): number {
-  const triggerMap = getTriggerMap();
-  
-  const TRIGGER_KEY: number = (
-    triggerMap.get(eventName.toLowerCase())
-  );
-
-  if (TRIGGER_KEY) {
-    return TRIGGER_KEY;
-  }
-
-  return;
-}
-
-/**
- * Returns a map containing all values of Trigger related enums
- * @TODO: Move to event related module
- */
-function getTriggerMap(): Map<string, number> {
-  const triggerMap: Map<string, number> = new Map();
-
-  const triggerEnums: any[] = [
-    ETrackpadTriggers,
-    ESiriRemoteTriggers,
-    EOtherTriggers,
-    EMagicMouseTriggers,
-    EMouseTriggers,
-  ];
-
-  triggerEnums.forEach((e: any) => {
-    // filters the keys only to string representations
-    const keys: string[] = Object.keys(e)
-      .filter((key: string) => Number.isNaN(Number.parseInt(key)));
-    
-    // for each key in map, create an entry
-    keys.forEach(key => {
-      triggerMap.set(key, e[key]);
-      // @TODO: get rid of CamelCase dependecy
-      triggerMap.set(CamelCase(key), e[key]);
-      triggerMap.set(CamelCase(key).toLowerCase(), e[key]);
-    });
-  });
-  
-  return triggerMap;
-}
-
-/**
- * Returns the trigger class proprerty, required for trigger actions to work
- * @TODO: Move to event related module
- * @param value 
- */
-function getTriggerClassProperty(value: number | string): string {
-  if (value in ETrackpadTriggers) {
-    return "BTTTriggerTypeTouchpadAll";
-  } else if (value in EMouseTriggers) {
-    return "BTTTriggerTypeNormalMouse";
-  } else if (value in EMagicMouseTriggers) {
-    return "BTTTriggerTypeMagicMouse";
-  } else if (value in ESiriRemoteTriggers) {
-    return "BTTTriggerTypeSiriRemote";
-  } else if (value in EOtherTriggers) {
-    return "BTTTriggerTypeOtherTriggers";
-  } else if (Keys.isValidShortcut(value as string)) {
-    return "BTTTriggerTypeKeyboardShortcut";
-  }
-}
-
-/**
  * Takes a namespace as a parameter and a text, to generate an UUID (uuidv5)
  * @param text 
  * @param namespace 
@@ -263,28 +117,41 @@ export function getNodeBinaryPath(): string {
 }
 
 /**
- * Generates a payload, later interpreted by btt-node-server
- * @TODO: Move to event related module
- * @param bttConfig config of certain btt instance
- * @param callback function to invoke
+ * Maps each key in the passed object to btt notation (BTTWhateverPassed)
+ * @TODO: Whole package should use simplified naming, and then just do it once
+ * @param key 
  */
-export function generatePayload(
-  bttConfig: Types.IBTTConfig,
-  callback: Function
-): string{
-  // create a payload object out of given params
-  const payload: string = JSON.stringify({
-    bttConfig: JSON.stringify(bttConfig),
-    cb: callback.toString(),
+export function translateObjectKeysToBttNotation(object: Record<string,any>) {
+  Object.keys(object).forEach(key => {
+    if (typeof object[key] === 'object') {
+      translateObjectKeysToBttNotation(object[key]);
+    }
+    object[keyToBttNotation(key)] = object[key];
+    delete object[key];
   });
 
-  // holds base64 representation of the payload
-  const base64Payload: string = Buffer.from(payload).toString('base64');
+  return object;
+}
 
-  // creates a data that is ready to use in POST request
-  const data = {
-    payload: base64Payload,
-  };
-  
-  return JSON.stringify(data);
-};
+/**
+ * Maps given string to btt JSON key notation
+ * @example 'triggerName' => 'BTTTriggerName'
+ * @param key 
+ */
+export function keyToBttNotation(key: string) {
+  if (key.indexOf('BTT') === 0) {
+    return key;
+  }
+  return `BTT${key[0].toUpperCase()}${key.substring(1)}`;
+}
+
+/**
+ * 
+ * @param string 
+ */
+export function simpleCase(string: string) {
+  return string
+    .replace(/-/g, '')
+    .replace(/_/g, '')
+    .toLocaleLowerCase();
+}

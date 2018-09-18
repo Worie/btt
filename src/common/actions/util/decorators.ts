@@ -3,7 +3,7 @@
  * @TODO: add proper typings
  * @param actionClass 
  */
-export default function ActionFactory(actionClass: any): Function {
+export function Action(actionClass: any): Function {
   return function (target: any, key: any, descriptor: PropertyDescriptor) {
     return {
       value: (function (...args: any[]) {
@@ -12,6 +12,16 @@ export default function ActionFactory(actionClass: any): Function {
           throw new Error(`Attempted to use disallowed action.`);
         }
         return new actionClass(this.config, ...args)
+      }),
+    };
+  };
+}
+
+export function EventMethod(methodName: string): Function {
+  return function (target: any, key: any, descriptor: PropertyDescriptor) {
+    return {
+      value: (function (...args: any[]) {
+        return this.event[methodName](...args);
       }),
     };
   };

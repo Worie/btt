@@ -108,18 +108,13 @@ export class FWidget {
 
     const binaryPath = CommonUtils.getNodeBinaryPath();
 
-    // @TODO: simply it, user dont really need to pass this here.
-    // widgets are used by bttjs differently anyway (their content is updated)
-    if (!binaryPath && !options.path) {
-      console.error('Sorry, you have to provide the node/bash binary path manually in the params');
-      return;
-    }
-
     // path to the executable, with slashes escaped
-    const escapedPath = (options.path ? options.path : binaryPath).replace(/\//g, '\/');
+    const escapedPath = (options.path || binaryPath || '/bin/bash').replace(/\//g, '\/');
     
+    const mode = (binaryPath === '/bin/bash' ? 'bash': false) || options.mode;
+
     // btt format for executable path 
-    const shellScriptWidgetGestureConfig = `${escapedPath}:::${(options.mode === 'node' ? '-e' : '-c')}`;
+    const shellScriptWidgetGestureConfig = `${escapedPath}:::${(mode === 'node' ? '-e' : '-c')}`;
 
     // real payload that'll create a widget
     const BTTPayload: any = {
@@ -134,6 +129,8 @@ export class FWidget {
       "BTTEnabled" : 1,
       "BTTOrder" : 9999,
       "BTTTriggerConfig" : {
+        "BTTTouchBarScriptUpdateInterval" : 0,
+        "BTTTouchBarAppleScriptStringRunOnInit" : false,
         "BTTTouchBarItemIconHeight" : options.appearance.iconHeight,
         "BTTTouchBarItemIconWidth" : options.appearance.iconWidth,
         "BTTTouchBarItemPadding" : options.appearance.padding,
