@@ -39,7 +39,7 @@ import AShowNotification from './common/actions/showNotification';
 import AToggleTrueTone from './common/actions/toggleTrueTone';
 
 // decorator for creating actions
-import Action from './common/actions/util/action-factory';
+import Action from './common/actions/util/action-decorator';
 
 /**
  * Class used to manage the BTT webserver 
@@ -94,11 +94,14 @@ export class Btt {
    * Creates actual event listener that'll be run upon certain event type detection.
    * The code will be invoked in btt-node-server, and this method is dependand on this project
    * 
+   * @TODO: create an EVENT decorator
+   * 
    * Keep in mind that this is persisent - it'll exist until you manually delete it.
    * 
    * @param eventType event type of specific action (for example, oneFingerForceClick)
    * @param cb callback function that'll be invoked upon event detection
    */
+  // @EventManager('removeEventListener') : Initializer.EventMethod
   public addEventListener(
     eventType: string,
     cb: (e: any) => {},
@@ -109,9 +112,12 @@ export class Btt {
   /**
    * Removes previously created event listener
    * 
+   * @TODO: create an EVENT decorator
+   * 
    * @param eventType event type of specific action (for example, oneFingerForceClick)
    * @param cb callback function that'll be invoked upon event detection
    */
+  // @EventManager('removeEventListener') : Initializer.EventMethod
   public removeEventListener(
     eventType: string,
     cb: (e: any) => {},
@@ -124,12 +130,15 @@ export class Btt {
    * you'll pass to this function will be invoked upon registering the action in the BetterTouchTool,
    * not after you trigger the specific eventType! 
    * 
+   * @TODO: create an EVENT decorator
+   * 
    * Keep in mind that this is persisent - it'll exist until you manually delete it.
    * 
    * @param eventType event type of specific action (for example, oneFingerForceClick)
    * @param cb callback function that'll define what actions should be executed
    * @param options additional options if you want to override the JSON somehow to fit your needs
    */
+  // @EventManager('removeEventListener') : Initializer.EventMethod
   public addTriggerAction(
     eventType: string,
     cb: (e: Types.IEventCallback) => any,
@@ -141,9 +150,12 @@ export class Btt {
   /**
    * Removes a trigger of specified ID from the BetterTouchTool
    * 
+   * @TODO: create an EVENT decorator
+   * 
    * @param eventType event type of specific action (for example, oneFingerForceClick)
    * @param cb a callback that was intended to run
    */
+  // @EventManager('removeEventListener') : Initializer.EventMethod
   public removeTriggerAction(
     eventType: string,
     cb: (e: Types.IEventCallback) => {},

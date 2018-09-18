@@ -87,6 +87,7 @@ export default class EventManager {
    */
   public removeTriggerAction(eventType: string, cb: (e: any) => any): void {    
     // get the id from event type, callback and everything
+    // @TODO: create private method here and reuse it 
     const triggerID: string = CommonUtils.generateUuidForString(
       `${eventType}:${String(cb)}`,
       this.namespace
@@ -116,6 +117,7 @@ export default class EventManager {
     const { port, domain } = this.config.eventServer;
 
     // add script
+    // @TODO: move to separate file and require it here
     const code = `
       const http = require('http');
       
@@ -187,7 +189,9 @@ export default class EventManager {
   }
 
   /**
-   * 
+   * Maps each key in the passed object to btt notation (BTTWhateverPassed)
+   * @TODO: move those to util and reuse everywhere. Whole package should use simplified naming,
+   * and then just do it once
    * @param key 
    */
   private translateObjectKeysToBttNotation(object: Record<string,any>) {
@@ -202,6 +206,11 @@ export default class EventManager {
     return object;
   }
   
+  /**
+   * Maps given string to btt JSON key notation
+   * @example 'triggerName' => 'BTTTriggerName'
+   * @param key 
+   */
   private keyToBttNotation(key: string) {
     if (key.indexOf('BTT') === 0) {
       return key;

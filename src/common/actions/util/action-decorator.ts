@@ -1,5 +1,6 @@
 /**
  * This decorator initializes the given class with config from its target
+ * @TODO: add proper typings
  * @param actionClass 
  */
 export default function ActionFactory(actionClass: any): Function {
@@ -16,6 +17,10 @@ export default function ActionFactory(actionClass: any): Function {
   };
 }
 
+/**
+ * This function will map inner class names to simplified method names, used within lib
+ * @param name 
+ */
 function mapClassNameToMethodName(name: string) {
   if (name[0] !== 'A') {
     throw new Error('Improper action format. This is probably issue caused by developer');
@@ -23,6 +28,11 @@ function mapClassNameToMethodName(name: string) {
   return name.substring(1).toLowerCase();
 }
 
+/**
+ * Will return whether particular action is blacklisted
+ * @param name 
+ * @param blacklist 
+ */
 function checkBlackListPresence(name: string, blacklist: string[]) {
   if (!blacklist) {
     return false;

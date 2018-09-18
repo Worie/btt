@@ -6,6 +6,7 @@ import * as uuidv5 from 'uuid/v5';
 import * as Keys from '../common/keys';
 
 // @TODO: Clean up utils - this is the most messy place atm
+// @TODO: abstract util class -> all methods defined there
 
 let fetch: any;
 let deleteTriggerFn: any; // could be "method" = 'webserver' | 'url scheme'
@@ -14,12 +15,6 @@ let getBinaryPath: any;
 const defaultComment = 'Created via https://github.com/Worie/btt';
 
 const NAMESPACE = '87a84aef-11fe-4dce-8d00-429cea46f345';
-
-enum EventType {
-  KEY_COMBO,
-  TRACKPAD,
-  SIRI_REMOTE,
-}
 
 if (DetectNode) {
   fetch = require('node-fetch-polyfill');
@@ -105,6 +100,7 @@ export function params(data: Record<string, string>, sharedKey?: string): string
 
 /**
  * Builds a JSON out of given array of action objects
+ * @TODO: Move to event related module
  * @param actions 
  */
 export function buildActionSequence(actions: any[]): any {
@@ -128,6 +124,7 @@ export function buildActionSequence(actions: any[]): any {
 
 /**
  * Builds trigger action, that can be added to BTT (event listener like)
+ * @TODO: Move to event related module
  * @param eventName 
  * @param batchAction 
  * @param options 
@@ -171,22 +168,15 @@ export function buildTriggerAction(eventName: string, batchAction: any, options:
 }
 
 /**
- * @TODO: implement
- * @param eventName 
- */
-function checkEventValidity(eventName: string): EventType {
-  return EventType.KEY_COMBO;
-}
-
-/**
  * Helper function for getting the real BTT-understandable integer
+ * @TODO: Move to event related module
  * @param eventName eventName
  */
 function getTriggerIdByEventName(eventName: string): number {
   const triggerMap = getTriggerMap();
   
   const TRIGGER_KEY: number = (
-    triggerMap.get(eventName) || triggerMap.get(eventName.toLowerCase())
+    triggerMap.get(eventName.toLowerCase())
   );
 
   if (TRIGGER_KEY) {
@@ -198,6 +188,7 @@ function getTriggerIdByEventName(eventName: string): number {
 
 /**
  * Returns a map containing all values of Trigger related enums
+ * @TODO: Move to event related module
  */
 function getTriggerMap(): Map<string, number> {
   const triggerMap: Map<string, number> = new Map();
@@ -218,8 +209,9 @@ function getTriggerMap(): Map<string, number> {
     // for each key in map, create an entry
     keys.forEach(key => {
       triggerMap.set(key, e[key]);
+      // @TODO: get rid of CamelCase dependecy
       triggerMap.set(CamelCase(key), e[key]);
-      triggerMap.set(key.toLowerCase(), e[key]);
+      triggerMap.set(CamelCase(key).toLowerCase(), e[key]);
     });
   });
   
@@ -228,6 +220,7 @@ function getTriggerMap(): Map<string, number> {
 
 /**
  * Returns the trigger class proprerty, required for trigger actions to work
+ * @TODO: Move to event related module
  * @param value 
  */
 function getTriggerClassProperty(value: number | string): string {
@@ -271,6 +264,7 @@ export function getNodeBinaryPath(): string {
 
 /**
  * Generates a payload, later interpreted by btt-node-server
+ * @TODO: Move to event related module
  * @param bttConfig config of certain btt instance
  * @param callback function to invoke
  */

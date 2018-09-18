@@ -108,6 +108,8 @@ export class FWidget {
 
     const binaryPath = CommonUtils.getNodeBinaryPath();
 
+    // @TODO: simply it, user dont really need to pass this here.
+    // widgets are used by bttjs differently anyway (their content is updated)
     if (!binaryPath && !options.path) {
       console.error('Sorry, you have to provide the node/bash binary path manually in the params');
       return;
