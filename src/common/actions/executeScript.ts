@@ -1,5 +1,5 @@
 import { EActions } from '../../types/enum';
-import { BaseAction } from '../action';
+import { BaseAction } from '../../abstract/base-action';
 import CommonUtils from '../util';
 
 /**

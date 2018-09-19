@@ -1,5 +1,5 @@
 import CommonUtils from '../util';
-import { BaseAction } from '../action';
+import { BaseAction } from '../../abstract/base-action';
 import AExecuteScript from '../actions/executeScript';
 import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers, EOtherTriggers, EMagicMouseTriggers } from '../../types/enum';
 import * as Keys from '../keys';

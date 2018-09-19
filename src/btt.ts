@@ -39,7 +39,7 @@ import AShowNotification from './common/actions/showNotification';
 import AToggleTrueTone from './common/actions/toggleTrueTone';
 
 // decorator for creating actions
-import { Action, EventMethod } from './common/actions/util/decorators';
+import { Action, EventMethod } from './common/decorators';
 
 /**
  * Class used to manage the BTT webserver 
@@ -102,7 +102,7 @@ export class Btt {
    * @param cb callback function that'll be invoked upon event detection
    */
   @EventMethod('addEventListener')
-  public addEventListener: Initializer.EventMethod
+  public addEventListener: Initializer.EventMethod;
 
   /**
    * Removes previously created event listener

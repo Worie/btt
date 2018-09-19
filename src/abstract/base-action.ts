@@ -1,4 +1,4 @@
-import CommonUtils from './util';
+import CommonUtils from '../common/util';
 import * as Url from 'url';
 import { EActions } from '../types/enum';
 import * as Types from '../types/types';

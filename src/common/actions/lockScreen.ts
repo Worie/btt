@@ -1,5 +1,5 @@
 import { EActions } from '../../types/enum';
-import { BaseAction } from '../action';
+import { BaseAction } from '../../abstract/base-action';
 
 /**
  * This action is responsible for locking the screen of your Mac
