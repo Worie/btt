@@ -30,8 +30,8 @@ module.exports = {
       ignoreCompilerErrors: true,
       out: './../docs/btt',
       module: 'commonjs',
-      target: 'es5',
-      exclude: ['**/node_modules/**/*.*,', './docs'],
+      target: 'ES2017',
+      exclude: ['./../**/node_modules/**/*.*,', './../docs', './../test/**/*'],
       experimentalDecorators: true,
       excludeExternals: true,
       excludePrivate: true,
@@ -42,7 +42,7 @@ module.exports = {
       mode: 'file',
     }, './src'),
     new FriendlyErrorsWebpackPlugin({
-      clearConsole: true,
+      clearConsole: false,
     }),
   ]
 };
