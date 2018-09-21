@@ -1,6 +1,7 @@
 import * as Types from '../types/types';
 import * as uuidv5 from 'uuid/v5';
 import * as _ from 'lodash';
+import { BaseAction } from '../abstract/base-action';
 
 const NAMESPACE = '87a84aef-11fe-4dce-8d00-429cea46f345';
 
@@ -160,4 +161,19 @@ export default abstract class Utilities {
   public generateUuidForString(text: string, namespace: string = NAMESPACE): string {
     return uuidv5(String(text), namespace);
   }
+
+  /**
+   * 
+   * @param theClass 
+   */
+  public mapClassNameToMethodName(theClass: Types.IClass<BaseAction>) {
+   if (
+     theClass.name[0] !== 'A' &&
+     theClass.prototype instanceof BaseAction
+   ) {
+     throw new Error('Improper action format. This is probably issue caused by developer');
+   }
+   return theClass.name.substring(1).toLowerCase();
+ }
+ 
 }

@@ -7,6 +7,7 @@ export interface IBTTConfig {
   eventServer?: IServerDefinition;
   nodeBinaryPath?: string;
   blacklist?: string[];
+  silent?: boolean;
 }
 
 export interface IServerDefinition {
@@ -109,6 +110,10 @@ export interface ITouchbarWidgetCreateConfig {
     buttonColor: string; // "0.000000, 0.000000, 0.000000, 255.000000",
     alternateBackgroundColor: string; // "128.829533, 128.829533, 128.829533, 255.000000"
   },
+}
+
+export interface IClass<T> {
+  new (config: IBTTConfig, ...args: any[]): T;
 }
 
 export type ActionJSON = Record<string, any>;

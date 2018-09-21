@@ -1,14 +1,15 @@
-import { Btt } from '../src';
+import { Btt, IBTTConfig } from '../src';
 
 describe('Trigger shortcut action', () => {
-  const btt = new Btt({
+  const config: IBTTConfig = {
     domain: '127.0.0.1',
     port: 8000,
     protocol: 'http',
     version: '2.525',
-  });
+  };
 
-  // @TODO: fix typings
+  const btt = new Btt(config);
+
   const action = btt.triggerShortcut('cmd+space');
 
   // bieda testy

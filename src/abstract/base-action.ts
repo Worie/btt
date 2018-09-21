@@ -71,6 +71,12 @@ export abstract class BaseAction {
    * Calls the prepared actions
    */
   public async invoke(): Promise<any> {
+    if (this.id === EActions.DUMMY) {
+      return new Promise((res, rej) => { 
+        res(`This action was was not performed due to blacklisting: ${(this as any).name}`); 
+      });
+    }
+
     return CommonUtils.makeAction(
       'trigger_action', 
       { json: this.json },
