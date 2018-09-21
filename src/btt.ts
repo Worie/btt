@@ -2,10 +2,10 @@ import { FTrigger } from './common/trigger';
 import { FWidget } from './common/widget';
 import VariableStore from './common/state';
 
-import * as Initializer from './types/action-initializers';
+import * as Initializer from './types/initializers';
 import * as Types from './types/types';
 
-import * as CommonUtils from './common/util';
+import CommonUtils from './common/util';
 
 import AHapticFeedback from './common/actions/hapticFeedback';
 import ASendText from './common/actions/sendText';
@@ -34,12 +34,12 @@ import AShowHUD from './common/actions/showHUD';
 import AMoveMouse from './common/actions/moveMouse';
 import AShowWebView from './common/actions/showWebView';
 import AExecuteScript from './common/actions/executeScript';
-import EventManager from './common/events';
+import EventManager from './common/events/';
 import AShowNotification from './common/actions/showNotification';
 import AToggleTrueTone from './common/actions/toggleTrueTone';
 
 // decorator for creating actions
-import Action from './common/actions/util/action-factory';
+import { Action, EventMethod } from './common/decorators';
 
 /**
  * Class used to manage the BTT webserver 
@@ -90,6 +90,8 @@ export class Btt {
     return CommonUtils.makeAction(action, data, this.config);
   }
 
+  /** Events Management */
+
   /**
    * Creates actual event listener that'll be run upon certain event type detection.
    * The code will be invoked in btt-node-server, and this method is dependand on this project
@@ -99,12 +101,8 @@ export class Btt {
    * @param eventType event type of specific action (for example, oneFingerForceClick)
    * @param cb callback function that'll be invoked upon event detection
    */
-  public addEventListener(
-    eventType: string,
-    cb: (e: any) => {},
-  ): void {
-    return this.event.addEventListener(eventType, cb);
-  }
+  @EventMethod('addEventListener')
+  public addEventListener: Initializer.EventMethod;
 
   /**
    * Removes previously created event listener
@@ -112,12 +110,8 @@ export class Btt {
    * @param eventType event type of specific action (for example, oneFingerForceClick)
    * @param cb callback function that'll be invoked upon event detection
    */
-  public removeEventListener(
-    eventType: string,
-    cb: (e: any) => {},
-  ): void {
-    return this.event.removeEventListener(eventType, cb);
-  }
+  @EventMethod('removeEventListener')
+  public removeEventListener: Initializer.EventMethod;
 
   /**
    * Adds a trigger action to the BetterTouchTool. Keep in mind, that the callback function that
@@ -130,13 +124,8 @@ export class Btt {
    * @param cb callback function that'll define what actions should be executed
    * @param options additional options if you want to override the JSON somehow to fit your needs
    */
-  public addTriggerAction(
-    eventType: string,
-    cb: (e: Types.IEventCallback) => any,
-    options?: any,
-  ): void {
-    return this.event.addTriggerAction(eventType, cb, options);
-  }
+  @EventMethod('addTriggerAction')
+  public addTriggerAction: Initializer.EventMethod;
 
   /**
    * Removes a trigger of specified ID from the BetterTouchTool
@@ -144,14 +133,10 @@ export class Btt {
    * @param eventType event type of specific action (for example, oneFingerForceClick)
    * @param cb a callback that was intended to run
    */
-  public removeTriggerAction(
-    eventType: string,
-    cb: (e: Types.IEventCallback) => {},
-  ): void {    
-    return this.event.removeTriggerAction(eventType, cb);
-  }
+  @EventMethod('removeTriggerAction')
+  public removeTriggerAction: Initializer.EventMethod;
 
-  /** ACTIONS */
+  /** Actions */
 
   /**
    * Sends shortcut to txhe application. Some apps need to have focus so they can recieve shortcuts.
@@ -293,6 +278,10 @@ export class Btt {
   @Action(AShowWebView)
   public showWebView: Initializer.ShowWebView;
 
+  /**
+   * Saves selected text to variable selected_text
+   * This can be later retrieved via btt.state.get('selected_text')
+   */
   @Action(ASaveSelectedText)
   public saveSelectedText: Initializer.SaveSelectedText;
 

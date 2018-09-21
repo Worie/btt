@@ -1,10 +1,10 @@
-import * as Util from '../src/common/util';
+import CommonUtils from '../src/common/util';
 
 describe('In common utility functions', () => {
   
   describe('getUrl', () => {
     it('should build base URL', () => {
-      const url = Util.getUrl({
+      const url = CommonUtils.getUrl({
         domain: '127.0.0.1',
         port: 8000,
         protocol: 'http'
@@ -15,12 +15,12 @@ describe('In common utility functions', () => {
   });
 
   describe('params', () => {
-    const params = Util.params({
+    const params = CommonUtils.params({
       foo: 'bar',
       bin: 'bash',
     });
 
-    const paramsWithSharedKey = Util.params({
+    const paramsWithSharedKey = CommonUtils.params({
       foo: 'bar',
       bin: 'bash',
     }, 'mySuperSecretKey');
@@ -48,7 +48,7 @@ describe('In common utility functions', () => {
 
   describe('buildFullUrl', () => {
     it('should return working url', () => {
-      const url = Util.buildFullUrl('trigger_action', 'foo=bar', 'http://127.0.0.1:8000/');
+      const url = CommonUtils.buildFullUrl('trigger_action', 'foo=bar', 'http://127.0.0.1:8000/');
       expect(url).toEqual('http://127.0.0.1:8000/trigger_action/?foo=bar');
     });
   });

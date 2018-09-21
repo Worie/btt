@@ -1,6 +1,8 @@
 import { EActions } from '../../types/enum';
-import { BaseAction } from '../action';
+import { BaseAction } from '../../abstract/base-action';
 import * as Types from '../../types/types';
+import CommonUtils from '../util';
+
 
 /**
  * This action is responsible for showing a BetterTouchTool HUD. 
@@ -9,7 +11,7 @@ import * as Types from '../../types/types';
 export default class AShowHUD extends BaseAction {
   protected id: EActions = EActions.SHOW_HUD;
 
-  public get data(): any {
+  public get data() {
     const config: Types.IShowHUDConfig = this.arguments[0];
     
     const { title, details, duration, background, direction } = config;
@@ -18,15 +20,17 @@ export default class AShowHUD extends BaseAction {
     const reasonableDuration = Math.abs(Math.min(duration, 10));
   
     const BTTAdditionalConfig: any = {
-      "BTTActionHUDDetail": details,
-      "BTTActionHUDTitle": title,
-      "BTTActionHUDDuration": reasonableDuration || 0.8,
-      "BTTActionHUDBackground": background, 
-      "BTTActionHUDSlideDirection": direction,
+      ActionHUDDetail: details,
+      ActionHUDTitle: title,
+      ActionHUDDuration: reasonableDuration || 0.8,
+      ActionHUDBackground: background, 
+      ActionHUDSlideDirection: direction,
     };
     
     const result: any = {
-      "BTTHUDActionConfiguration" : JSON.stringify(BTTAdditionalConfig),
+      HUDActionConfiguration : JSON.stringify(
+        CommonUtils.translateObjectKeysToBttNotation(BTTAdditionalConfig)
+      ),
     };
   
     return result;

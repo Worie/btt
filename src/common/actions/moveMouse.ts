@@ -1,5 +1,5 @@
 import { EActions } from '../../types/enum';
-import { BaseAction } from '../action';
+import { BaseAction } from '../../abstract/base-action';
 import * as Types from '../../types/types';
 
 /**
@@ -8,13 +8,13 @@ import * as Types from '../../types/types';
 export default class AMoveMouse extends BaseAction {
   protected id: EActions = EActions.MOVE_MOUSE;
 
-  public get data(): any {
+  public get data() {
     const actionConfig: Types.IMoveMouseConfig = this.arguments[0];
     const { x, y, relativeTo } = actionConfig;
 
     return {
-      "BTTMoveMouseToPosition" : `{${x}, ${y}}`,
-      "BTTMoveMouseRelative" : `${relativeTo || 0}`,
+      MoveMouseToPosition: `{${x}, ${y}}`,
+      MoveMouseRelative: `${relativeTo || 0}`,
     };
   }
 }

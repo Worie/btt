@@ -31,8 +31,13 @@ import AExecuteScript from '../common/actions/executeScript';
 import AShowNotification from '../common/actions/showNotification';
 import AToggleTrueTone from '../common/actions/toggleTrueTone';
 import ASaveSelectedText from '../common/actions/saveSelectedText';
-import * as Types from '../types/types';
+import * as Types from './types';
 
+export type EventMethod = (
+  eventType: string,
+  cb: (e: Types.IEventCallback) => any,
+  options?: any,
+) => void;
 export type ToggleDnD = () => AToggleDnD;
 export type ExecuteScript = (code: string) => AExecuteScript;
 export type ToggleTrueTone = () => AToggleTrueTone;
@@ -46,7 +51,7 @@ export type DelayNextAction = (timeout: number) => ADelayNextAction;
 export type ToggleBTT = () => AToggleBTT;
 export type StartSiri = () => AStartSiri;
 export type Mute = () => AMute;
-export type ToggleApplication = (applicationPath: string) => AToggleApplication;
+export type ToggleApplication = (applicationPath: string, binaryPath: string) => AToggleApplication;
 export type LaunchApplication = (applicationPath: string) => ALaunchApplication;
 export type SleepDisplay = () => ASleepDisplay;
 export type Logout = () => ALogout;

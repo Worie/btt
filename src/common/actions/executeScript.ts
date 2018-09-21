@@ -1,7 +1,6 @@
 import { EActions } from '../../types/enum';
-import { BaseAction } from '../action';
-
-import * as CommonUtils from '../util';
+import { BaseAction } from '../../abstract/base-action';
+import CommonUtils from '../util';
 
 /**
  * This action is responsible for executing a node script
@@ -9,7 +8,7 @@ import * as CommonUtils from '../util';
 export default class AExecuteScript extends BaseAction { 
   protected id: EActions = EActions.EXECUTE_SCRIPT;
 
-  public get data(): Record<string, any> {
+  public get data() {
     const code: string = this.arguments[0];
 
     const binaryPath = CommonUtils.getNodeBinaryPath();
@@ -23,11 +22,11 @@ export default class AExecuteScript extends BaseAction {
     const escapedPath = binaryPath.replace(/\//g, '\/');
   
     // btt format for executable path 
-    const shellScriptActionConfig = `${escapedPath}:::-e:::copy-shell`;
+    const shellScriptActionConfig = `${escapedPath}:::-e:::btt-generated-script`;
 
     return {
-      "BTTShellTaskActionScript" : code, 
-      "BTTShellTaskActionConfig" : shellScriptActionConfig,
+      ShellTaskActionScript: code, 
+      ShellTaskActionConfig: shellScriptActionConfig,
     };
   }
 }

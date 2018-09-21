@@ -1,4 +1,4 @@
-import * as CommonUtils from './util';
+import CommonUtils from './util';
 import * as Types from '../types/types';
 
 export class Trigger {
@@ -65,7 +65,7 @@ export class Trigger {
       'update_trigger',
       {
         uuid: this.uuid,
-        json: JSON.stringify(data),
+        json: data,
       },
       this.config,
     );
@@ -102,7 +102,7 @@ export class FTrigger {
     await CommonUtils.makeAction(
       'add_new_trigger',
       {
-        json: JSON.stringify(config),
+        json: config,
       },
       this.config,
     );
@@ -128,7 +128,7 @@ export class FTrigger {
     return CommonUtils.makeAction(
       'trigger_action',
       {
-        json: JSON.stringify(json),
+        json,
       },
       this.config,
     );

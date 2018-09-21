@@ -1,6 +1,6 @@
 {
   "name": "btt",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Manage your BetterTouchTool in JavaScript, easly.",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
@@ -15,9 +15,9 @@
   "license": "MIT",
   "dependencies": {
     "@types/uuid": "^3.4.3",
-    "camelcase": "^5.0.0",
     "child_process": "^1.0.2",
     "detect-node": "^2.0.3",
+    "lodash": "^4.17.10",
     "node-fetch-polyfill": "^2.0.6",
     "uuid": "^3.2.1"
   },

@@ -6,6 +6,8 @@ export interface IBTTConfig {
   version?: string;
   eventServer?: IServerDefinition;
   nodeBinaryPath?: string;
+  blacklist?: string[];
+  silent?: boolean;
 }
 
 export interface IServerDefinition {
@@ -86,6 +88,7 @@ export interface IFloatingHTMLConfig {
 export interface IEventCallback { 
   actions: ActionJSON[],
   comment: string;
+  additionalJSON: Record<string, any>;
 }
 
 export interface IShowNotificationConfig {
@@ -109,4 +112,12 @@ export interface ITouchbarWidgetCreateConfig {
   },
 }
 
+export interface IClass<T> {
+  new (config: IBTTConfig, ...args: any[]): T;
+}
+
 export type ActionJSON = Record<string, any>;
+
+export type IKeyCombo = string;
+
+export type IBetterTouchToolPayload = Record<string, any>;
