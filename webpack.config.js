@@ -42,7 +42,7 @@ module.exports = {
       mode: 'file',
     }, './src'),
     new FriendlyErrorsWebpackPlugin({
-      clearConsole: false,
+      clearConsole: true,
     }),
   ]
 };
