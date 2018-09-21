@@ -14,5 +14,4 @@ export default class ADummyAction extends BaseAction {
     super(config, ...args);
     this.name = this.arguments[0];
   }
-
 }
