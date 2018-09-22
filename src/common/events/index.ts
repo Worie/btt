@@ -1,11 +1,16 @@
 import CommonUtils from '../util';
+import EventTriggers from './/triggers';
 import { BaseAction } from '../../abstract/base-action';
 import AExecuteScript from '../actions/executeScript';
-import { EActions, ETrackpadTriggers, EMouseTriggers, ESiriRemoteTriggers, EOtherTriggers, EMagicMouseTriggers } from '../../types/enum';
+import { EActions, EventCategory } from '../../types/enum';
 import * as Keys from '../keys';
 import * as Types from '../../types/types';
 import EventPayloadTemplate from './payload';
 import * as _ from 'lodash';
+
+/**
+ * @TODO: Clean up addTriggerAction
+ */
 
 /**
  * This class holds methods related to the wide term "events"
@@ -35,23 +40,29 @@ export default class EventManager {
    * two entries will be added to BTT. Closing the browser / node process won't make the listeners die
    * 
    * @param eventType string, created from action enum identifier
-   * @param cb IEventCallback
+   * @param cb IEventParameter
    */
-  public addTriggerAction(eventType: string, cb: (e: Types.IEventCallback) => any): void {
+  public addTriggerAction(eventType: string, cb: (e: Types.IEventParameter) => any): void {
     const jsonUUID: string = this.generateUUID(...arguments);
 
     const actions: BaseAction[] = [];
     let comment: string = '';
 
-    const event: Types.IEventCallback = {
+    const event: Types.IEventParameter = {
       actions,
       comment,
+      requiredModifierKeys: [],
       additionalJSON: {},
+      config: {},
     };
 
     cb(event);
 
-    // do something with those actions and eventType and the event that we got
+    // handle required modifier keys (for 'trackpad', mouse related and 'other' categories )
+    // @TODO: use requiredModifierKeys, map them, use KEYS module to calculate the BTTRequiredModifierKeys mask (or value?)
+
+    // build a base JSON that'll contain a list of actions that should be triggered
+    // upon detection of given eventType
     const batchAction: any = this.buildActionSequence(event.actions);
 
     const listenerJSON: any = this.buildTriggerAction(
@@ -60,7 +71,7 @@ export default class EventManager {
       { comment: event.comment }
     );
     
-    _.merge(listenerJSON, event.additionalJSON);
+    _.merge(listenerJSON, event.config, event.additionalJSON);
   
     listenerJSON.UUID = jsonUUID;
     listenerJSON.AdditionalActions = listenerJSON.AdditionalActions.map((action: any) => {
@@ -112,7 +123,7 @@ export default class EventManager {
       // register a trigger in BetterTouchTool that'll make a request to the btt-node-server
       this.addTriggerAction(
         eventType, 
-        (ev: Types.IEventCallback): any => {
+        (ev: Types.IEventParameter): any => {
           const actions = [
             this.executeScript(code),
           ];
@@ -191,21 +202,19 @@ export default class EventManager {
    * 
    * @param value 
    */
-  private getTriggerClassProperty(value: number | string): string {
-    // this is value -> do not use shorthand!
-    if (value in ETrackpadTriggers) {
-      return "BTTTriggerTypeTouchpadAll";
-    } else if (value in EMouseTriggers) {
-      return "BTTTriggerTypeNormalMouse";
-    } else if (value in EMagicMouseTriggers) {
-      return "BTTTriggerTypeMagicMouse";
-    } else if (value in ESiriRemoteTriggers) {
-      return "BTTTriggerTypeSiriRemote";
-    } else if (value in EOtherTriggers) {
-      return "BTTTriggerTypeOtherTriggers";
-    } else if (Keys.isValidShortcut(value as string)) {
-      return "BTTTriggerTypeKeyboardShortcut";
+  private getTriggerClassProperty(category: EventCategory): string {
+    // we're returning the value of the json property that'll be dispatched to BTT
+    // so we must use full "BTTTriggerType*" instead TriggerType*
+    switch (category) {
+      case EventCategory.TRACKPAD: { return "BTTTriggerTypeTouchpadAll"; }
+      case EventCategory.OTHER_MOUSE: { return "BTTTriggerTypeNormalMouse"; }
+      case EventCategory.MAGIC_MOUSE: { return "BTTTriggerTypeMagicMouse"; }
+      case EventCategory.SIRI_REMOTE: { return "BTTTriggerTypeSiriRemote"; }
+      case EventCategory.OTHER: { return "BTTTriggerTypeOtherTriggers"; }
+      case EventCategory.KEY_COMBO: { return "BTTTriggerTypeKeyboardShortcut"; }
     }
+
+    return null;
   }
 
   /**
@@ -240,28 +249,30 @@ export default class EventManager {
    * @param options 
    */
   private buildTriggerAction(eventName: string, batchAction: any, options: any = {}) { 
-    const triggerType: number = this.getTriggerIdByEventName(eventName);
-    const isValidShorcut: boolean = Keys.isValidShortcut(eventName);
+    const eventTriggerObject: Types.IEventTrigger = EventTriggers.getByName(eventName);
 
-    if (typeof triggerType === 'undefined' && !isValidShorcut) {
+    if (typeof eventTriggerObject === 'undefined') {
       throw new Error(`Trying to use an event that does not exist, nor is a shortcut: ${eventName}`)
     }
 
     const json: any = {
-      TriggerType: triggerType,
-      TriggerClass: this.getTriggerClassProperty(triggerType || eventName),
+      TriggerType: eventTriggerObject.id,
+      TriggerClass: this.getTriggerClassProperty(eventTriggerObject.category),
       Order: 99999,
       GestureNotes: options.comment || this.defaultComment,
       ...batchAction,
     };
 
-    if (isValidShorcut) {
+    // if user requested a key combo trigger, some additional fields are necessary
+    if (eventTriggerObject.category === EventCategory.KEY_COMBO) {
       Object.assign(json, {
         ShortcutModifierKeys: Keys.createBitmaskForShortcut(eventName, false),
         AdditionalConfiguration: String(Keys.createBitmaskForShortcut(eventName, true)),
         ShortcutKeyCode: Keys.getKeyCode(eventName.split('+').pop())
       });
 
+      // in case user has explicitly said that modifiers location matters, 
+      // enable differentation
       if (Keys.isDifferentiating(eventName)) {
         Object.assign(json, {
           TriggerConfig: {
@@ -269,58 +280,8 @@ export default class EventManager {
           },
         });
       }
-
-      return json;
     }
 
     return json;
-  }
-
-  /**
-   * Helper function for getting the real BTT-understandable integer
-   * 
-   * @param eventName eventName
-   */
-  private getTriggerIdByEventName(eventName: string): number {
-    const triggerMap = this.getTriggerMap();
-    
-    const TRIGGER_KEY: number = (
-      triggerMap.get(eventName.toLowerCase())
-    );
-
-    if (TRIGGER_KEY) {
-      return TRIGGER_KEY;
-    }
-
-    return;
-  }
-
-  /**
-   * Returns a map containing all values of Trigger related enums
-   */
-  private getTriggerMap(): Map<string, number> {
-    const triggerMap: Map<string, number> = new Map();
-
-    const triggerEnums: any[] = [
-      ETrackpadTriggers,
-      ESiriRemoteTriggers,
-      EOtherTriggers,
-      EMagicMouseTriggers,
-      EMouseTriggers,
-    ];
-
-    triggerEnums.forEach((e: any) => {
-      // filters the keys only to string representations
-      const keys: string[] = Object.keys(e)
-        .filter((key: string) => Number.isNaN(Number.parseInt(key)));
-      
-      // for each key in map, create an entry
-      keys.forEach(key => {
-        triggerMap.set(key, e[key]);
-        triggerMap.set(CommonUtils.simpleCase(key), e[key]);
-      });
-    });
-    
-    return triggerMap;
   }
 }

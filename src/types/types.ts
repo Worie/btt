@@ -1,3 +1,5 @@
+import { EventCategory } from './enum';
+
 export interface IBTTConfig {
   domain: string;
   port: number;
@@ -85,10 +87,14 @@ export interface IFloatingHTMLConfig {
   showButtons?: boolean;
 }
 
-export interface IEventCallback { 
+export interface IEventParameter { 
   actions: ActionJSON[],
   comment: string;
   additionalJSON: Record<string, any>;
+  requiredModifierKeys: ('fn' | 'cmd' | 'alt' | 'ctrl' | 'shift')[];
+  // allows to specify the data that is not possible to pass
+  // via simple event name
+  config: any;
 }
 
 export interface IShowNotificationConfig {
@@ -121,3 +127,41 @@ export type ActionJSON = Record<string, any>;
 export type IKeyCombo = string;
 
 export type IBetterTouchToolPayload = Record<string, any>;
+
+export interface IEventTrigger {
+  id: number;
+  category: EventCategory;
+  name: string;
+  notices?: INoticeMessage[],
+}
+
+export interface INoticeMessage {
+  text: string;
+  data?: Record<string, any>;
+}
+
+/**
+ * ETR - EventTriggerRequirements (Additional options for some triggers)
+ */
+
+export interface ETRNamedTrigger {
+  triggerName: string;
+}
+
+export interface ETRLaunchingOnSerialNumber { 
+  machineSerialNumber: string;
+}
+
+export interface ETRMoveMouseToCorner {
+  delayBeforeTriggering: number,
+  allowDragging: 0 | 1,
+}
+
+export type ETRMoveMouseToTopLeftCorner = ETRMoveMouseToCorner;
+export type ETRMoveMouseToTopRightCorner = ETRMoveMouseToCorner;
+export type ETRMoveMouseToBottomLeftCorner = ETRMoveMouseToCorner;
+export type ETRMoveMouseToBottomRightCorner = ETRMoveMouseToCorner;
+
+export interface ETRRecievedDistributedNotificationWithName {
+  distributedNotificationName: string;
+}

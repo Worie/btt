@@ -35,7 +35,7 @@ import * as Types from './types';
 
 export type EventMethod = (
   eventType: string,
-  cb: (e: Types.IEventCallback) => any,
+  cb: (e: Types.IEventParameter) => any,
   options?: any,
 ) => void;
 export type ToggleDnD = () => AToggleDnD;
