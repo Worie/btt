@@ -48,6 +48,8 @@ Then, please enable and configure webserver in BetterTouchTool preferences. You'
 
 ## Example usage
 
+First, you'd need to create a btt instance passing the data for BTT webserver.
+
 ```ts
 // import Btt class from the package
 import { Btt } from 'btt';
@@ -60,12 +62,41 @@ const btt = new Btt({
   protocol: 'http',
   version: '2.525',
 });
+```
 
+Now you can invoke the actions - there are plenty of way to do it, but all of those are promise based
+
+```ts
 // sequentially run three actions - spotlight, type text and night shift
-btt.triggerShortcut('cmd+space').invoke()
+// as all actions are promise based, you can use async/await notation without hussle
+btt
+  .triggerShortcut('cmd+space').invoke()
   .then(() => btt.sendText({ text: 'Hello world!'}).invoke())
   .then(() => btt.toggleNightShift().invoke());
 
+// you can also use custom chain method to simplify it even more, without using async/await
+btt
+  .invokeChain()                      // 1)
+  .triggerShortcut('cmd+space')       // 2)
+  .sendText({text: 'Hello world!'})   // 3)
+  .wait(1000)                         // 4)
+  .toggleNightShift()                 // 5)
+  .call()                             // 6)
+  .then(() => console.info('done!'))  // 7)
+
+// Explanation:
+// 1) Starts method chaining
+// 2) Action that user want to perform
+// 3) Action that user want to perform
+// 4) Additional method available in chain only - wait before triggering next action
+// 5) Action that user want to perform
+// 6) Invokes all previously defined actions, ensuring the execution order
+// 7) Returns a promise that resolves once all of the actions are fulfilled
+```
+
+You can even register system-wide event listener within BTT that'll trigger particular actions
+
+```ts
 // creates a trigger in BetterTouchTool. Keep in mind that this is persistent until you manually delete it!
 btt.addTriggerAction('oneFingerForceClick', (ev) => {
 
@@ -81,18 +112,33 @@ btt.addTriggerAction('oneFingerForceClick', (ev) => {
   ev.actions.push(...actionsToInvoke);
 });
 
-// get the url of the action - can be assigned to <a> element for example, and once clicked - will perform given action
-console.log(btt.triggerShortcut('cmd+space').url);
-
 // you can also delete an event listener - trigger: 
 btt.removeTriggerAction('oneFingerForceClick', callbackFuntion);
+```
 
-// you can also define real callbacks that'll be triggered once certain event happens!
-// however, that requires the btt-node-server project. Have a look at the docs or example section to learn more
-btt.addEventListener('threeFingerDoubleTap', async (ev) => {
+But the above method will trigger the callback upon running your script, not when particular event really occurs. If you need to call a function upon event recognition, you'd need to use [btt-node-server](https://github.com/Worie/btt-node-server) and use `addEventListener` and `removeEventListener` methods on btt instance. The callback you provide will be run in nodejs environment, within `vm`.
+
+```ts
+const btt = new Btt({
+  domain: '127.0.0.1',
+  port: 8000,
+  protocol: 'http',
+  version: '2.525',
+  // you need to pass eventServer to use this part of the lib
+  eventServer: {
+    domain: 'localhost',
+    port: 8888,
+  },
+});
+
+// adds real event listener, that'll be run once event occurs
+btt.addEventListener('cmd+ctrl+alt+u', async (ev) => {
+  // write the code as you'd normally do -> trigger the action for some interval
   const intervalID = setInterval(() => {
     btt.showHUD({ title: 'It works!'}).invoke();
   }, 1000);
+
+  // you can use fetch API here or anything that your node version will support
 
   // will stop the interval after 10 seconds
   await new Promise((res, rej) => {
@@ -102,13 +148,35 @@ btt.addEventListener('threeFingerDoubleTap', async (ev) => {
     }, 10000);
   });
   
-  // the value you return will be returned by the btt-node-server 
+  // the value you return from the callback, will be the response of the btt-node-server 
   return { messsage: 'Hello world!' };
 });
-
-
-// surely, you can use removeEventListener, similary to native JS method implementation
 ```
+
+To get all available events, you'd have to look in the enums (list of all valid events is going to be available soon).
+Still, most of the time you can just guess it, because all event names are a lowercased equivalent of triggers from within `BetterTouchTool`.
+
+### Additional action information
+
+For use within browser, you can get the `url` that lies behind all actions and assign it to some `<a href="${link}">Link</a>`. To get `link` you simply need to read the `.url` property of any action: 
+
+
+```ts
+console.log(
+  btt.triggerShortcut('cmd+space').url
+);
+```
+
+If you want to have a sneek peak on the generated action JSON, or want to share it with others who use `BetterTouchTool` you can read the `.json` property of any action. 
+
+
+```ts
+console.log(
+  btt.showHUD({ title: 'Hello!' }).json
+);
+```
+
+## More examples 
 
 For more advanced examples you can visit [the example section](https://github.com/Worie/btt/tree/master/examples)
 
