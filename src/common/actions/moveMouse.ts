@@ -9,7 +9,7 @@ export default class AMoveMouse extends BaseAction {
   protected id: EActions = EActions.MOVE_MOUSE;
 
   public get data() {
-    const actionConfig: Types.IMoveMouseConfig = this.arguments[0];
+    const actionConfig: Types.MoveMouseConfig = this.arguments[0];
     const { x, y, relativeTo } = actionConfig;
 
     return {

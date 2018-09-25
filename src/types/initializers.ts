@@ -35,18 +35,17 @@ import * as Types from './types';
 
 export type EventMethod = (
   eventType: string,
-  cb: (e: Types.IEventParameter) => any,
-  options?: any,
+  cb: Types.EventCallback,
 ) => void;
 export type ToggleDnD = () => AToggleDnD;
 export type ExecuteScript = (code: string) => AExecuteScript;
 export type ToggleTrueTone = () => AToggleTrueTone;
 export type ToggleNightShift = () => AToggleNightShift;
 export type TriggerShortcut = (shortcut: string) => ATriggerShortcut;
-export type ShowHUD = (config: Types.IShowHUDConfig) => AShowHUD;
-export type SendText = (config: Types.ISendTextConfig) => ASendText;
+export type ShowHUD = (config: Types.ShowHUDConfig) => AShowHUD;
+export type SendText = (config: Types.SendTextConfig) => ASendText;
 export type HapticFeedback = (mode: number) => AHapticFeedback;
-export type MoveMouse = (config: Types.IMoveMouseConfig) => AMoveMouse;
+export type MoveMouse = (config: Types.MoveMouseConfig) => AMoveMouse;
 export type DelayNextAction = (timeout: number) => ADelayNextAction;
 export type ToggleBTT = () => AToggleBTT;
 export type StartSiri = () => AStartSiri;
@@ -62,7 +61,7 @@ export type ToggleMouseSize = () => AToggleMouseSize;
 export type ToggleMouseCursor = () => AToggleMouseCursor;
 export type ToggleMouseSpeed = () => AToggleMouseSpeed;
 export type QuitBTT = () => AQuitBTT;
-export type ShowNotification = (config: Types.IShowNotificationConfig) => AShowNotification;
+export type ShowNotification = (config: Types.ShowNotificationConfig) => AShowNotification;
 export type RestartBTT = () => ARestartBTT;
 export type SaveSelectedText = () => ASaveSelectedText;
 export type SleepComputer = () => ASleepComputer;

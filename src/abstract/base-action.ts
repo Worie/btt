@@ -8,16 +8,16 @@ import * as Types from '../types/types';
  * Every action implementation derives from this class, should not be called directly
  */
 export abstract class BaseAction {
-  protected config: Types.IBTTConfig;
+  protected config: Types.AppConfig;
   protected arguments: any[] = [];
   protected id: EActions;
   
   /**
-   * A constructor for abstract Action class
+   * A constructor for the Action
    * @param args 
    */
   public constructor(
-    config: Types.IBTTConfig,
+    config: Types.AppConfig,
     ...args: any[]
   ) {
     this.config = config;
@@ -28,7 +28,7 @@ export abstract class BaseAction {
    * Returns JSON structure for the current action. 
    * Must be overriden by instances
    */
-  public get json(): Types.IBetterTouchToolPayload {
+  public get json(): Types.BttPayload {
     return CommonUtils.translateObjectKeysToBttNotation({
       ...this.baseData,
       ...this.data,
@@ -39,14 +39,14 @@ export abstract class BaseAction {
    * Intended to be overriden by action implementation
    * If left as is, simply uses the id of the action and produces required json
    */
-  protected get data(): Partial<Types.IBetterTouchToolPayload> {
+  protected get data(): Partial<Types.BttPayload> {
     return this.baseData;
   }
   
   /**
    * Returns the base data of every JSON, required for BTT to see the changes
    */
-  private get baseData(): Partial<Types.IBetterTouchToolPayload> {
+  private get baseData(): Partial<Types.BttPayload> {
     return {
       PredefinedActionType : this.id,
       Enabled2 : 1,
@@ -56,6 +56,8 @@ export abstract class BaseAction {
   
   /**
    * Returns the url of the given action, that this library generates
+   * Visiting the returned value in browser (or calling it from backend) will
+   * invoke this particular action on the mac specified in initial configuration
    */
   public get url(): string {
     let url: string = Url.resolve(
@@ -68,7 +70,7 @@ export abstract class BaseAction {
   }
 
   /**
-   * Calls the prepared actions
+   * Calls the prepared action
    */
   public async invoke(): Promise<any> {
     if (this.id === EActions.DUMMY) {
@@ -77,7 +79,7 @@ export abstract class BaseAction {
       });
     }
 
-    return CommonUtils.makeAction(
+    return CommonUtils.callBetterTouchTool(
       'trigger_action', 
       { json: this.json },
       this.config

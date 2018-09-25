@@ -9,15 +9,15 @@ export class Trigger {
   private name: string;
 
   // holds the config of the current instance
-  private config: Types.IBTTConfig;
+  private config: Types.AppConfig;
   
   /**
    * Constructs the Trigger instance, sets the uuid and name for further calls
    * @param {*} config 
    */
   public constructor(
-    config: Types.IBTTConfig,
-    triggerConfig: Types.ITriggerConfig
+    config: Types.AppConfig,
+    triggerConfig: Types.TriggerConfig
   ) {
     this.uuid = triggerConfig.uuid;
     this.name = triggerConfig.name;
@@ -33,7 +33,7 @@ export class Trigger {
     // if this is a named trigger
     if (this.name) {
       // perform a named trigger execution
-      return CommonUtils.makeAction(
+      return CommonUtils.callBetterTouchTool(
         'trigger_named',
         { trigger_name: this.name },
         this.config,
@@ -42,7 +42,7 @@ export class Trigger {
     // if this was a generic trigger
     } else if (this.uuid) {
       // executre the actions for this trigger
-      return CommonUtils.makeAction(
+      return CommonUtils.callBetterTouchTool(
         'execute_assigned_actions_for_trigger',
         { uuid: this.uuid },
         this.config,
@@ -54,14 +54,14 @@ export class Trigger {
    * Updates the trigger data with given JSON
    * @param {*} data 
    */
-  update(data: any): Promise<void> {
+  update(data: Types.BttPayload): Promise<void> {
     if (!data) {
       console.warn('No update data passed to Trigger');
       return;
     }
 
     // update the trigger with given json
-    return CommonUtils.makeAction(
+    return CommonUtils.callBetterTouchTool(
       'update_trigger',
       {
         uuid: this.uuid,
@@ -76,9 +76,9 @@ export class Trigger {
  * Creates an instances of Trigger with specified config
  */
 export class FTrigger {
-  private config: Types.IBTTConfig;
+  private config: Types.AppConfig;
 
-  public constructor(config: Types.IBTTConfig) {
+  public constructor(config: Types.AppConfig) {
     this.config = config;
   }
 
@@ -87,7 +87,7 @@ export class FTrigger {
    * @param uuid 
    */
   public async delete(uuid: string) {
-    return CommonUtils.makeAction(
+    return CommonUtils.callBetterTouchTool(
       'delete_trigger',
       { uuid },
       this.config,
@@ -98,8 +98,8 @@ export class FTrigger {
    * Creates a new trigger
    * @param config 
    */
-  public async create(config: Types.ITriggerConfig): Promise<Trigger> {
-    await CommonUtils.makeAction(
+  public async create(config: Types.TriggerConfig): Promise<Trigger> {
+    await CommonUtils.callBetterTouchTool(
       'add_new_trigger',
       {
         json: config,
@@ -117,15 +117,15 @@ export class FTrigger {
    * Returns existing trigger
    * @param config 
    */
-  public get(config: Types.ITriggerConfig): Trigger {
+  public get(config: Types.TriggerConfig): Trigger {
     return new Trigger(this.config, config);
   }
 
   /**
    * Triggers an action / trigger of specified json
    */
-  public async invoke(json: any) {
-    return CommonUtils.makeAction(
+  public async invoke(json: Types.BttPayload) {
+    return CommonUtils.callBetterTouchTool(
       'trigger_action',
       {
         json,

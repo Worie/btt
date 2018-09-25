@@ -9,7 +9,7 @@ export default class ASendText extends BaseAction {
   protected id: EActions = EActions.INSERT_TYPE_PASTE_TEXT;
 
   public get data() {
-    const actiionConfig: Types.ISendTextConfig = this.arguments[0];
+    const actiionConfig: Types.SendTextConfig = this.arguments[0];
     const { text, moveCursorLeft } = actiionConfig;
 
     return {

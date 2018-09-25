@@ -7,13 +7,13 @@ import * as Types from '../types/types';
  * every method retunrs a promise.
  */
 export default class VariableStore {
-  private config: Types.IBTTConfig;
+  private config: Types.AppConfig;
 
   /**
    * Used to instanitilize the variable store with given BTT config
    * @param config 
    */
-  constructor(config: Types.IBTTConfig) {
+  constructor(config: Types.AppConfig) {
     this.config = config;
   }
 
@@ -37,7 +37,7 @@ export default class VariableStore {
   
     const method: string = `set_${persistent}${variableType}_variable`;
   
-    return CommonUtils.makeAction(method, { variableName: key, to: value }, this.config);  
+    return CommonUtils.callBetterTouchTool(method, { variableName: key, to: value }, this.config);  
   }
 
   /**
@@ -47,12 +47,12 @@ export default class VariableStore {
    */
   public async get(key: string, mode?: 'string' | 'number'): Promise<number | string> {
     const getStringVariable = async () => {
-      const response = await CommonUtils.makeAction(`get_string_variable`, { variableName: key}, this.config);
+      const response = await CommonUtils.callBetterTouchTool(`get_string_variable`, { variableName: key}, this.config);
       return response.text();
     };
 
     const getNumberVariable = async () => {
-      const response = await CommonUtils.makeAction(`get_number_variable`, { variableName: key}, this.config);
+      const response = await CommonUtils.callBetterTouchTool(`get_number_variable`, { variableName: key}, this.config);
       return response.text();
     };
     

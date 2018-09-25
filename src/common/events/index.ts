@@ -3,10 +3,11 @@ import EventTriggers from './/triggers';
 import { BaseAction } from '../../abstract/base-action';
 import AExecuteScript from '../actions/executeScript';
 import { EActions, EventCategory } from '../../types/enum';
-import * as Keys from '../keys';
+import Keys from '../keys';
 import * as Types from '../../types/types';
 import EventPayloadTemplate from './payload';
 import * as _ from 'lodash';
+import { AppPayload } from '../../types/types';
 
 /**
  * @TODO: Clean up addTriggerAction
@@ -20,7 +21,7 @@ import * as _ from 'lodash';
  */
 export default class EventManager {
   // holds btt instance config
-  private config: Types.IBTTConfig;
+  private config: Types.AppConfig;
 
   private defaultComment = 'Created via https://github.com/Worie/btt';
 
@@ -31,7 +32,7 @@ export default class EventManager {
    * Initializes the event manager with specific btt config
    * @param config 
    */
-  constructor(config: Types.IBTTConfig) {
+  constructor(config: Types.AppConfig) {
     this.config = config;
   }
 
@@ -42,17 +43,16 @@ export default class EventManager {
    * @param eventType string, created from action enum identifier
    * @param cb IEventParameter
    */
-  public addTriggerAction(eventType: string, cb: (e: Types.IEventParameter) => any): void {
+  public addTriggerAction(eventType: string, cb: Types.EventCallback): void {
     const jsonUUID: string = this.generateUUID(...arguments);
 
-    const actions: BaseAction[] = [];
     let comment: string = '';
 
-    const event: Types.IEventParameter = {
-      actions,
+    const event: Types.EventParameter = {
+      actions: [],
       comment,
       requiredModifierKeys: [],
-      additionalJSON: {},
+      additionalData: {},
       config: {},
     };
 
@@ -63,25 +63,25 @@ export default class EventManager {
 
     // build a base JSON that'll contain a list of actions that should be triggered
     // upon detection of given eventType
-    const batchAction: any = this.buildActionSequence(event.actions);
+    const batchAction: Partial<Types.AppPayload> = this.buildActionSequence(event.actions);
 
-    const listenerJSON: any = this.buildTriggerAction(
+    const listenerJSON: Partial<Types.AppPayload> = this.buildTriggerAction(
       eventType, 
       batchAction,
       { comment: event.comment }
     );
     
-    _.merge(listenerJSON, event.config, event.additionalJSON);
+    _.merge(listenerJSON, event.config, event.additionalData);
   
     listenerJSON.UUID = jsonUUID;
-    listenerJSON.AdditionalActions = listenerJSON.AdditionalActions.map((action: any) => {
+    listenerJSON.AdditionalActions = listenerJSON.AdditionalActions.map((action: Partial<AppPayload>) => {
       return _.merge(action, {
         UUID: CommonUtils.generateUuidForString(JSON.stringify(action), jsonUUID),
       });
     });
 
     // and set up ids
-    CommonUtils.makeAction('add_new_trigger', {
+    CommonUtils.callBetterTouchTool('add_new_trigger', {
       json: _.cloneDeep(listenerJSON),
     }, this.config);
   }
@@ -91,11 +91,11 @@ export default class EventManager {
    * Removes event listener
    * 
    * @param eventType string, created from action enum identifier
-   * @param cb IEventCallback
+   * @param cb 
    */
-  public removeTriggerAction(eventType: string, cb: (e: any) => any): void {    
+  public removeTriggerAction(eventType: string, cb: Types.EventCallback): void {    
     // get the id from event type, callback and everything
-    const triggerID: string = this.generateUUID(...arguments);
+    const triggerID: string = this.generateUUID(eventType, cb);
   
     CommonUtils.deleteTrigger(triggerID);
   }
@@ -105,7 +105,7 @@ export default class EventManager {
    * @param eventType 
    * @param cb 
    */
-  public addEventListener(eventType: string, cb: (e: any) => any): void {
+  public addEventListener(eventType: string, cb: Types.EventCallback): void {
     if (!this.config.eventServer) {
       console.warn('You must provide event server URL to use this feature');
       return;
@@ -123,13 +123,13 @@ export default class EventManager {
       // register a trigger in BetterTouchTool that'll make a request to the btt-node-server
       this.addTriggerAction(
         eventType, 
-        (ev: Types.IEventParameter): any => {
+        (ev: Types.EventParameter): void => {
           const actions = [
             this.executeScript(code),
           ];
           
           ev.actions.push(...actions);
-          ev.additionalJSON = { UUID: triggerID };
+          ev.additionalData = { UUID: triggerID };
         },
       );
   };
@@ -140,7 +140,7 @@ export default class EventManager {
    * @param eventType event that'd trigger the action
    * @param cb callback that you want to take off from the event
    */
-  public removeEventListener(eventType: string, cb: (e: any) => {}): void {
+  public removeEventListener(eventType: string, cb: Types.EventCallback): void {
     const data = this.generatePayload(this.config, cb);
 
     // get the id from event type, callback and everything
@@ -176,7 +176,7 @@ export default class EventManager {
    * @param callback function to invoke
    */
   private generatePayload(
-    bttConfig: Types.IBTTConfig,
+    bttConfig: Types.AppConfig,
     callback: Function
   ): string{
     // create a payload object out of given params
@@ -222,8 +222,8 @@ export default class EventManager {
    * 
    * @param actions 
    */
-  private buildActionSequence(actions: any[]): any {
-    const jsons: any = actions
+  private buildActionSequence(actions: Partial<Types.AppPayload>[]): Partial<AppPayload> {
+    const jsons: Partial<AppPayload> = actions
       .map(action => action.json)
       .map((action, index) => {
         return {
@@ -248,19 +248,23 @@ export default class EventManager {
    * @param batchAction 
    * @param options 
    */
-  private buildTriggerAction(eventName: string, batchAction: any, options: any = {}) { 
-    const eventTriggerObject: Types.IEventTrigger = EventTriggers.getByName(eventName);
+  private buildTriggerAction(
+    eventName: string, 
+    actions: Partial<Types.AppPayload>, 
+    options: any = {},
+  ) { 
+    const eventTriggerObject: Types.EventTrigger = EventTriggers.getByName(eventName);
 
     if (typeof eventTriggerObject === 'undefined') {
       throw new Error(`Trying to use an event that does not exist, nor is a shortcut: ${eventName}`)
     }
 
-    const json: any = {
+    const json: Partial<Types.AppPayload> = {
       TriggerType: eventTriggerObject.id,
       TriggerClass: this.getTriggerClassProperty(eventTriggerObject.category),
       Order: 99999,
       GestureNotes: options.comment || this.defaultComment,
-      ...batchAction,
+      ...actions,
     };
 
     // if user requested a key combo trigger, some additional fields are necessary

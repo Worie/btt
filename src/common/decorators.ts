@@ -8,7 +8,7 @@ import CommonUtils from '../common/util';
  * This decorator initializes the given class with config from its target
  * @param actionClass 
  */
-export function Action(theClass: Types.IClass<BaseAction>): Function {
+export function Action(theClass: Types.Class<BaseAction>): Function {
   return function (target: any, key: any, descriptor: PropertyDescriptor) {
     return {
       value: (function (...args: any[]) {
@@ -17,8 +17,20 @@ export function Action(theClass: Types.IClass<BaseAction>): Function {
             console.error(`You can't use any of these actions, due to explicit blacklisting: ${JSON.stringify(this.config.blacklist, null, 2)}`)
             throw new Error(`Attempted to use disallowed action.`);
           } else {
-            return new ADummyAction(this.config, CommonUtils.mapClassNameToMethodName(theClass));
+            if (this.isChainable) {
+              const action = new ADummyAction(this.config, CommonUtils.mapClassNameToMethodName(theClass));
+              this.addToQueue(action.invoke.bind(action));
+              return this;
+            } else {
+              return new ADummyAction(this.config, CommonUtils.mapClassNameToMethodName(theClass));
+            }
           }
+        }
+
+        if (this.isChainable) {
+          const action = new theClass(this.config, ...args);
+          this.addToQueue(action.invoke.bind(action));
+          return this;
         }
         return new theClass(this.config, ...args);
       }),
@@ -40,12 +52,25 @@ export function EventMethod(methodName: string): Function {
   };
 }
 
+export function Disallow(reason: string): Function {
+  return function(target: any, key: any, descriptor: PropertyDescriptor) {
+    return {
+      value: (function (...args: any[]): null {
+        if (!this.silent) {
+          throw new Error(`You cannot use this method here. ${reason}`)
+        }
+        
+        return null;
+      }),
+    };
+  }
+}
 /**
  * Will return whether particular action is blacklisted
  * @param theClass 
  * @param blacklist 
  */
-function checkBlackListPresence(theClass: Types.IClass<BaseAction>, blacklist: string[]) {
+function checkBlackListPresence(theClass: Types.Class<BaseAction>, blacklist: string[]) {
   if (!blacklist) {
     return false;
   }
@@ -57,3 +82,4 @@ function checkBlackListPresence(theClass: Types.IClass<BaseAction>, blacklist: s
   }
   return false;
 }
+

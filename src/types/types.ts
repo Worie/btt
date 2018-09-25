@@ -1,33 +1,40 @@
 import { EventCategory } from './enum';
 
-export interface IBTTConfig {
+export interface KeyDefinition {
+  key: string;
+  code: number;
+  locationMask?: number;
+  modifierValue?: number;
+}
+
+export interface AppConfig {
   domain: string;
   port: number;
   protocol: string;
   sharedKey?: string;
   version?: string;
-  eventServer?: IServerDefinition;
+  eventServer?: EventServerDefinition;
   nodeBinaryPath?: string;
   blacklist?: string[];
   silent?: boolean;
 }
 
-export interface IServerDefinition {
+export interface EventServerDefinition {
   domain: string;
   port: number;
 }
 
-export interface ITriggerConfig {
+export interface TriggerConfig {
   uuid?: string;
   name?: string;
 }
 
-export interface IWidgetConfig {
+export interface WidgetConfig {
   uuid: string;
   default: Function;
 }
 
-export interface IActionRequirements {
+export interface ActionRequirements {
   // a BTT version in which this action has been introduced
   min: string;
   // a BTT version in which this action has become deprecated
@@ -38,18 +45,12 @@ export interface IActionRequirements {
   name?: string;
 }
 
-export interface IActionConfig {
-  requirements: IActionRequirements;
+export interface ActionConfig {
+  requirements: ActionRequirements;
   name: string;
 }
 
-export interface IState {
-  set: (key: string, value: string | number, isPersistent: boolean) => Promise<any>;
-  get: (key: string, mode?: 'string' | 'number') => Promise<number | string>;
-  delete: (key: string) => Promise<any>;
-}
-
-export interface IShowHUDConfig {
+export interface ShowHUDConfig {
   title?: string;
   details?: string;
   duration?: number;
@@ -57,18 +58,18 @@ export interface IShowHUDConfig {
   direction?: number;
 }
 
-export interface ISendTextConfig {
+export interface SendTextConfig {
   text: string;
   moveCursorLeft?: number;
 }
 
-export interface IMoveMouseConfig {
+export interface MoveMouseConfig {
   x: number;
   y: number;
   relativeTo?: number;
 }
 
-export interface IShowWebViewConfig {
+export interface ShowWebViewConfig {
   width: number;
   height: number;
   name: string;
@@ -76,10 +77,10 @@ export interface IShowWebViewConfig {
   y?: number;
   url?: string;
   html?: string;
-  config?: IFloatingHTMLConfig;
+  config?: FloatingWebViewConfig;
 }
 
-export interface IFloatingHTMLConfig {
+export interface FloatingWebViewConfig {
   cache?: boolean;
   closeOnClickOut?: boolean;
   whiteBackground?: boolean;
@@ -87,22 +88,24 @@ export interface IFloatingHTMLConfig {
   showButtons?: boolean;
 }
 
-export interface IEventParameter { 
+export type ActionJSON = Partial<AppPayload>;
+
+export interface EventParameter { 
   actions: ActionJSON[],
   comment: string;
-  additionalJSON: Record<string, any>;
+  additionalData: Partial<AppPayload>;
   requiredModifierKeys: ('fn' | 'cmd' | 'alt' | 'ctrl' | 'shift')[];
   // allows to specify the data that is not possible to pass
   // via simple event name
-  config: any;
+  config: BttPayload;
 }
 
-export interface IShowNotificationConfig {
+export interface ShowNotificationConfig {
   title: string;
   content: string;
 }
 
-export interface ITouchbarWidgetCreateConfig {
+export interface WidgetCreateConfig {
   name: string; // 'touchbar widget name',
   mode: 'node' | 'bash';
   path: string;
@@ -118,27 +121,27 @@ export interface ITouchbarWidgetCreateConfig {
   },
 }
 
-export interface IClass<T> {
-  new (config: IBTTConfig, ...args: any[]): T;
+export interface Class<T> {
+  new (config: AppConfig, ...args: any[]): T;
 }
 
-export type ActionJSON = Record<string, any>;
+export type KeyCombo = string;
+export type AppPayload = Record<string, any>;
+export type BttPayload = Record<string, any>;
 
-export type IKeyCombo = string;
-
-export type IBetterTouchToolPayload = Record<string, any>;
-
-export interface IEventTrigger {
+export interface EventTrigger {
   id: number;
   category: EventCategory;
   name: string;
-  notices?: INoticeMessage[],
+  notices?: NoticeMessage[],
 }
 
-export interface INoticeMessage {
+export interface NoticeMessage {
   text: string;
-  data?: Record<string, any>;
+  data?: Partial<AppPayload>,
 }
+
+export type EventCallback = (e: EventParameter) => void;
 
 /**
  * ETR - EventTriggerRequirements (Additional options for some triggers)

@@ -1,45 +1,45 @@
-import { FTrigger } from './common/trigger';
-import { FWidget } from './common/widget';
-import VariableStore from './common/state';
+import { FTrigger } from '../common/trigger';
+import { FWidget } from '../common/widget';
+import VariableStore from '../common/state';
 
-import * as Initializer from './types/initializers';
-import * as Types from './types/types';
+import * as Initializer from '../types/initializers';
+import * as Types from '../types/types';
 
-import CommonUtils from './common/util';
+import CommonUtils from '../common/util';
 
-import AHapticFeedback from './common/actions/hapticFeedback';
-import ASendText from './common/actions/sendText';
-import ASaveSelectedText from './common/actions/saveSelectedText';
-import ADelayNextAction from './common/actions/delayNextAction';
-import AToggleBTT from './common/actions/toggle';
-import AStartSiri from './common/actions/startSiri';
-import ALaunchApplication from './common/actions/launchApplication';
-import AToggleApplication from './common/actions/toggleApplication';
-import AMute from './common/actions/mute';
-import ATriggerShortcut from './common/actions/triggerShortcut';
-import AToggleNightShift from './common/actions/toggleNightShift';
-import AToggleDnD from './common/actions/toggleDnD';  
-import AToggleMouseSize from './common/actions/toggleMouseSize';
-import AToggleMouseSpeed from './common/actions/toggleMouseSpeed';
-import AToggleMouseCursor from './common/actions/toggleMouseCursor';
-import AToggleDarkMode from './common/actions/toggleDarkMode';
-import ALockScreen from './common/actions/lockScreen';
-import ALogout from './common/actions/logout';
-import ASleepDisplay from './common/actions/sleepDisplay';
-import ASleepComputer from './common/actions/sleepComputer';
-import ARestartBTT from './common/actions/restart';
-import AQuitBTT from './common/actions/quit';
-import ASendShortcut from './common/actions/sendShortcut';
-import AShowHUD from './common/actions/showHUD';
-import AMoveMouse from './common/actions/moveMouse';
-import AShowWebView from './common/actions/showWebView';
-import AExecuteScript from './common/actions/executeScript';
-import EventManager from './common/events/';
-import AShowNotification from './common/actions/showNotification';
-import AToggleTrueTone from './common/actions/toggleTrueTone';
+import AHapticFeedback from '../common/actions/hapticFeedback';
+import ASendText from '../common/actions/sendText';
+import ASaveSelectedText from '../common/actions/saveSelectedText';
+import ADelayNextAction from '../common/actions/delayNextAction';
+import AToggleBTT from '../common/actions/toggle';
+import AStartSiri from '../common/actions/startSiri';
+import ALaunchApplication from '../common/actions/launchApplication';
+import AToggleApplication from '../common/actions/toggleApplication';
+import AMute from '../common/actions/mute';
+import ATriggerShortcut from '../common/actions/triggerShortcut';
+import AToggleNightShift from '../common/actions/toggleNightShift';
+import AToggleDnD from '../common/actions/toggleDnD';  
+import AToggleMouseSize from '../common/actions/toggleMouseSize';
+import AToggleMouseSpeed from '../common/actions/toggleMouseSpeed';
+import AToggleMouseCursor from '../common/actions/toggleMouseCursor';
+import AToggleDarkMode from '../common/actions/toggleDarkMode';
+import ALockScreen from '../common/actions/lockScreen';
+import ALogout from '../common/actions/logout';
+import ASleepDisplay from '../common/actions/sleepDisplay';
+import ASleepComputer from '../common/actions/sleepComputer';
+import ARestartBTT from '../common/actions/restart';
+import AQuitBTT from '../common/actions/quit';
+import ASendShortcut from '../common/actions/sendShortcut';
+import AShowHUD from '../common/actions/showHUD';
+import AMoveMouse from '../common/actions/moveMouse';
+import AShowWebView from '../common/actions/showWebView';
+import AExecuteScript from '../common/actions/executeScript';
+import EventManager from '../common/events';
+import AShowNotification from '../common/actions/showNotification';
+import AToggleTrueTone from '../common/actions/toggleTrueTone';
 
 // decorator for creating actions
-import { Action, EventMethod } from './common/decorators';
+import { Action, EventMethod, Disallow } from '../common/decorators';
 
 /**
  * Class used to manage the BTT webserver 
@@ -56,7 +56,7 @@ export class Btt {
   public Widget: FWidget;
 
   // stores the config from the constructor
-  private config: Types.IBTTConfig;
+  private config: Types.AppConfig;
 
   // event manager
   private event: EventManager;
@@ -64,7 +64,7 @@ export class Btt {
   /**
    * Creates BTT instance which communicates with BetterTouchTool built in webserver
    */
-  constructor(config: Types.IBTTConfig) {
+  constructor(config: Types.AppConfig) {
     this.config = config;
     
     // initialize the Widget factory
@@ -85,9 +85,16 @@ export class Btt {
    */
   public do(
     action: string,
-    data: Record<string, any>
+    data: Types.BttPayload,
   ): Promise<any> {
-    return CommonUtils.makeAction(action, data, this.config);
+    return CommonUtils.callBetterTouchTool(action, data, this.config);
+  }
+
+  /**
+   * Allows to create a queue of actions, and just then invoke them
+   */
+  public invokeChain() {
+    return new Chain(this.config);
   }
 
   /** Events Management */
@@ -235,7 +242,7 @@ export class Btt {
 
   /**
    * Delays the next action. For most cases manually managing the execution of actions in JavaScript
-   * should be sufficient - this will block any new action that BTT will recieve by the given am
+   * should be sufficient - using this will block any new action that BTT will recieve
    * 
    * @param timeout - time in miliseconds during any action execution will be delayed
    */
@@ -326,4 +333,102 @@ export class Btt {
    */
   @Action(AQuitBTT)
   public quit: Initializer.QuitBTT;
+}
+
+// @TODO: can't be moved out to separate module due to circular dependecy issue
+class Chain extends Btt {
+  private readonly currentQueue: (() => Promise<any>)[] = [];
+  
+  public readonly isChainable: boolean = true;
+
+  // @Disallow('Constructors are only available in base btt instance')
+  // public Trigger: FTrigger;
+
+  // @Disallow('Constructors are only available in base btt instance')
+  // public Widget: FWidget;
+  
+  // @Disallow('Variable related functionalities are disabled while in chain')
+  // public state: VariableStore;
+  
+  @Disallow('Event related methods are only valid in base btt instance, not in its chain')
+  public addEventListener: Initializer.EventMethod;
+  
+  @Disallow('Event related methods are only valid in base btt instance, not in its chain')
+  public addTriggerAction: Initializer.EventMethod;
+  
+  @Disallow('Event related methods are only valid in base btt instance, not in its chain')
+  public removeEventListener: Initializer.EventMethod;
+  
+  @Disallow('Event related methods are only valid in base btt instance, not in its chain')
+  public removeTriggerAction: Initializer.EventMethod;
+
+  @Disallow('Chaining multiple invokeChain methods is not allowed')
+  public invokeChain(): undefined {
+    return;
+  };
+
+  /**
+   * Returns whether queue is empty or not
+   */
+  protected get queueFinished(): boolean {
+    return this.currentQueue.length === 0;
+  }
+
+  /**
+   * Allows to invoke previously prepared chain, returns promise
+   */
+  public call(): Promise<any> {
+    // start completing the queue
+    this.updateQueue();
+    
+    // return a promise that'll resolve once all items in queue are done (queue empty)
+    return new Promise((res, rej) => {
+      if (this.queueFinished) { res(); }
+    });
+  };
+
+  /**
+   * Allows to delay the action execution from JavaScript side. Time in ms
+   * @param timeout 
+   */
+  public wait(timeout: number) {
+    // adds a promise to queue that'll resolve after given timeout
+    this.addToQueue(() => new Promise((res, rej) => { setTimeout(() => { res(this) }, timeout) }));
+
+    // because this method is chainable, we're returning current instance
+    return this;
+  }
+
+  /**
+   * Recursive function that'll invoke the queue elements an remove them from list once resolved
+   */
+  private async updateQueue() {
+    // if queue is empty at this point, finish
+    if (this.currentQueue.length === 0) {
+      return true;
+    };
+
+    // get the item that should be processed now
+    const currentStep = this.currentQueue[0];
+
+    // if the element is a function, not a promise - invoke it and proceed
+    if (typeof currentStep === 'function') {
+      // invoke the current callback and wait for it to complete
+      await currentStep.call(null);
+
+      // remove the element from queue
+      this.currentQueue.shift();
+
+      // proceed to next step
+      await this.updateQueue();
+    }
+  }
+
+  /**
+   * Allows to add new entries to queue
+   * @param fn 
+   */
+  private addToQueue(fn: () => Promise<any>) {
+    this.currentQueue.push(fn);
+  }
 }

@@ -1,4 +1,4 @@
-import { mapShortcutNotationToBTT } from '../keys';
+import Keys from '../keys';
 import { EActions } from '../../types/enum';
 import { BaseAction } from '../../abstract/base-action';
 
@@ -10,7 +10,7 @@ export default class ATriggerShortcut extends BaseAction {
 
   public get data() {
     const shortcut: string = this.arguments[0];
-    const shortcutToSend: string = mapShortcutNotationToBTT(shortcut);
+    const shortcutToSend: string = Keys.mapShortcutNotationToBTT(shortcut);
 
     return {
       ShortcutToSend: shortcutToSend,

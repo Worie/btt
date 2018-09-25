@@ -10,11 +10,11 @@ export default class AShowWebView extends BaseAction {
   protected id: EActions = EActions.SHOW_WEB_VIEW;
   
   public get data() {
-    const actionConfig: Types.IShowWebViewConfig = this.arguments[0];
-    const floatingHTMLConfig: Types.IFloatingHTMLConfig = actionConfig.config || {};
+    const actionConfig: Types.ShowWebViewConfig = this.arguments[0];
+    const floatingHTMLConfig: Types.FloatingWebViewConfig = actionConfig.config || {};
     const { width, height, x, y, name, url, html } = actionConfig;
 
-    const actionFloatingHTMLConfig: any = {
+    const actionFloatingHTMLConfig: Partial<Types.AppPayload> = {
       CloseOnOutsideClick: floatingHTMLConfig.closeOnClickOut || true,
       UseWhiteBackground: floatingHTMLConfig.whiteBackground || false,
       CloseOnBrowserOpen: floatingHTMLConfig.closeOnBrowserOpen || true,
@@ -28,7 +28,7 @@ export default class AShowWebView extends BaseAction {
       actionFloatingHTMLConfig.Position = `{${x || 0}, ${y || 0}}`;
     }
   
-    const result: any = {
+    const result: Partial<Types.AppPayload> = {
       ActionFloatingHTMLConfig: JSON.stringify(
         CommonUtils.translateObjectKeysToBttNotation(actionFloatingHTMLConfig)
       ),

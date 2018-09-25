@@ -12,14 +12,14 @@ export default class AShowHUD extends BaseAction {
   protected id: EActions = EActions.SHOW_HUD;
 
   public get data() {
-    const config: Types.IShowHUDConfig = this.arguments[0];
+    const config: Types.ShowHUDConfig = this.arguments[0];
     
     const { title, details, duration, background, direction } = config;
       
     // limit the duration to 10 seconds, and ignore negative values
     const reasonableDuration = Math.abs(Math.min(duration, 10));
   
-    const BTTAdditionalConfig: any = {
+    const BTTAdditionalConfig = {
       ActionHUDDetail: details,
       ActionHUDTitle: title,
       ActionHUDDuration: reasonableDuration || 0.8,
@@ -27,7 +27,7 @@ export default class AShowHUD extends BaseAction {
       ActionHUDSlideDirection: direction,
     };
     
-    const result: any = {
+    const result = {
       HUDActionConfiguration : JSON.stringify(
         CommonUtils.translateObjectKeysToBttNotation(BTTAdditionalConfig)
       ),

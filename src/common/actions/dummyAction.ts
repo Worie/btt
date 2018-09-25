@@ -10,7 +10,7 @@ export default class ADummyAction extends BaseAction {
   protected id: EActions = EActions.DUMMY;
   public name: string;
 
-  constructor(config: Types.IBTTConfig, ...args: any[]) {
+  constructor(config: Types.AppConfig, ...args: any[]) {
     super(config, ...args);
     this.name = this.arguments[0];
   }

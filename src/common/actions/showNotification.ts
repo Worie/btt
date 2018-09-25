@@ -10,7 +10,7 @@ export default class AShowNotification extends BaseAction {
 
   public get data() {
 
-    const config: Types.IShowNotificationConfig = this.arguments[0];
+    const config: Types.ShowNotificationConfig = this.arguments[0];
 
     return {
       TriggerClass: "BTTTriggerTypeKeyboardShortcut",

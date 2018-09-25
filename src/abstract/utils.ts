@@ -19,7 +19,7 @@ export default abstract class Utilities {
   /**
    * Returns a base url for the BTT webserver endpoint
    */
-  public getUrl(config: Partial<Types.IBTTConfig>): string {
+  public getUrl(config: Partial<Types.AppConfig>): string {
     const { protocol, domain, port } = config; 
 
     return `${protocol}://${domain}:${port}/`;
@@ -28,10 +28,10 @@ export default abstract class Utilities {
   /**
    * Sends a request to real BTT built in webserver with given data translated as GET query params
    */
-  public async makeAction(
+  public async callBetterTouchTool(
     action: string, 
-    data: Record<string, any>,
-    config: Types.IBTTConfig,
+    data: Types.BttPayload,
+    config: Types.AppConfig,
   ): Promise<any> {
     const parsedJSON = this.translateObjectKeysToBttNotation(data.json);
     const parameters = this.params({json: JSON.stringify(parsedJSON)}, config.sharedKey);
@@ -44,7 +44,7 @@ export default abstract class Utilities {
     } catch (err) {
       return new Error(
         `
-        Fetch to BetterTouchTool webserver API failed. See the details:
+        Request to BetterTouchTool webserver API failed. See the details:
         
         Action: ${action}
         Parameters: ${JSON.stringify(data, null, 2)}
@@ -90,7 +90,9 @@ export default abstract class Utilities {
    * Maps each key in the passed object to btt notation (BTTWhateverPassed)
    * @param key 
    */
-  public translateObjectKeysToBttNotation(object: Record<string,any>) {
+  public translateObjectKeysToBttNotation(
+    object: Partial<Types.AppPayload> | Partial<Types.BttPayload>
+  ) {
     if (object === null) {
       return object;
     }
@@ -106,6 +108,7 @@ export default abstract class Utilities {
       }
 
       const newKey: string = this.keyToBttNotation(key);
+
       if (newKey !== key) {
         object[newKey] = _.cloneDeep(object[key]);
         delete object[key];
@@ -128,7 +131,7 @@ export default abstract class Utilities {
   }
 
   /**
-   * 
+   * Parses given string to simplified lower case
    * @param string 
    */
   public simpleCase(string: string) {
@@ -148,7 +151,7 @@ export default abstract class Utilities {
   /**
    * Returns a base url for the BTT webserver endpoint
    */
-  public getBaseUrl(config: Partial<Types.IBTTConfig>): string {
+  public getBaseUrl(config: Partial<Types.AppConfig>): string {
     const { protocol, domain, port } = config; 
     return `${protocol}://${domain}:${port}/`;
   }
@@ -163,10 +166,11 @@ export default abstract class Utilities {
   }
 
   /**
-   * 
+   * Parses given class name to simplified notation
    * @param theClass 
+   * @example Class AShowHUD { } => showhud
    */
-  public mapClassNameToMethodName(theClass: Types.IClass<BaseAction>) {
+  public mapClassNameToMethodName(theClass: Types.Class<BaseAction>) {
    if (
      theClass.name[0] !== 'A' &&
      theClass.prototype instanceof BaseAction

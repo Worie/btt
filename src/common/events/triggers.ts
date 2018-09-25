@@ -5,11 +5,11 @@
  * @TODO: make use of notices mechanism
  */
 import { EventCategory } from '../../types/enum';
-import { IEventTrigger } from '../../types/types';
-import * as Keys from '../keys';
+import { EventTrigger } from '../../types/types';
+import Keys from '../keys';
 
 export default class EventTriggers {
-  private static events: IEventTrigger[] = [
+  private static events: EventTrigger[] = [
     {
       id: 157,
       category: EventCategory.TRACKPAD,
@@ -496,7 +496,7 @@ export default class EventTriggers {
       category: EventCategory.OTHER,
       name: 'namedTrigger',
       notices: [{
-        text: 'You need to pass a trigger so yo can later invoke it',
+        text: 'You need to pass a trigger name by which you can later invoke it',
         data: {
           triggerName: 'my-trigger',
         },
@@ -1075,19 +1075,36 @@ export default class EventTriggers {
     },
   ];
 
-  static get all(): IEventTrigger[] {
+  /**
+   * Returns all predefined event trigger definitions
+   */
+  static get all(): EventTrigger[] {
     return EventTriggers.events;
   }
 
-  static getByCategory(category: EventCategory): IEventTrigger[] {
+  /**
+   * Returns all triggers that match the specified category
+   * @param category 
+   */
+  static getByCategory(category: EventCategory): EventTrigger[] {
     return EventTriggers.all.filter(t => t.category === category);
   }
 
-  static getById(id: number): IEventTrigger {
+  /**
+   * Returns single trigger based on id
+   * @param id 
+   */
+  static getById(id: number): EventTrigger {
     return EventTriggers.all.find(t => t.id === id);
   }
 
-  static getByName(name: string): IEventTrigger {
+  /**
+   * Returns trigger definition based by name - string passed by user
+   * 
+   * In case user requests key combo event, dummy object is returned
+   * @param name 
+   */
+  static getByName(name: string): EventTrigger {
     // first we need to check whether this particular event exists in predefined list
     const knownEventsLookupResult = EventTriggers.all.find(t => {
       return t.name.toLowerCase() === name.toLowerCase();

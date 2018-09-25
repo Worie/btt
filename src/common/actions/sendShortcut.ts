@@ -1,6 +1,6 @@
 import { EActions } from '../../types/enum';
 import { BaseAction } from '../../abstract/base-action';
-import { mapShortcutNotationToBTT } from '../keys';
+import Keys from '../keys';
 import CommonUtils from '../util';
 
 /**
@@ -14,7 +14,7 @@ export default class ASendShortcut extends BaseAction {
     const applicationPath: string = this.arguments[1];
     const mdlsName: string = this.arguments[2];
 
-    const shortcutToSend: string = mapShortcutNotationToBTT(shortcut);
+    const shortcutToSend: string = Keys.mapShortcutNotationToBTT(shortcut);
 
     const mdlsValue = CommonUtils.getMdlsName(applicationPath) || mdlsName;
 

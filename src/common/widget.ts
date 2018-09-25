@@ -1,11 +1,11 @@
 /**
  * Represents a BTT TouchBar Widget.
- * For "typings structure" refer to the https://github.com/Microsoft/TypeScript/issues/13462#issuecomment-295685298
  */
 
 import CommonUtils from './util';
 import { ETouchBarWidgets } from '../types/enum';
 import * as Types from '../types/types';
+import { BttPayload } from '../types/types';
 
 export class Widget {
   // stores the uuid of the existing btt widget
@@ -15,15 +15,16 @@ export class Widget {
   private default: Function;    
 
   // holds the config of the current instance
-  private config: Types.IBTTConfig;
+  private config: Types.AppConfig;
 
   /**
    * Creates an instance representing BTT Widget
-   * @param {*} config 
+   * @param config 
+   * @param widgetConfig 
    */
   public constructor(
-    config: Types.IBTTConfig,
-    widgetConfig: Types.IWidgetConfig,
+    config: Types.AppConfig,
+    widgetConfig: Types.WidgetConfig,
   ) {
     this.uuid = widgetConfig.uuid;
     this.default = widgetConfig.default;
@@ -33,9 +34,9 @@ export class Widget {
 
   /**
    * Updates the current widget with given data
-   * @param {*} data 
+   * @param data 
    */
-  async update(data?: any): Promise<void> {
+  async update(data?: Partial<BttPayload>): Promise<void> {
     // if there was no data passed, nor there was no default fallback
     if (!data && !this.default) {
       // show a warning and stop the execution of the function
@@ -57,21 +58,21 @@ export class Widget {
     };
 
     // update current widget
-    return CommonUtils.makeAction('update_touch_bar_widget', updateData, this.config);
+    return CommonUtils.callBetterTouchTool('update_touch_bar_widget', updateData, this.config);
   }
 
   /**
    * Refreshes current widget
    */
   public async refresh(): Promise<void> {
-    return CommonUtils.makeAction('refresh_widget', { uuid: this.uuid }, this.config);
+    return CommonUtils.callBetterTouchTool('refresh_widget', { uuid: this.uuid }, this.config);
   }
 
   /**
    * Triggers the widget
    */
   public async click(): Promise<void> {
-    return CommonUtils.makeAction('execute_assigned_actions_for_trigger', {
+    return CommonUtils.callBetterTouchTool('execute_assigned_actions_for_trigger', {
       uuid: this.uuid,
     }, this.config);
   }
@@ -81,13 +82,13 @@ export class Widget {
  * Creates Widget class instance with given config
  */
 export class FWidget {
-  private config: Types.IBTTConfig;
+  private config: Types.AppConfig;
 
   /**
-   * Takes an IBTTConfig as a constructor parameter
+   * Takes an AppConfig as a constructor parameter
    * @param config 
    */
-  public constructor(config: Types.IBTTConfig) {
+  public constructor(config: Types.AppConfig) {
     this.config = config;
   }
 
@@ -95,7 +96,7 @@ export class FWidget {
    * Returns a new Widget class instance and automatically passes the current btt instance config
    * @param config 
    */
-  public get(config: Types.IWidgetConfig): Widget {
+  public get(config: Types.WidgetConfig): Widget {
     return new Widget(this.config, config);
   }
 
@@ -103,7 +104,7 @@ export class FWidget {
    * Creates a new BetterTouchTool touchbar widget and returns its instance
    * @param options: Types.ITouchbarWidgetCreateConfig
    */
-  public async create(options: Types.ITouchbarWidgetCreateConfig): Promise<any> {    
+  public async create(options: Types.WidgetCreateConfig): Promise<Widget> {    
     const uuid = CommonUtils.generateUuidForString(JSON.stringify(options));
 
     const binaryPath = CommonUtils.getNodeBinaryPath();
@@ -116,8 +117,8 @@ export class FWidget {
     // btt format for executable path 
     const shellScriptWidgetGestureConfig = `${escapedPath}:::${(mode === 'node' ? '-e' : '-c')}`;
 
-    // real payload that'll create a widget
-    const bttPayload: any = {
+    // library payload that'll create a widget later
+    const appPayload: Types.AppPayload = {
       WidgetName: options.name,
       TriggerType: ETouchBarWidgets.CREATE,
       TriggerClass: "BTTTriggerTypeTouchBar",
@@ -143,8 +144,8 @@ export class FWidget {
     };
     
     // make the request to the BTT API to create new widget
-    await CommonUtils.makeAction('add_new_trigger', {
-      json: bttPayload,
+    await CommonUtils.callBetterTouchTool('add_new_trigger', {
+      json: appPayload,
     }, this.config);
 
     // get the instance representing the newly created widget
