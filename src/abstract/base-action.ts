@@ -72,10 +72,15 @@ export abstract class BaseAction {
   /**
    * Calls the prepared action
    */
-  public async invoke(): Promise<any> {
+  public async invoke(): Promise<Types.CallResult | any> {
     if (this.id === EActions.DUMMY) {
       return new Promise((res, rej) => { 
-        res(`This action was was not performed due to blacklisting: ${(this as any).name}`); 
+        const response = ({
+          time: null,
+          note: `This action was was not performed due to blacklisting: ${(this as any).name}`,
+          status: null,
+        }) as Types.CallResult;
+        res(response); 
       });
     }
 

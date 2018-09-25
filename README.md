@@ -196,9 +196,9 @@ So depending on your BTT version some actions may be glitchy. Do not hestitate t
 ### Related projects:
 
 * [btt](https://github.com/Worie/btt) - BetterTouchTool management in JS
-* [btt-json-loader](https://github.com/Worie/btt-json-loader) - JSON loader for BTT
+<!-- * [btt-json-loader](https://github.com/Worie/btt-json-loader) - JSON loader for BTT -->
 * [btt-node-server](https://github.com/Worie/btt-node-server) - Simple express server, required for advanced event listeners handling
-* [btt-touchbar-widgets](https://github.com/Worie/btt-touchbar-widgets) - Working touchbar widgets, based on [btt](https://github.com/Worie/btt)
+<!-- * [btt-touchbar-widgets](https://github.com/Worie/btt-touchbar-widgets) - Working touchbar widgets, based on [btt](https://github.com/Worie/btt) -->
 * [btt-node](https://github.com/Worie/btt-node) Premature version of this package ([btt](https://github.com/Worie/btt)) - deprecated
 
 ## License

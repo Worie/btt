@@ -29,7 +29,7 @@ export class Trigger {
    * Calls the given trigger. Based on the data it was constructed with
    * the method of invoke varies
    */
-  invoke(): Promise<void> {
+  invoke(): Promise<Types.CallResult> {
     // if this is a named trigger
     if (this.name) {
       // perform a named trigger execution
@@ -54,7 +54,7 @@ export class Trigger {
    * Updates the trigger data with given JSON
    * @param {*} data 
    */
-  update(data: Types.BttPayload): Promise<void> {
+  update(data: Types.BttPayload): Promise<Types.CallResult> {
     if (!data) {
       console.warn('No update data passed to Trigger');
       return;

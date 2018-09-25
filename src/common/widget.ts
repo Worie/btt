@@ -36,7 +36,7 @@ export class Widget {
    * Updates the current widget with given data
    * @param data 
    */
-  async update(data?: Partial<BttPayload>): Promise<void> {
+  async update(data?: Partial<BttPayload>): Promise<Types.CallResult> {
     // if there was no data passed, nor there was no default fallback
     if (!data && !this.default) {
       // show a warning and stop the execution of the function
@@ -64,14 +64,14 @@ export class Widget {
   /**
    * Refreshes current widget
    */
-  public async refresh(): Promise<void> {
+  public async refresh(): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool('refresh_widget', { uuid: this.uuid }, this.config);
   }
 
   /**
    * Triggers the widget
    */
-  public async click(): Promise<void> {
+  public async click(): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool('execute_assigned_actions_for_trigger', {
       uuid: this.uuid,
     }, this.config);

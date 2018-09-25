@@ -335,11 +335,25 @@ export class Btt {
   public quit: Initializer.QuitBTT;
 }
 
+enum QueueStatus {
+  IDLE = 0,
+  RUNNING = 1,
+  FINISHED = 1,
+}
 // @TODO: can't be moved out to separate module due to circular dependecy issue
 class Chain extends Btt {
-  private readonly currentQueue: (() => Promise<any>)[] = [];
+  
+  // holds the current queue, which removes 
+  private currentQueue: Types.ChainEntry[] = [];
+
+  private finishedQueue: Types.CallResult[] = [];
+
+  private totalQueue: Types.ChainEntry[] = [];
   
   public readonly isChainable: boolean = true;
+
+  // holds status of the queue - if runinng or not
+  private status: QueueStatus = QueueStatus.IDLE;
 
   // @Disallow('Constructors are only available in base btt instance')
   // public Trigger: FTrigger;
@@ -368,22 +382,52 @@ class Chain extends Btt {
   };
 
   /**
+   * 
+   */
+  private getChainResponse(time: number): Types.ChainResponse {
+    return {
+      time,
+      actionsResults: this.finishedQueue,
+      status: null,
+      note: null,
+      value: null,
+    }
+  }
+
+  /**
    * Returns whether queue is empty or not
    */
-  protected get queueFinished(): boolean {
-    return this.currentQueue.length === 0;
+  public get isFinished(): boolean {
+    return this.status === QueueStatus.FINISHED;
+  }
+
+  public get isRunning(): boolean {
+    return this.status === QueueStatus.RUNNING;
   }
 
   /**
    * Allows to invoke previously prepared chain, returns promise
    */
   public call(): Promise<any> {
+    const startTime = performance.now();
+
+    // set current queue to the total list
+    this.currentQueue = this.totalQueue;
+
+    // clear the finished list
+    this.finishedQueue = [];
+
     // start completing the queue
     this.updateQueue();
     
     // return a promise that'll resolve once all items in queue are done (queue empty)
     return new Promise((res, rej) => {
-      if (this.queueFinished) { res(); }
+      if (this.isFinished) { 
+        const endTime = performance.now();
+        res(
+          this.getChainResponse((startTime - endTime)),
+        ); 
+      }
     });
   };
 
@@ -403,6 +447,8 @@ class Chain extends Btt {
    * Recursive function that'll invoke the queue elements an remove them from list once resolved
    */
   private async updateQueue() {
+    this.status = QueueStatus.RUNNING;
+
     // if queue is empty at this point, finish
     if (this.currentQueue.length === 0) {
       return true;
@@ -414,7 +460,7 @@ class Chain extends Btt {
     // if the element is a function, not a promise - invoke it and proceed
     if (typeof currentStep === 'function') {
       // invoke the current callback and wait for it to complete
-      await currentStep.call(null);
+      this.finishedQueue.push(await currentStep.call(null));
 
       // remove the element from queue
       this.currentQueue.shift();
@@ -422,6 +468,8 @@ class Chain extends Btt {
       // proceed to next step
       await this.updateQueue();
     }
+
+    this.status = QueueStatus.FINISHED;
   }
 
   /**
@@ -429,6 +477,7 @@ class Chain extends Btt {
    * @param fn 
    */
   private addToQueue(fn: () => Promise<any>) {
+    this.totalQueue.push(fn);
     this.currentQueue.push(fn);
   }
 }

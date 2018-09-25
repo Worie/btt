@@ -7,6 +7,19 @@ export interface KeyDefinition {
   modifierValue?: number;
 }
 
+export interface CallResult {
+  time: number;
+  status: number;
+  value: any;
+  note?: string;
+}
+
+export interface ChainResponse extends CallResult {
+  actionsResults: CallResult[];
+}
+
+export type ChainEntry = () => Promise<CallResult>;
+
 export interface AppConfig {
   domain: string;
   port: number;
