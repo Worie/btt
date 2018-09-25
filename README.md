@@ -15,24 +15,28 @@ This package is a handy wrapper over [BetterTouchTool](https://folivora.ai/) bui
 
 This package will allow you to automate you MacOS-running machine using JavaScript. You'll be able to:
 
+* Create event listeners that'll be run within operating system, outside browser!
 * Toggle your do-not-disturb state
 * Show a system notification
 * Toggle Night Shift
 * Sleep your computer after timeout
 * Create your own **touchbar widgets**
 * Feel a notification via **haptic engine**
+* Control the brightness of the screen, keyboard
+* Control the volume levels
 * Use the content of your clipboard to be opened in specific url or application
 * Create your own UIs "within system" using web view 
 * Trigger a system wide keyboard shortcut
 * Send a shortcut to specific application
 * Show / Hide / Open / Quit specific applcation
 * Move your mouse to specific position and click it
+* Hide your cursor
 * Lock / Unlock your MacOS machine
-* Integrate your flow with various APIs ...
+* Integrate your flow / touchbar with various APIs ...
 
 *and anything else that BetterTouchTool or JavaScript specification will allow you to do!*
 
-## Typings
+## Typings enabled, isomorphic app
 
 This package provides it's own type definitions and can be run both on browser and nodejs environment.
 
@@ -195,7 +199,7 @@ So depending on your BTT version some actions may be glitchy. Do not hestitate t
 * [btt-json-loader](https://github.com/Worie/btt-json-loader) - JSON loader for BTT
 * [btt-node-server](https://github.com/Worie/btt-node-server) - Simple express server, required for advanced event listeners handling
 * [btt-touchbar-widgets](https://github.com/Worie/btt-touchbar-widgets) - Working touchbar widgets, based on [btt](https://github.com/Worie/btt)
-* [btt-node](https://github.com/Worie/btt-node) Premature version of [btt](https://github.com/Worie/btt) - deprecated
+* [btt-node](https://github.com/Worie/btt-node) Premature version of this package ([btt](https://github.com/Worie/btt)) - deprecated
 
 ## License
 
