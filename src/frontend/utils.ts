@@ -17,4 +17,6 @@ export default class FrontendUtilities extends Utilities {
   public getMdlsName(applicationPath: string): string {
     return undefined;
   }
+
+  public performanceNow = window.performance.now;
 }

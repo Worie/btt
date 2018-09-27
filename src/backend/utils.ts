@@ -1,6 +1,7 @@
 import Utilities from '../abstract/utils';
 import { execSync } from 'child_process';
 import * as Path from 'path';
+import * as PerformanceNow from 'performance-now';
 
 export default class BackendUtilities extends Utilities {
 
@@ -22,4 +23,6 @@ export default class BackendUtilities extends Utilities {
       const mdlsName: string = execSync(`mdls -name kMDItemCFBundleIdentifier -r ${applicationPath}`).toString();
       return mdlsName;
   }
+
+  public performanceNow = PerformanceNow
 }

@@ -2,7 +2,6 @@ import * as Types from '../types/types';
 import * as uuidv5 from 'uuid/v5';
 import * as _ from 'lodash';
 import { BaseAction } from '../abstract/base-action';
-import { start } from 'repl';
 
 const NAMESPACE = '87a84aef-11fe-4dce-8d00-429cea46f345';
 
@@ -14,6 +13,8 @@ export default abstract class Utilities {
   public abstract getNodeBinaryPath(): string;
 
   public abstract getMdlsName(applicationPath: string): string;
+
+  public abstract performanceNow: any;
 
   /** Base, environment agnostic methods */
 
@@ -40,21 +41,20 @@ export default abstract class Utilities {
     const urlToFetch = this.buildFullUrl(action, parameters, url);
     
     // start mesuring time
-    const startTime = performance.now();
+    const startTime = this.performanceNow().toFixed(3) * 100;
     
     try {
       const response = await this.fetch(urlToFetch);
       // end mesuring time
-      const endTime = performance.now();
+      const endTime = this.performanceNow().toFixed(3) * 100;
       return {
         time: (endTime - startTime),
         value: response,
         status: response.status,
       };
     } catch (err) {
-      const endTime = performance.now();
       return {
-        time: (endTime - startTime),
+        time: null,
         value: err,
         status: err.status,
         note: `

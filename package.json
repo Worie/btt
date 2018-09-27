@@ -19,6 +19,7 @@
     "detect-node": "^2.0.3",
     "lodash": "^4.17.10",
     "node-fetch-polyfill": "^2.0.6",
+    "performance-now": "^2.1.0",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

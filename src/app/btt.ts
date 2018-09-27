@@ -338,7 +338,7 @@ export class Btt {
 enum QueueStatus {
   IDLE = 0,
   RUNNING = 1,
-  FINISHED = 1,
+  FINISHED = 2,
 }
 // @TODO: can't be moved out to separate module due to circular dependecy issue
 class Chain extends Btt {
@@ -384,13 +384,11 @@ class Chain extends Btt {
   /**
    * 
    */
-  private getChainResponse(time: number): Types.ChainResponse {
+  private get chainResponse(): Partial<Types.ChainResponse> {
     return {
-      time,
-      actionsResults: this.finishedQueue,
       status: null,
       note: null,
-      value: null,
+      value: this.finishedQueue,
     }
   }
 
@@ -408,26 +406,27 @@ class Chain extends Btt {
   /**
    * Allows to invoke previously prepared chain, returns promise
    */
-  public call(): Promise<any> {
-    const startTime = performance.now();
+  public async call(): Promise<any> {
+    const startTime = CommonUtils.performanceNow() * 100;
 
     // set current queue to the total list
     this.currentQueue = this.totalQueue;
 
     // clear the finished list
     this.finishedQueue = [];
-
-    // start completing the queue
-    this.updateQueue();
     
     // return a promise that'll resolve once all items in queue are done (queue empty)
-    return new Promise((res, rej) => {
-      if (this.isFinished) { 
-        const endTime = performance.now();
-        res(
-          this.getChainResponse((startTime - endTime)),
-        ); 
-      }
+    return new Promise(async (res, rej) => {
+        // start completing the queue
+        await this.updateQueue();
+        const endTime = CommonUtils.performanceNow().toFixed(3) * 100;
+        const response = this.chainResponse;
+        const status = (this.chainResponse.value.every((r: Types.CallResult) => r.status === 200) ? 200 : 'multiple');
+        res({
+          ...response,
+          status,
+          time: (endTime / 100) - (startTime / 100),
+        }); 
     });
   };
 
@@ -437,7 +436,16 @@ class Chain extends Btt {
    */
   public wait(timeout: number) {
     // adds a promise to queue that'll resolve after given timeout
-    this.addToQueue(() => new Promise((res, rej) => { setTimeout(() => { res(this) }, timeout) }));
+    this.addToQueue(() => new Promise((res, rej) => {
+      setTimeout(() => {
+        res({
+          value: null,
+          status: 200,
+          time: timeout,
+          note: `Explicit timeout`
+        } as Types.CallResult);
+      }, timeout);
+    }));
 
     // because this method is chainable, we're returning current instance
     return this;
@@ -446,12 +454,14 @@ class Chain extends Btt {
   /**
    * Recursive function that'll invoke the queue elements an remove them from list once resolved
    */
-  private async updateQueue() {
+  private async updateQueue(): Promise<Types.CallResult[]> {
     this.status = QueueStatus.RUNNING;
+    const result: Types.CallResult[] = [];
 
     // if queue is empty at this point, finish
     if (this.currentQueue.length === 0) {
-      return true;
+      this.status = QueueStatus.FINISHED;
+      return result;
     };
 
     // get the item that should be processed now
@@ -468,8 +478,6 @@ class Chain extends Btt {
       // proceed to next step
       await this.updateQueue();
     }
-
-    this.status = QueueStatus.FINISHED;
   }
 
   /**

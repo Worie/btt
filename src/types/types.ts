@@ -14,9 +14,7 @@ export interface CallResult {
   note?: string;
 }
 
-export interface ChainResponse extends CallResult {
-  actionsResults: CallResult[];
-}
+export type ChainResponse = CallResult;
 
 export type ChainEntry = () => Promise<CallResult>;
 
