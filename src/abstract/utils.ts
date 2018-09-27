@@ -48,7 +48,7 @@ export default abstract class Utilities {
       // end mesuring time
       const endTime = this.performanceNow().toFixed(3) * 100;
       return {
-        time: (endTime - startTime),
+        time: (endTime / 100) - (startTime / 100),
         value: response,
         status: response.status,
       };

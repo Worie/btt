@@ -1,6 +1,7 @@
 import { FTrigger } from '../common/trigger';
 import { FWidget } from '../common/widget';
 import VariableStore from '../common/state';
+import * as _ from 'lodash';
 
 import * as Initializer from '../types/initializers';
 import * as Types from '../types/types';
@@ -343,13 +344,10 @@ enum QueueStatus {
 // @TODO: can't be moved out to separate module due to circular dependecy issue
 class Chain extends Btt {
   
-  // holds the current queue, which removes 
-  private currentQueue: Types.ChainEntry[] = [];
-
-  private finishedQueue: Types.CallResult[] = [];
-
+  // holds all entries ever passed to this chain
   private totalQueue: Types.ChainEntry[] = [];
   
+  // modifies action decorator for methods to be chainable
   public readonly isChainable: boolean = true;
 
   // holds status of the queue - if runinng or not
@@ -382,48 +380,22 @@ class Chain extends Btt {
   };
 
   /**
-   * 
-   */
-  private get chainResponse(): Partial<Types.ChainResponse> {
-    return {
-      status: null,
-      note: null,
-      value: this.finishedQueue,
-    }
-  }
-
-  /**
-   * Returns whether queue is empty or not
-   */
-  public get isFinished(): boolean {
-    return this.status === QueueStatus.FINISHED;
-  }
-
-  public get isRunning(): boolean {
-    return this.status === QueueStatus.RUNNING;
-  }
-
-  /**
    * Allows to invoke previously prepared chain, returns promise
    */
   public async call(): Promise<any> {
     const startTime = CommonUtils.performanceNow() * 100;
 
     // set current queue to the total list
-    this.currentQueue = this.totalQueue;
-
-    // clear the finished list
-    this.finishedQueue = [];
+    const queue = _.cloneDeep(this.totalQueue);
     
     // return a promise that'll resolve once all items in queue are done (queue empty)
     return new Promise(async (res, rej) => {
-        // start completing the queue
-        await this.updateQueue();
+        // complete the queue
+        const response = await this.updateQueue(queue);
         const endTime = CommonUtils.performanceNow().toFixed(3) * 100;
-        const response = this.chainResponse;
-        const status = (this.chainResponse.value.every((r: Types.CallResult) => r.status === 200) ? 200 : 'multiple');
+        const status = (response.every((r: Types.CallResult) => r.status === 200) ? 200 : 'multiple');
         res({
-          ...response,
+          value: response,
           status,
           time: (endTime / 100) - (startTime / 100),
         }); 
@@ -454,30 +426,26 @@ class Chain extends Btt {
   /**
    * Recursive function that'll invoke the queue elements an remove them from list once resolved
    */
-  private async updateQueue(): Promise<Types.CallResult[]> {
+  private async updateQueue(queue: Types.ChainEntry[], result: Types.CallResult[] = []): Promise<Types.CallResult[]> {
     this.status = QueueStatus.RUNNING;
-    const result: Types.CallResult[] = [];
 
     // if queue is empty at this point, finish
-    if (this.currentQueue.length === 0) {
+    if (queue.length === 0) {
       this.status = QueueStatus.FINISHED;
       return result;
     };
 
     // get the item that should be processed now
-    const currentStep = this.currentQueue[0];
+    const currentStep = queue[0];
 
-    // if the element is a function, not a promise - invoke it and proceed
-    if (typeof currentStep === 'function') {
-      // invoke the current callback and wait for it to complete
-      this.finishedQueue.push(await currentStep.call(null));
+    // invoke the current callback and wait for it to complete
+    result.push(await currentStep.call(null));
 
-      // remove the element from queue
-      this.currentQueue.shift();
+    // remove the element from queue
+    queue.shift();
 
-      // proceed to next step
-      await this.updateQueue();
-    }
+    // proceed to next step
+    return this.updateQueue(queue, result);
   }
 
   /**
@@ -486,6 +454,5 @@ class Chain extends Btt {
    */
   private addToQueue(fn: () => Promise<any>) {
     this.totalQueue.push(fn);
-    this.currentQueue.push(fn);
   }
 }
