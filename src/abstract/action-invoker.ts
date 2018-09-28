@@ -30,7 +30,6 @@ import AToggleTrueTone from '../common/actions/toggleTrueTone';
 
 // decorator for creating actions
 import { Action } from '../common/decorators';
-import * as Types from "../types/types";
 import { BaseAction } from './base-action';
 
 export default abstract class ActionInvoker {  
