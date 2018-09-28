@@ -31,14 +31,14 @@ import AExecuteScript from '../common/actions/executeScript';
 import AShowNotification from '../common/actions/showNotification';
 import AToggleTrueTone from '../common/actions/toggleTrueTone';
 import ASaveSelectedText from '../common/actions/saveSelectedText';
+import Chain from '../app/chain';
 import * as Types from './types';
 
 export type EventMethod = (
   eventType: string,
   cb: Types.EventCallback,
 ) => void;
-export type ToggleDnD = () => AToggleDnD;
-export type ExecuteScript = (code: string) => AExecuteScript;
+
 export type ToggleTrueTone = () => AToggleTrueTone;
 export type ToggleNightShift = () => AToggleNightShift;
 export type TriggerShortcut = (shortcut: string) => ATriggerShortcut;
@@ -66,3 +66,35 @@ export type RestartBTT = () => ARestartBTT;
 export type SaveSelectedText = () => ASaveSelectedText;
 export type SleepComputer = () => ASleepComputer;
 export type SendShortcut = (shortcut: string, applicationPath: string, mdlsName?: string) => ASendShortcut;
+export type ExecuteScript = (code: string) => AExecuteScript;
+export type ToggleDnD = () => AToggleDnD;
+
+export type ChainToggleDnD = () => Chain;
+export type ChainExecuteScript = (code: string) => Chain;
+export type ChainToggleTrueTone = () => Chain;
+export type ChainToggleNightShift = () => Chain;
+export type ChainTriggerShortcut = (shortcut: string) => Chain;
+export type ChainShowHUD = (config: Types.ShowHUDConfig) => Chain;
+export type ChainSendText = (config: Types.SendTextConfig) => Chain;
+export type ChainHapticFeedback = (mode: number) => Chain;
+export type ChainMoveMouse = (config: Types.MoveMouseConfig) => Chain;
+export type ChainDelayNextAction = (timeout: number) => Chain;
+export type ChainToggleBTT = () => Chain;
+export type ChainStartSiri = () => Chain;
+export type ChainMute = () => Chain;
+export type ChainToggleApplication = (applicationPath: string, binaryPath: string) => Chain;
+export type ChainLaunchApplication = (applicationPath: string) => Chain;
+export type ChainSleepDisplay = () => Chain;
+export type ChainLogout = () => Chain;
+export type ChainLockScreen = () => Chain;
+export type ChainShowWebView = () => Chain;
+export type ChainToggleDarkMode = () => Chain;
+export type ChainToggleMouseSize = () => Chain;
+export type ChainToggleMouseCursor = () => Chain;
+export type ChainToggleMouseSpeed = () => Chain;
+export type ChainQuitBTT = () => Chain;
+export type ChainShowNotification = (config: Types.ShowNotificationConfig) => Chain;
+export type ChainRestartBTT = () => Chain;
+export type ChainSaveSelectedText = () => Chain;
+export type ChainSleepComputer = () => Chain;
+export type ChainSendShortcut = (shortcut: string, applicationPath: string, mdlsName?: string) => Chain;
