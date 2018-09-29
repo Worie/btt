@@ -1119,7 +1119,7 @@ export default class EventTriggers {
     // because it might be a key combo
     if (Keys.isValidShortcut(name)) {
       return {
-        id: null,
+        id: -1,
         category: EventCategory.KEY_COMBO,
         name,
       };

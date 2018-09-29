@@ -28,7 +28,7 @@ module.exports = {
     new UglifyJSWebpackPlugin(),
     new TypedocWebpackPlugin({
       ignoreCompilerErrors: true,
-      out: './../docs/btt',
+      out: './../docs/btt/api',
       module: 'commonjs',
       target: 'ES2017',
       exclude: ['./../**/node_modules/**/*.*,', './../docs', './../test/**/*'],
