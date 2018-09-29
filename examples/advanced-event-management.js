@@ -14,7 +14,7 @@
 const Btt = require('../dist/index').Btt;
 
 // connect to some btt webserver
-const btt = new bttNode.Btt({
+const btt = new Btt({
   domain: '127.0.0.1',
   port: '64472',
   protocol: 'http',
@@ -23,7 +23,7 @@ const btt = new bttNode.Btt({
   eventServer: {
     domain: 'localhost',
     port: 8888,
-  }
+  },
 });
 
 // set up an event listener - it'll be run on the local web server!
@@ -42,10 +42,9 @@ const myCallback = async function() {
 };
 
 // set up previously defined eventListener
-btt.addEventListener('oneFingerForceClick', myCallback);
+btt.addEventListener('cmd+u', myCallback);
 
 // remove the event listener after 20seconds
 setTimeout(() => {
-  btt.removeEventListener('oneFingerForceClick', myCallback);
-  console.log('Example complete!');
+  btt.removeEventListener('cmd+u', myCallback);
 }, 20000);
