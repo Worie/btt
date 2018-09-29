@@ -2,6 +2,7 @@ import CommonUtils from '../util';
 import EventTriggers from './/triggers';
 import { BaseAction } from '../../abstract/base-action';
 import AExecuteScript from '../actions/executeScript';
+import AShowNotification from '../actions/showNotification';
 import { EActions, EventCategory } from '../../types/enum';
 import Keys from '../keys';
 import * as Types from '../../types/types';
@@ -127,6 +128,7 @@ export default class EventManager {
       eventType, 
       (ev: Types.EventParameter): void => {
         const actions = [
+          this.showNotification(),
           this.executeScript(code),
         ];
         
@@ -152,12 +154,22 @@ export default class EventManager {
     CommonUtils.deleteTrigger(triggerID);
   };
 
+  // @TODO: use BTT instance here
+  // @TODO: create a BTT "service" or Action invoker here
+
   /**
    * Runs the code in the current btt instance
    * @param code code to be run
    */
   private executeScript(code: string): BaseAction {
     return new AExecuteScript(this.config, code);
+  }
+
+  /**
+   * Shows a notification when user is invoking a valid, btt-node-server event
+   */
+  private showNotification() {
+    return new AShowNotification(this.config, { title: 'Triggering an event', content: 'Please wait...'});
   }
 
   /**
