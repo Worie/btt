@@ -78,6 +78,20 @@ btt
   .then(() => btt.sendText({ text: 'Hello world!'}).invoke())
   .then(() => btt.toggleNightShift().invoke());
 
+```
+
+```ts
+// every single action returns an CallResult object containing various information about the Call
+
+interface CallResult {
+  time: number;     // contains time in MS that this action took to perform (including fetch time)
+  status: number;   // contains an HTTP status / string
+  value: any;       // depending on the method used, may return array, object or fetch result
+  note?: string;    // additional note for the user if someone needs it
+}
+```
+
+```ts
 // you can also use custom chain method to simplify it even more, without using async/await
 btt
   .invokeChain()                      // 1)
@@ -86,7 +100,7 @@ btt
   .wait(1000)                         // 4)
   .toggleNightShift()                 // 5)
   .call()                             // 6)
-  .then(() => console.info('done!'))  // 7)
+  .then((v) => console.info(v))  // 7)
 
 // Explanation:
 // 1) Starts method chaining
@@ -95,7 +109,8 @@ btt
 // 4) Additional method available in chain only - wait before triggering next action
 // 5) Action that user want to perform
 // 6) Invokes all previously defined actions, ensuring the execution order
-// 7) Returns a promise that resolves once all of the actions are fulfilled
+// 7) Returns a promise that resolves once all of the actions are fulfilled. 
+//    Contains information about the status of the chain (time, value, status)
 ```
 
 You can even register system-wide event listener within BTT that'll trigger particular actions
