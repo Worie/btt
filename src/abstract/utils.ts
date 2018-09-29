@@ -34,12 +34,18 @@ export default abstract class Utilities {
     action: string, 
     data: Types.BttPayload,
     config: Types.AppConfig,
+    translate: boolean = true,
   ): Promise<Types.CallResult> {
-    const parsedJSON = this.translateObjectKeysToBttNotation(data.json);
-    const parameters = this.params({json: JSON.stringify(parsedJSON)}, config.sharedKey);
+    let parameters = this.params(data, config.sharedKey);
+    
+    if (translate) {
+      const parsedJSON = this.translateObjectKeysToBttNotation(data.json);
+      parameters = this.params({json: JSON.stringify(parsedJSON)}, config.sharedKey);
+    }
+
     const url = this.getUrl(config);
     const urlToFetch = this.buildFullUrl(action, parameters, url);
-    
+
     // start mesuring time
     const startTime = this.performanceNow().toFixed(3) * 100;
     
@@ -107,7 +113,7 @@ export default abstract class Utilities {
   public translateObjectKeysToBttNotation(
     object: Partial<Types.AppPayload> | Partial<Types.BttPayload>
   ) {
-    if (object === null) {
+    if (object === null || !object) {
       return object;
     }
     Object.keys(object).forEach(key => {

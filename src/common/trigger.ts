@@ -37,6 +37,7 @@ export class Trigger {
         'trigger_named',
         { trigger_name: this.name },
         this.config,
+        false,
       );
       
     // if this was a generic trigger
@@ -46,6 +47,7 @@ export class Trigger {
         'execute_assigned_actions_for_trigger',
         { uuid: this.uuid },
         this.config,
+        false,
       );
     }
   }
@@ -68,6 +70,7 @@ export class Trigger {
         json: data,
       },
       this.config,
+      false,
     );
   }
 };
@@ -91,6 +94,7 @@ export class FTrigger {
       'delete_trigger',
       { uuid },
       this.config,
+      false,
     );
   };
 
@@ -105,6 +109,7 @@ export class FTrigger {
         json: config,
       },
       this.config,
+      false,
     );
 
     return new Trigger(

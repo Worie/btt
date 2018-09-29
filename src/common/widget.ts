@@ -58,14 +58,14 @@ export class Widget {
     };
 
     // update current widget
-    return CommonUtils.callBetterTouchTool('update_touch_bar_widget', updateData, this.config);
+    return CommonUtils.callBetterTouchTool('update_touch_bar_widget', updateData, this.config, false);
   }
 
   /**
    * Refreshes current widget
    */
   public async refresh(): Promise<Types.CallResult> {
-    return CommonUtils.callBetterTouchTool('refresh_widget', { uuid: this.uuid }, this.config);
+    return CommonUtils.callBetterTouchTool('refresh_widget', { uuid: this.uuid }, this.config, false);
   }
 
   /**
@@ -74,7 +74,7 @@ export class Widget {
   public async click(): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool('execute_assigned_actions_for_trigger', {
       uuid: this.uuid,
-    }, this.config);
+    }, this.config, false);
   }
 };
 
