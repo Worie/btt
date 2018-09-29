@@ -30,11 +30,8 @@ import AToggleTrueTone from '../common/actions/toggleTrueTone';
 
 // decorator for creating actions
 import { Action } from '../common/decorators';
-import { BaseAction } from './base-action';
 
 export default abstract class ActionInvoker {  
-  protected actionMap: Map<string, BaseAction> = new Map();
-
   /**
    * Sends shortcut to txhe application. Some apps need to have focus so they can recieve shortcuts.
    * 

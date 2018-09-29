@@ -40,10 +40,10 @@ setInterval(() => {
 }, 1000);
 
 // you could also create a new widget on the fly, in the runtime!
-const newWidget= btt.Widget.create({
-  name: 'toucbar widget name',
+const widgetPromise = btt.Widget.create({
+  name: 'Touchbar widget name',
   mode: 'node',
-  // if you use the package on the frontend, you'd need to prive path option manually
+  // if you use the package on the frontend, you may need to provide path option manually
   // path: '/Users/Worie/.nvm/versions/node/v9.2.0/bin/node'
   alwaysShow: false,
   script: `console.log('Hello world!')`,
@@ -58,8 +58,10 @@ const newWidget= btt.Widget.create({
 });
 
 // now you can update it as you did previously
-newWidget.update(() => {
-  return {
-    text: 'updated!',
-  };
-});
+widgetPromise.then(async (widget) => {
+  setInterval(() => {
+    widget.update({
+      text: `${new Date()}`,
+    });  
+  }, 1000);
+})
