@@ -22,6 +22,7 @@ const btt = new Btt({
 // get predefined widget instance
 const widget = btt.Widget.get({
   // uuid of the widget that we'll be working on
+  // keep in mind if it doesn't exists in btt, this won't work
   uuid: '07CA71DD-A3F9-4CF0-8340-9285373399EC',
   
   // you can provide default callback that'll be invoked
