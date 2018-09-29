@@ -41,10 +41,14 @@ const myCallback = async function() {
   return { message: 'completed!'};
 };
 
+const eventName = 'cmd+u';
+console.log(`Try out the ${eventName} shortcut :)`)
 // set up previously defined eventListener
-btt.addEventListener('cmd+u', myCallback);
+btt.addEventListener(eventName, myCallback);
 
 // remove the event listener after 20seconds
 setTimeout(() => {
-  btt.removeEventListener('cmd+u', myCallback);
-}, 20000);
+  btt.removeEventListener(eventName, myCallback);
+  console.log(`${eventName} trigger has been removed`)
+  console.log(`\n the end!`);
+}, 1000);

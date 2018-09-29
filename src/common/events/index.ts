@@ -44,8 +44,6 @@ export default class EventManager {
    * @param cb IEventParameter
    */
   public addTriggerAction(eventType: string, cb: Types.EventCallback): void {
-    const jsonUUID: string = this.generateUUID(...arguments);
-
     let comment: string = '';
 
     const event: Types.EventParameter = {
@@ -57,6 +55,10 @@ export default class EventManager {
     };
 
     cb(event);
+
+    const jsonUUID: string = (
+      event.additionalData.UUID ? event.additionalData.UUID : this.generateUUID(eventType, cb)
+    );
 
     // handle required modifier keys (for 'trackpad', mouse related and 'other' categories )
     // @TODO: use requiredModifierKeys, map them, use KEYS module to calculate the BTTRequiredModifierKeys mask (or value?)
@@ -120,18 +122,18 @@ export default class EventManager {
     // add script
     const code = EventPayloadTemplate({data, domain, port});
 
-      // register a trigger in BetterTouchTool that'll make a request to the btt-node-server
-      this.addTriggerAction(
-        eventType, 
-        (ev: Types.EventParameter): void => {
-          const actions = [
-            this.executeScript(code),
-          ];
-          
-          ev.actions.push(...actions);
-          ev.additionalData = { UUID: triggerID };
-        },
-      );
+    // register a trigger in BetterTouchTool that'll make a request to the btt-node-server
+    this.addTriggerAction(
+      eventType, 
+      (ev: Types.EventParameter): void => {
+        const actions = [
+          this.executeScript(code),
+        ];
+        
+        ev.actions.push(...actions);
+        ev.additionalData = { UUID: triggerID };
+      },
+    );
   };
   
   /**
