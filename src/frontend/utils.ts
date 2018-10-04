@@ -18,5 +18,5 @@ export default class FrontendUtilities extends Utilities {
     return undefined;
   }
 
-  public performanceNow = window.performance.now;
+  public performanceNow = () => { return window.performance.now(); };
 }

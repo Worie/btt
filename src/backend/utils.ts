@@ -20,8 +20,8 @@ export default class BackendUtilities extends Utilities {
   }
 
   public getMdlsName(applicationPath: string): string {
-      const mdlsName: string = execSync(`mdls -name kMDItemCFBundleIdentifier -r ${applicationPath}`).toString();
-      return mdlsName;
+    const mdlsName: string = execSync(`mdls -name kMDItemCFBundleIdentifier -r ${applicationPath}`).toString();
+    return mdlsName;
   }
 
   public performanceNow = PerformanceNow
