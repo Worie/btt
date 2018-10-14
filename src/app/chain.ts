@@ -234,6 +234,14 @@ export default class Chain extends ActionInvoker {
   };
 
   /**
+   * Clears the current chain
+   */
+  public clear() {
+    this.totalQueue.length = 0;
+    return this;
+  }
+
+  /**
    * Allows to delay the action execution from JavaScript side. Time in ms
    * @param timeout 
    */

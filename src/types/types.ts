@@ -63,7 +63,7 @@ export interface ActionConfig {
 
 export interface ShowHUDConfig {
   title?: string;
-  details?: string;
+  content?: string;
   duration?: number;
   background?: string;
   direction?: number;
