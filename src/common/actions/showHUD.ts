@@ -14,13 +14,13 @@ export default class AShowHUD extends BaseAction {
   public get data() {
     const config: Types.ShowHUDConfig = this.arguments[0];
     
-    const { title, details, duration, background, direction } = config;
+    const { title, content, duration, background, direction } = config;
       
     // limit the duration to 10 seconds, and ignore negative values
     const reasonableDuration = Math.abs(Math.min(duration, 10));
   
     const BTTAdditionalConfig = {
-      ActionHUDDetail: details,
+      ActionHUDDetail: content,
       ActionHUDTitle: title,
       ActionHUDDuration: reasonableDuration || 0.8,
       ActionHUDBackground: background, 
