@@ -179,3 +179,17 @@ export type ETRMoveMouseToBottomRightCorner = ETRMoveMouseToCorner;
 export interface ETRRecievedDistributedNotificationWithName {
   distributedNotificationName: string;
 }
+
+export enum BTTEndpoint {
+  WIDGET_UPDATE = 'update_touch_bar_widget',
+  WIDGET_REFRESH = 'refresh_widget',
+  WIDGET_DELETE = 'delete_trigger',
+  WIDGET_CLICK = 'execute_assigned_actions_for_trigger',
+  WIDGET_CREATE = 'add_new_trigger',
+  TRIGGER_UPDATE = 'update_trigger',
+  TRIGGER_INVOKE = 'execute_assigned_actions_for_trigger',
+  TRIGGER_NAMED_INVOKE = 'trigger_named',
+  TRIGGER_DELETE = 'delete_trigger',
+  TRIGGER_CREATE = 'add_new_trigger',
+  TRIGGER_JSON = 'trigger_action',
+}

@@ -5,11 +5,11 @@
 import CommonUtils from './util';
 import { ETouchBarWidgets } from '../types/enum';
 import * as Types from '../types/types';
-import { BttPayload } from '../types/types';
+import { BttPayload, BTTEndpoint } from '../types/types';
 
 export class Widget {
   // stores the uuid of the existing btt widget
-  private uuid: string;
+  public uuid: string;
 
   // stores the default update behaviour of the widget
   private default: Function;    
@@ -36,7 +36,7 @@ export class Widget {
    * Updates the current widget with given data
    * @param data 
    */
-  async update(data?: Partial<BttPayload>): Promise<Types.CallResult> {
+  public async update(data?: Partial<BttPayload>): Promise<Types.CallResult> {
     // if there was no data passed, nor there was no default fallback
     if (!data && !this.default) {
       // show a warning and stop the execution of the function
@@ -58,23 +58,48 @@ export class Widget {
     };
 
     // update current widget
-    return CommonUtils.callBetterTouchTool('update_touch_bar_widget', updateData, this.config, false);
+    return this.callBTTWithContext(BTTEndpoint.WIDGET_UPDATE, updateData);
   }
 
   /**
    * Refreshes current widget
    */
   public async refresh(): Promise<Types.CallResult> {
-    return CommonUtils.callBetterTouchTool('refresh_widget', { uuid: this.uuid }, this.config, false);
+    return this.callBTTWithContext(BTTEndpoint.WIDGET_REFRESH, { uuid: this.uuid });
   }
 
   /**
    * Triggers the widget
    */
   public async click(): Promise<Types.CallResult> {
-    return CommonUtils.callBetterTouchTool('execute_assigned_actions_for_trigger', {
-      uuid: this.uuid,
-    }, this.config, false);
+    return this.callBTTWithContext(BTTEndpoint.WIDGET_CLICK, { uuid: this.uuid });
+  }
+
+  /**
+   * Removes current widget
+   */
+  public async delete() {
+    return this.callBTTWithContext(BTTEndpoint.WIDGET_DELETE, { uuid: this.uuid });
+  }
+
+  /**
+   * Allows to set the default callback programatically
+   */
+  public setDefaultCallback(cb: Function): void {
+    this.default = cb.bind(this);
+  } 
+
+  /**
+   * Calls BTT with given payload using widget context
+   * @TODO may be made reusable
+   * @param mode 
+   * @param payload 
+   */
+  private callBTTWithContext(
+    mode: string, 
+    payload: BttPayload,
+  ): Promise<Types.CallResult> {
+    return CommonUtils.callBetterTouchTool(mode, payload, this.config, false);
   }
 };
 
@@ -144,7 +169,7 @@ export class FWidget {
     };
     
     // make the request to the BTT API to create new widget
-    await CommonUtils.callBetterTouchTool('add_new_trigger', {
+    await CommonUtils.callBetterTouchTool(BTTEndpoint.WIDGET_CREATE, {
       json: appPayload,
     }, this.config);
 
