@@ -1,6 +1,5 @@
 const path = require('path');
 const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const UglifyJSWebpackPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
@@ -21,7 +20,7 @@ module.exports = {
   stats: 'errors-only',
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     libraryTarget: 'commonjs',
   },
   plugins: [
@@ -41,8 +40,5 @@ module.exports = {
       name: 'btt',
       mode: 'file',
     }, './src'),
-    new FriendlyErrorsWebpackPlugin({
-      clearConsole: true,
-    }),
   ]
 };

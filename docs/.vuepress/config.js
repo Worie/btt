@@ -11,19 +11,19 @@ module.exports = {
     { text: 'Community forum', link: 'https://community.folivora.ai/' },
   ],
   sidebar: [
-    '/guide/introduction',
-    '/guide/getting-started',
-    '/guide/configuration',
-    '/guide/actions',
-    '/guide/events',
-    '/guide/variables',
-    '/guide/triggers',
-    '/guide/widgets',
-    '/guide/web-view',
-    '/guide/community',
+    'introduction',
+    'getting-started',
+    'configuration',
+    'actions',
+    'events',
+    'variables',
+    'triggers',
+    'widgets',
+    'web-view',
+    'community',
   ],
   head: [
     ['script', { src: 'btt.js'}]
   ],
-  dest: '../dist/docs/guide'
+  dest: 'dist/docs/guide'
 }

@@ -7,7 +7,7 @@ describe('Trigger shortcut action', () => {
     protocol: 'http',
     version: '2.525',
   };
-
+  
   const btt = new Btt(config);
 
   const action = btt.triggerShortcut('cmd+space');

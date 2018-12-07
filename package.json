@@ -6,14 +6,12 @@
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "_precommit-msg": "echo 'Pre-commit checks...' && exit 0",
-    "docts": "docts",
-    "watch": "webpack -d --watch",
-    "build": "webpack -p",
-    "test": "jest",
+    "watch": "webpack -d --watch --config webpack/dev.config.js",
+    "build": "webpack -p --config webpack/prod.config.js && npm run docs:build",
     "docs:dev": "vuepress dev docs",
     "docs:build": "npm run inject && vuepress build docs",
-    "publish": "",
-    "inject": "browserify ./scripts/btt-window-inject.js > docs/.vuepress/public/btt.js"
+    "inject": "browserify ./scripts/btt-window-inject.js > ./docs/.vuepress/public/btt.js",
+    "test": "jest"
   },
   "author": "Wojciech Połowniak",
   "license": "MIT",
