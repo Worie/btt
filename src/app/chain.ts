@@ -213,24 +213,28 @@ export default class Chain extends ActionInvoker {
   /**
    * Allows to invoke previously prepared chain, returns promise
    */
-  public async call(): Promise<any> {
+  public async call(): Promise<Types.CallResult> {
     const startTime = CommonUtils.performanceNow() * 100;
 
     // set current queue to the total list
     const queue = _.cloneDeep(this.totalQueue);
     
-    // return a promise that'll resolve once all items in queue are done (queue empty)
-    return new Promise(async (res, rej) => {
-        // complete the queue
-        const response = await this.updateQueue(queue);
-        const endTime = CommonUtils.performanceNow().toFixed(3) * 100;
-        const status = (response.every((r: Types.CallResult) => r.status === 200) ? 200 : 'multiple');
-        res({
-          value: response,
-          status,
-          time: (endTime / 100) - (startTime / 100),
-        }); 
-    });
+    // complete the queue and get combined results
+    const response = await this.runQueue(queue);
+
+    // mark when the queue finished its execution
+    const endTime = CommonUtils.performanceNow().toFixed(3) * 100;
+
+    // check if status code of each call was successful, and only then consider it as success
+    // @TODO: Find proper status code
+    const status = (response.every((r: Types.CallResult) => r.status === 200) ? 200 : null);
+    
+    // return nested call result 
+    return {
+      value: response,
+      status,
+      time: (endTime / 100) - (startTime / 100),
+    } as Types.CallResult; 
   };
 
   /**
@@ -265,7 +269,7 @@ export default class Chain extends ActionInvoker {
   /**
    * Recursive function that'll invoke the queue elements an remove them from list once resolved
    */
-  private async updateQueue(queue: Types.ChainEntry[], result: Types.CallResult[] = []): Promise<Types.CallResult[]> {
+  private async runQueue(queue: Types.ChainEntry[], result: Types.CallResult[] = []): Promise<Types.CallResult[]> {
     // if queue is empty at this point, finish
     if (queue.length === 0) {
       return result;
@@ -281,7 +285,7 @@ export default class Chain extends ActionInvoker {
     queue.shift();
 
     // proceed to next step
-    return this.updateQueue(queue, result);
+    return this.runQueue(queue, result);
   }
 
   /**
