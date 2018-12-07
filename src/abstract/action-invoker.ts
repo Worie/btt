@@ -174,7 +174,7 @@ export default abstract class ActionInvoker {
 
   /**
    * Saves selected text to variable selected_text
-   * This can be later retrieved via btt.state.get('selected_text')
+   * This can be later retrieved via (await btt.state.get('selected_text'))
    */
   @Action(ASaveSelectedText)
   public abstract saveSelectedText: any;
@@ -220,4 +220,8 @@ export default abstract class ActionInvoker {
    */
   @Action(AQuitBTT)
   public abstract quit: any;
+
+  /**
+   * @TODO: Implement action that'll allow to manage "detection groups"
+   */
 }
