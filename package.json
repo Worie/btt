@@ -5,11 +5,15 @@
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
+    "_precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "docts": "docts",
-    "build": "webpack -d --watch",
-    "prod": "webpack -p",
+    "watch": "webpack -d --watch",
+    "build": "webpack -p",
     "test": "jest",
-    "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "npm run inject && vuepress build docs",
+    "publish": "",
+    "inject": "browserify ./scripts/btt-window-inject.js > docs/.vuepress/public/btt.js"
   },
   "author": "Wojciech Połowniak",
   "license": "MIT",
@@ -41,6 +45,7 @@
     "typedoc-webpack-plugin": "^1.1.4",
     "typescript": "^2.9.1",
     "uglifyjs-webpack-plugin": "^1.3.0",
+    "vuepress": "^0.14.5",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.3",
     "webpack-node-externals": "^1.7.2"
@@ -64,7 +69,7 @@
     "coverageDirectory": "./coverage"
   },
   "pre-commit": [
-    "precommit-msg",
+    "_precommit-msg",
     "test"
   ]
 }

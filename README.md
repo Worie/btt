@@ -36,9 +36,12 @@ This package will allow you to automate you MacOS-running machine using JavaScri
 
 *and anything else that BetterTouchTool or JavaScript specification will allow you to do!*
 
-## Typings enabled, isomorphic app
+## Get started 
 
-This package provides it's own type definitions and can be run both on browser and nodejs environment.
+See the [guide](https://github.io/Worie/btt/guide) and [api](https://github.io/Worie/api) for `btt.js`. 
+
+## Typed, browser/server side library
+This package provides it's own type definitions and can be run both on browser (using module bundlers) and nodejs environment.
 
 ## Requirements
 
@@ -80,6 +83,8 @@ btt
 
 ```
 
+## Response structure for every action
+
 ```ts
 // every single action returns an CallResult object containing various information about the Call
 
@@ -91,6 +96,8 @@ interface CallResult {
 }
 ```
 
+## Chaining methods
+
 ```ts
 // you can also use custom chain method to simplify it even more, without using async/await
 btt
@@ -100,7 +107,7 @@ btt
   .wait(1000)                         // 4)
   .toggleNightShift()                 // 5)
   .call()                             // 6)
-  .then((v) => console.info(v))  // 7)
+  .then(v => console.info(v))         // 7)
 
 // Explanation:
 // 1) Starts method chaining
@@ -112,6 +119,8 @@ btt
 // 7) Returns a promise that resolves once all of the actions are fulfilled. 
 //    Contains information about the status of the chain (time, value, status)
 ```
+
+## Event listeners
 
 You can even register system-wide event listener within BTT that'll trigger particular actions
 
@@ -199,14 +208,12 @@ console.log(
 
 For more advanced examples you can visit [the example section](https://github.com/Worie/btt/tree/master/examples)
 
-## Docs
-
-You can visit the docs [here](https://worie.github.io/btt/).
-
 ## Notice
 
 Keep in mind that this module only provides handy utility functions that underneath sends request to BTT built in webserver.
-So depending on your BTT version some actions may be glitchy. Do not hestitate to report those issues here or in [official BTT community forum](https://community.folivora.ai/categories).
+So depending on your BTT version some actions may be glitchy. Do not hestitate to report those issues here or in [official BTT community forum](https://community.folivora.ai/categories). 
+
+Also, keep in mind that accessing any kind of low level APIs from JS may be dangerous, make sure to [stay secure](#)
 
 ### Related projects:
 
@@ -219,5 +226,3 @@ So depending on your BTT version some actions may be glitchy. Do not hestitate t
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
-
-Copyright (c) 2018-present, Wojtek Połowniak

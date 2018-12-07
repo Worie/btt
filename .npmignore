@@ -3,6 +3,7 @@ docs
 examples
 test
 ./src
+dist/docs
 definitions.d.ts
 webpack.config.js
 .DS_Store
