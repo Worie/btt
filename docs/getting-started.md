@@ -49,7 +49,7 @@ BetterTouchTool allows you to set up an https certificate for the webserver - yo
 HTTPS prevents intruders from being able to passively listen to communications between your websites and your users (you in that case).
 
 ::: tip
-For more, please visit [google web fundamentals](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/why-https) or [mdn](https://developer.mozilla.org/en-US/docs/Glossary/https).
+For more, please visit [mdn](https://developer.mozilla.org/en-US/docs/Glossary/https) or [google web fundamentals](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/why-https).
 :::
 
 ### Use shared key
