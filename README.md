@@ -38,7 +38,7 @@ This package will allow you to automate you MacOS-running machine using JavaScri
 
 ## Get started 
 
-See the [guide](https://github.io/Worie/btt/guide) and [api](https://github.io/Worie/api) for `btt.js`. 
+See the [guide](https://worie.github.io/btt/guide/introduction.html) and [api](https://worie.github.io/btt/api) for `btt.js`. 
 
 ## Typed, browser/server side library
 This package provides it's own type definitions and can be run both on browser (using module bundlers) and nodejs environment.
