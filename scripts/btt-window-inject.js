@@ -51,5 +51,5 @@ Object.defineProperty(window, 'config', {
 // upon entering the page - try to load data from LS 
 window.config = readFromLS();
 
-// create a btt libr instance with available config
+// create a btt lib instance with available config
 window.btt = new Btt(config);
