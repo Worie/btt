@@ -102,4 +102,4 @@ triggerInstance.invoke();
 // => Promise<CallResult>
 ```
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/triggers.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/triggers.md)._

@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This guide will be divided into two parts - adding trigger actions (BTT native) and event listeners (enabled via `btt.js` Event server)
+This guide will be divided into two parts - adding trigger actions (BTT native) and event listeners (enabled via `btt.js` event server)
 
 ## Creating simple events (Triggers)
 
-This is the basic, most simple way of using "events" with `btt.js`. Using `addTriggerAction` and `removeTriggerAction` you can manage the actions registered within BTT.
+This is the basic, simplest way of using "events" with `btt.js`. Using `addTriggerAction` and `removeTriggerAction` you can manage the actions registered within BTT.
 
 For example, if you would like to create an action that'll `showHUD` on `cmd+ctrl+alt+t`, you could do it like so: 
 
@@ -142,4 +142,4 @@ await triggerInstance.invoke();
 
 I'm considering some more abstract way of doing this, but currently this seems like an overkill. You could also make it work with real JS callbacks using `addEventListener` method and invoking the trigger created by this method.
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/events.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/events.md)._

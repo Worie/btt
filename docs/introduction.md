@@ -46,6 +46,6 @@ Just as a heads up - this library and BetterTouchTool in general will allow you 
 ### Default behaviour
 By default, BetterTouchTool webserver is set up to allow network request only from localhost - that means, that no one - even from same local network - can use its capabilities to harm your Machine. 
 
-But that's not always the case - by enabling its webserver API you make it possible for websites that know your internal configuration to invoke malicious actions - simply visiting such website may cause undesired behaviour of your machine. That's why it is super important to ** stay secure **.
+But that's not always the case - by enabling its webserver API you make it possible for websites that know your internal configuration to invoke malicious actions - simply visiting such website may cause undesired behaviour of your machine. That's why it is super important to [stay secure](https://worie.github.io/btt/guide/getting-started.html#staying-secure).
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/introduction.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/introduction.md)._

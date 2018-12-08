@@ -8,9 +8,9 @@ Widgets are buttons / entities that live on your MBP TouchBar - they can autoref
 
 BetterTouchTool allows you to use the TouchBar in two separate modes - with MacOS control strip and without it (full control).
 
-Full control strip may look like this:
+<!-- Full control strip may look like this:
 
-On the other hand, it may be used as a group on the strip:
+On the other hand, it may be used as a group on the strip: -->
 
 ## Creating Touchbar widget
 
@@ -108,4 +108,4 @@ await widget.delete();
 ```
 
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/widgets.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/widgets.md)._

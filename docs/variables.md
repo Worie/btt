@@ -35,4 +35,4 @@ await btt.state.set('myVar', 100, true);
 BetterTouchTool variables are also available from AppleScript - so you can use `executeScript` which will fetch it for you, or simply get those before script execution and pass them as constants to the script that you want to run using `btt.state.get`
 :::
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/variables.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/variables.md)._

@@ -1,6 +1,6 @@
 ### Actions
 
-The basic way of managing your Mac from BetterTouchTool are actions. To see the list of available actions please visit HERE
+The basic way of managing your Mac from BetterTouchTool are actions. To see the list of available actions please visit [api docs](https://worie.github.io/btt/api/classes/btt.html).
 
 ## Making actions
 Each action is a function that depending on it's type, may or may not require additional parameters. 
@@ -114,6 +114,6 @@ Each call on the `invokeChain` method will create a new chain instance, and diff
 You can also clear any chain (restore to its default, empty state) via `clear` method (available only in chain)
 
 
-## Playground
+<!-- ## Playground -->
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/actions.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/actions.md)._

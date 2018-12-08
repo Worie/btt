@@ -35,7 +35,7 @@ const btt = new Btt({
 
 If you read the **Staying secure** section you already know that you can disable some actions within particular `btt.js` instance.
 
-To do so..................... array of names
+To do so provide array of action names that you want to disable, for example:
 
 ```js
 const btt = new Btt({
@@ -45,6 +45,8 @@ const btt = new Btt({
   blacklist: ['showHUD'],
 });
 ```
+
+will disable `btt.showHUD` method.
 
 ## Silent mode
 
@@ -60,6 +62,6 @@ const btt = new Btt({
 });
 ```
 
-## Event server configuration
+<!-- ## Event server configuration -->
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/configuration.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/configuration.md)._

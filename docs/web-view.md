@@ -37,7 +37,7 @@ await btt.showWebView({
 
 ## Boilerplate
 
-Visit HERERE, clone the repo, install assets and run the server with `npm run start` to start a live server with BTT, typescript and scss preconfigured.
+Visit HERE, clone the repo, install assets and run the server with `npm run start` to start a live server with BTT, typescript and scss preconfigured.
 
 ## Inline data 
 
@@ -59,4 +59,4 @@ await btt.showWebView({
 Keep in mind that using `html` and `url` together will ignore the `html` flag, as `url` has higher priority by design. So if you want to use `html` property, omit the `url` flag
 :::
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/web-view.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/web-view.md)._

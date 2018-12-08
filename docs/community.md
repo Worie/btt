@@ -10,4 +10,4 @@ You can share your presets to official community forum via https://share.folivor
 ## Ask a question on BTT forum
 Any additional questions regarding BetterTouchTool itself may be asked [here](https://community.folivora.ai/).
 
-You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/community.md).
+_You can [edit this page on GitHub](https://github.com/Worie/btt/blob/master/docs/guide/community.md)._
