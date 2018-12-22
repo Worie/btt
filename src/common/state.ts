@@ -37,7 +37,7 @@ export default class VariableStore {
   
     const method: string = `set_${persistent}${variableType}_variable`;
   
-    return CommonUtils.callBetterTouchTool(method, { variableName: key, to: value }, this.config);  
+    return CommonUtils.callBetterTouchTool(method, { variableName: key, to: value }, this.config, false);  
   }
 
   /**
@@ -47,12 +47,13 @@ export default class VariableStore {
    */
   public async get(key: string, mode?: 'string' | 'number'): Promise<number | string> {
     const getStringVariable = async () => {
-      const response = await CommonUtils.callBetterTouchTool(`get_string_variable`, { variableName: key}, this.config);
+      const response = await CommonUtils.callBetterTouchTool(`get_string_variable`, { variableName: key}, this.config, false);
       return response.value.text();
     };
 
     const getNumberVariable = async () => {
-      const response = await CommonUtils.callBetterTouchTool(`get_number_variable`, { variableName: key}, this.config);
+      const response = await CommonUtils.callBetterTouchTool(`get_number_variable`, { variableName: key}, this.config, false);
+      console.log(response);
       return response.value.text();
     };
     
