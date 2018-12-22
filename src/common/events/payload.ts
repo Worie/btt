@@ -27,5 +27,5 @@ export default function EventPayloadTemplate (passedData: Record<string,any>) {
   
   req.write(postData);
   req.end();
-  `.replace(/\s/g, '');
+  `.replace(/\s\s/g, ' ');
 };
