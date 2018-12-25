@@ -29,7 +29,7 @@ export default class FrontendUtilities extends Utilities {
     config: Types.AppConfig,
     translate: boolean = true,
   ): Promise<Types.CallResult> {
-    if (this.isInBttWebView()) {
+    if (this.isInBttWebView) {
       return this.callBttWebViewFunctions(action, data, translate);
     }
     return this.callWebserverApi(action, data, config, translate);
@@ -37,17 +37,23 @@ export default class FrontendUtilities extends Utilities {
 
   public performanceNow = () => { return window.performance.now(); };
 
-  private isInBttWebView(): boolean {
+  private get isInBttWebView(): boolean {
     const WVWindow: Types.WebViewWindow = window as Types.WebViewWindow;
-    return (WVWindow.BTT && typeof WVWindow.BTT.callHandler === 'function');
+    return (Boolean(WVWindow.BTT) && typeof WVWindow.BTT.callHandler === 'function');
   }
 
+  /**
+   * Available only on frontend, because this is valid only for built in BTT webview
+   * @param action 
+   * @param data 
+   * @param translate 
+   */
   private callBttWebViewFunctions(
     action: string,
     data: Types.BttPayload,
     translate: boolean,
   ): Promise<Types.CallResult> {
-    const start = this.performanceNow();
+    const start = Number(this.performanceNow().toFixed(3)) * 100;
     const WVWindow: Types.WebViewWindow = window as Types.WebViewWindow;
     let payload: Types.BttPayload = data;
 
@@ -60,10 +66,10 @@ export default class FrontendUtilities extends Utilities {
       let timeout = setTimeout(() => rej('Error: timedout at webview window function'), 30000);
  
       WVWindow.BTT.callHandler(action, payload, (result: any) => {
-        const end = this.performanceNow();
+        const end = Number(this.performanceNow().toFixed(3)) * 100;
         clearTimeout(timeout);
         res({
-          time: (end - start),
+          time: (end / 100) - (start / 100),
           value: result,
           note: 'Invoked using built in webview window functions'
         })

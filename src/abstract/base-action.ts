@@ -60,6 +60,16 @@ export abstract class BaseAction {
    * invoke this particular action on the mac specified in initial configuration
    */
   public get url(): string {
+    // This is only a valid case if used as a built in wrapper
+    // for webview. User don't need to specify the webserver config then
+    if (
+      !this.config.domain || 
+      !this.config.port || 
+      !this.config.protocol
+    ) {
+      return '#badConfig';
+    }
+
     let url: string = Url.resolve(
       CommonUtils.getBaseUrl(this.config),
       'trigger_action/',

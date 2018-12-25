@@ -223,7 +223,7 @@ export default class Chain extends ActionInvoker {
     const response = await this.runQueue(queue);
 
     // mark when the queue finished its execution
-    const endTime = CommonUtils.performanceNow().toFixed(3) * 100;
+    const endTime = Number(CommonUtils.performanceNow().toFixed(3)) * 100;
 
     // check if status code of each call was successful, and only then consider it as success
     // @TODO: Find proper status code

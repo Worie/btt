@@ -53,7 +53,6 @@ export default class VariableStore {
 
     const getNumberVariable = async () => {
       const response = await CommonUtils.callBetterTouchTool(`get_number_variable`, { variableName: key}, this.config, false);
-      console.log(response);
       return response.value.text();
     };
     

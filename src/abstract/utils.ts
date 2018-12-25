@@ -48,12 +48,12 @@ export default abstract class Utilities {
     const urlToFetch = this.buildFullUrl(action, parameters, url);
 
     // start mesuring time
-    const startTime = this.performanceNow().toFixed(3) * 100;
+    const startTime = Number(this.performanceNow().toFixed(3)) * 100;
     
     try {
       const response = await this.fetch(urlToFetch);
       // end mesuring time
-      const endTime = this.performanceNow().toFixed(3) * 100;
+      const endTime = Number(this.performanceNow().toFixed(3)) * 100;
       return {
         time: (endTime / 100) - (startTime / 100),
         value: response,

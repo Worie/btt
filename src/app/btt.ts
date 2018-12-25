@@ -38,7 +38,7 @@ export class Btt extends ActionInvoker {
   /**
    * Creates BTT instance which communicates with BetterTouchTool built in webserver
    */
-  constructor(config: Types.AppConfig) {
+  constructor(config: Types.AppConfig = { domain: null, port: null, protocol: null }) {
     super();
     this.config = config;
     
