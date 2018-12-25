@@ -1,13 +1,13 @@
 {
   "name": "btt",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "Manage your BetterTouchTool in JavaScript, easly.",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "_precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "watch": "webpack -d --watch --config webpack/dev.config.js",
-    "build": "webpack -p --config webpack/prod.config.js && npm run docs:build",
+    "build": "webpack --devtool eval-cheap-module-source-map -p --config webpack/prod.config.js && npm run docs:build",
     "docs:dev": "vuepress dev docs",
     "docs:build": "npm run inject; vuepress build docs",
     "inject": "browserify ./scripts/btt-window-inject.js > ./docs/.vuepress/public/btt.js",
