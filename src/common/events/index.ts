@@ -86,7 +86,7 @@ export default class EventManager {
     // and set up ids
     CommonUtils.callBetterTouchTool('add_new_trigger', {
       json: _.cloneDeep(listenerJSON),
-    }, this.config);
+    }, this.config, true);
   }
 
 

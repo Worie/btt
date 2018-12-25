@@ -62,7 +62,7 @@ export class Btt extends ActionInvoker {
     action: string,
     data: Types.BttPayload,
   ): Promise<any> {
-    return CommonUtils.callBetterTouchTool(action, data, this.config);
+    return CommonUtils.callBetterTouchTool(action, data, this.config, true);
   }
 
   /**

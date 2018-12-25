@@ -171,7 +171,7 @@ export class FWidget {
     // make the request to the BTT API to create new widget
     await CommonUtils.callBetterTouchTool(BTTEndpoint.WIDGET_CREATE, {
       json: appPayload,
-    }, this.config);
+    }, this.config, true);
 
     // get the instance representing the newly created widget
     return new Widget(this.config, { uuid, default: undefined });

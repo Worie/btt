@@ -6,6 +6,8 @@ import { BaseAction } from '../abstract/base-action';
 const NAMESPACE = '87a84aef-11fe-4dce-8d00-429cea46f345';
 
 export default abstract class Utilities {
+  protected type: 'frontend' | 'backend';
+
   public abstract deleteTrigger(uuid: string): void;
   
   public abstract fetch(path: string, options?: any): Promise<any>;
@@ -16,21 +18,20 @@ export default abstract class Utilities {
 
   public abstract performanceNow: any;
 
-  /** Base, environment agnostic methods */
-
-  /**
-   * Returns a base url for the BTT webserver endpoint
-   */
-  public getUrl(config: Partial<Types.AppConfig>): string {
-    const { protocol, domain, port } = config; 
-
-    return `${protocol}://${domain}:${port}/`;
-  }
-
   /**
    * Sends a request to real BTT built in webserver with given data translated as GET query params
    */
-  public async callBetterTouchTool(
+  public abstract async callBetterTouchTool(
+    action: string, 
+    data: Types.BttPayload,
+    config: Types.AppConfig,
+    translate: boolean,
+  ): Promise<Types.CallResult>;
+
+  /**
+  * Sends a request to real BTT built in webserver with given data translated as GET query params
+  */
+  protected async callWebserverApi(
     action: string, 
     data: Types.BttPayload,
     config: Types.AppConfig,
@@ -73,6 +74,17 @@ export default abstract class Utilities {
           Error message: ${err}`.trim(),
       };
     }
+  }
+
+  /** Base, environment agnostic methods */
+
+  /**
+   * Returns a base url for the BTT webserver endpoint
+   */
+  public getUrl(config: Partial<Types.AppConfig>): string {
+    const { protocol, domain, port } = config; 
+
+    return `${protocol}://${domain}:${port}/`;
   }
 
   /**

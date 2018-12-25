@@ -87,7 +87,8 @@ export abstract class BaseAction {
     return CommonUtils.callBetterTouchTool(
       'trigger_action', 
       { json: this.json },
-      this.config
+      this.config,
+      true
     );
   }
   

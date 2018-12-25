@@ -9,7 +9,7 @@ export interface KeyDefinition {
 
 export interface CallResult {
   time: number;
-  status: number;
+  status?: number;
   value: any;
   note?: string;
 }
@@ -193,3 +193,5 @@ export enum BTTEndpoint {
   TRIGGER_CREATE = 'add_new_trigger',
   TRIGGER_JSON = 'trigger_action',
 }
+
+export type WebViewWindow = Window & { BTT: any }
