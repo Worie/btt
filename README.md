@@ -10,6 +10,10 @@
 </p><p align="center"><h2 align="center">Manage your BetterTouchTool in JavaScript, easly.
 </h2></p>
 
+## Get started 
+
+See the [guide](https://worie.github.io/btt/guide/introduction.html) and [api](https://worie.github.io/btt/api) for `btt.js`. 
+
 ## About 
 This package is a handy wrapper over [BetterTouchTool](https://folivora.ai/) built in webserver API. (by [@Andreas Hegenberg](https://github.com/fifafu))
 
@@ -35,10 +39,6 @@ This package will allow you to automate you MacOS-running machine using JavaScri
 * Integrate your flow / touchbar with various APIs ...
 
 *and anything else that BetterTouchTool or JavaScript specification will allow you to do!*
-
-## Get started 
-
-See the [guide](https://worie.github.io/btt/guide/introduction.html) and [api](https://worie.github.io/btt/api) for `btt.js`. 
 
 ## Typed, browser/server side library
 This package provides it's own type definitions and can be run both on browser (using module bundlers) and nodejs environment.
