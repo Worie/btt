@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://nodei.co/npm/btt/">
   <img src="https://nodei.co/npm/btt.png?downloads=true&downloadRank=true" alt="Vunerabilitiesn"></a>
-</p><p align="center"><h2 align="center">Manage your BetterTouchTool in JavaScript, easly.
+</p><p align="center"><h2 align="center">Manage your BetterTouchTool in JavaScript, easily.
 </h2></p>
 
 ## Get started 
@@ -19,35 +19,35 @@ This package is a handy wrapper over [BetterTouchTool](https://folivora.ai/) bui
 
 This package will allow you to automate you MacOS-running machine using JavaScript. You'll be able to:
 
-* Create event listeners that'll be run within operating system, outside browser!
+* Create event listeners that'll run within an operating system, outside the browser!
 * Toggle your do-not-disturb state
 * Show a system notification
 * Toggle Night Shift
 * Sleep your computer after timeout
 * Create your own **touchbar widgets**
 * Feel a notification via **haptic engine**
-* Control the brightness of the screen, keyboard
+* Control the brightness of the screen and keyboard
 * Control the volume levels
-* Use the content of your clipboard to be opened in specific url or application
+* Use the content of your clipboard to be opened in a specific url or application
 * Create your own UIs "within system" using web view 
-* Trigger a system wide keyboard shortcut
-* Send a shortcut to specific application
-* Show / Hide / Open / Quit specific applcation
-* Move your mouse to specific position and click it
+* Trigger a system-wide keyboard shortcut
+* Send a shortcut to a specific application
+* Show / Hide / Open / Quit a specific applcation
+* Move your mouse to a specific position and click
 * Hide your cursor
 * Lock / Unlock your MacOS machine
 * Integrate your flow / touchbar with various APIs ...
 
-*and anything else that BetterTouchTool or JavaScript specification will allow you to do!*
+*and anything else that BetterTouchTool or the JavaScript specification will allow you to do!*
 
 ## Typed, browser/server side library
-This package provides it's own type definitions and can be run both on browser (using module bundlers) and nodejs environment.
+This package provides its own type definitions and can be run both on browser (using module bundlers) and in a nodejs environment.
 
 ## Requirements
 
-This package depends on application [BetterTouchTool](https://folivora.ai/) in at least version v2.0.0, you need to have it installed and running before going anywhere further.
+This package depends on the application [BetterTouchTool](https://folivora.ai/) in at least version v2.0.0, you need to have it installed and running before going further.
 
-Then, please enable and configure webserver in BetterTouchTool preferences. You're now ready to go!
+Then, please enable and configure the webserver in the BetterTouchTool preferences. You're now ready to go!
 
 ## Installation
 
@@ -55,7 +55,7 @@ Then, please enable and configure webserver in BetterTouchTool preferences. You'
 
 ## Example usage
 
-First, you'd need to create a btt instance passing the data for BTT webserver.
+First, create a btt instance passing the required data for BTT webserver.
 
 ```ts
 // import Btt class from the package
@@ -71,11 +71,11 @@ const btt = new Btt({
 });
 ```
 
-Now you can invoke the actions - there are plenty of way to do it, but all of those are promise based
+Now you can invoke the actions - there are plenty of ways to do it, and all are promise-based.
 
 ```ts
 // sequentially run three actions - spotlight, type text and night shift
-// as all actions are promise based, you can use async/await notation without hussle
+// as all actions are promise-based, you can use async/await notation without hassle
 btt
   .triggerShortcut('cmd+space').invoke()
   .then(() => btt.sendText({ text: 'Hello world!'}).invoke())
@@ -86,20 +86,20 @@ btt
 ## Response structure for every action
 
 ```ts
-// every single action returns an CallResult object containing various information about the Call
+// every single action returns a CallResult object containing information about the Call
 
 interface CallResult {
   time: number;     // contains time in MS that this action took to perform (including fetch time)
   status: number;   // contains an HTTP status / string
-  value: any;       // depending on the method used, may return array, object or fetch result
-  note?: string;    // additional note for the user if someone needs it
+  value: any;       // depending on the method used, may return an array, object or fetch result
+  note?: string;    // an additional note for the user
 }
 ```
 
 ## Chaining methods
 
 ```ts
-// you can also use custom chain method to simplify it even more, without using async/await
+// you can also use a custom chain method to simplify even more and avoid using async/await
 btt
   .invokeChain()                      // 1)
   .triggerShortcut('cmd+space')       // 2)
@@ -111,18 +111,18 @@ btt
 
 // Explanation:
 // 1) Starts method chaining
-// 2) Action that user want to perform
-// 3) Action that user want to perform
+// 2) Action that a user wants to perform
+// 3) Action that a user wants to perform
 // 4) Additional method available in chain only - wait before triggering next action
-// 5) Action that user want to perform
-// 6) Invokes all previously defined actions, ensuring the execution order
+// 5) Action that a user wants to perform
+// 6) Invokes all previously-defined actions, ensuring the execution order
 // 7) Returns a promise that resolves once all of the actions are fulfilled. 
 //    Contains information about the status of the chain (time, value, status)
 ```
 
 ## Event listeners
 
-You can even register system-wide event listener within BTT that'll trigger particular actions
+You can even register a system-wide event listener within BTT that'll trigger particular actions
 
 ```ts
 // creates a trigger in BetterTouchTool. Keep in mind that this is persistent until you manually delete it!
@@ -144,7 +144,7 @@ btt.addTriggerAction('oneFingerForceClick', (ev) => {
 btt.removeTriggerAction('oneFingerForceClick', callbackFuntion);
 ```
 
-But the above method will trigger the callback upon running your script, not when particular event really occurs. If you need to call a function upon event recognition, you'd need to use [btt-node-server](https://github.com/Worie/btt-node-server) and use `addEventListener` and `removeEventListener` methods on btt instance. The callback you provide will be run in nodejs environment, within `vm`.
+The above method will trigger the callback upon running your script, not when a particular event really occurs. If you need to call a function upon event recognition, you need to use [btt-node-server](https://github.com/Worie/btt-node-server) and use the `addEventListener` and `removeEventListener` methods on the btt instance. The callback you provide will run in the nodejs environment, within `vm`.
 
 ```ts
 const btt = new Btt({
@@ -152,14 +152,14 @@ const btt = new Btt({
   port: 8000,
   protocol: 'http',
   version: '2.525',
-  // you need to pass eventServer to use this part of the lib
+  // pass eventServer to use this part of the lib
   eventServer: {
     domain: 'localhost',
     port: 8888,
   },
 });
 
-// adds real event listener, that'll be run once event occurs
+// adds real event listener, that'll run once event occurs
 btt.addEventListener('cmd+ctrl+alt+u', async (ev) => {
   // write the code as you'd normally do -> trigger the action for some interval
   const intervalID = setInterval(() => {
@@ -168,7 +168,7 @@ btt.addEventListener('cmd+ctrl+alt+u', async (ev) => {
 
   // you can use fetch API here or anything that your node version will support
 
-  // will stop the interval after 10 seconds
+  // stops the interval after 10 seconds
   await new Promise((res, rej) => {
     setTimeout(() => {
       clearTimeout(intervalID);
@@ -176,17 +176,17 @@ btt.addEventListener('cmd+ctrl+alt+u', async (ev) => {
     }, 10000);
   });
   
-  // the value you return from the callback, will be the response of the btt-node-server 
+  // the value you return from the callback will be the response of the btt-node-server 
   return { messsage: 'Hello world!' };
 });
 ```
 
-To get all available events, you'd have to look in the enums (list of all valid events is going to be available soon).
-Still, most of the time you can just guess it, because all event names are a lowercased equivalent of triggers from within `BetterTouchTool`.
+To get all available events, you have to look in the enums (list of all valid events will be available soon).
+Most of the time you can just guess because all event names are the lowercased equivalent of the triggers from within `BetterTouchTool`.
 
 ### Additional action information
 
-For use within browser, you can get the `url` that lies behind all actions and assign it to some `<a href="${link}">Link</a>`. To get `link` you simply need to read the `.url` property of any action: 
+For use within the browser, you can get the `url` that lies behind all actions and assign it to some `<a href="${link}">Link</a>`. To get `link` you simply need to read the `.url` property of any action: 
 
 
 ```ts
@@ -195,7 +195,7 @@ console.log(
 );
 ```
 
-If you want to have a sneek peak on the generated action JSON, or want to share it with others who use `BetterTouchTool` you can read the `.json` property of any action. 
+If you want to have a peak at the generated action JSON, or want to share it with others who use `BetterTouchTool` you can read the `.json` property of any action. 
 
 
 ```ts
@@ -206,12 +206,12 @@ console.log(
 
 ## More examples 
 
-For more advanced examples you can visit [the example section](https://github.com/Worie/btt/tree/master/examples)
+For more advanced examples visit [the example section](https://github.com/Worie/btt/tree/master/examples)
 
 ## Notice
 
-Keep in mind that this module only provides handy utility functions that underneath sends request to BTT built in webserver.
-So depending on your BTT version some actions may be glitchy. Do not hestitate to report those issues here or in [official BTT community forum](https://community.folivora.ai/categories). 
+Keep in mind that this module only provides handy utility functions that send requests to BTT built in webserver.
+So depending on your BTT version, some actions may be glitchy. Do not hestitate to report those issues here or in the [official BTT community forum](https://community.folivora.ai/categories). 
 
 Also, keep in mind that accessing any kind of low level APIs from JS may be dangerous, make sure to [stay secure](#)
 
@@ -219,7 +219,7 @@ Also, keep in mind that accessing any kind of low level APIs from JS may be dang
 
 * [btt](https://github.com/Worie/btt) - BetterTouchTool management in JS
 <!-- * [btt-json-loader](https://github.com/Worie/btt-json-loader) - JSON loader for BTT -->
-* [btt-node-server](https://github.com/Worie/btt-node-server) - Simple express server, required for advanced event listeners handling
+* [btt-node-server](https://github.com/Worie/btt-node-server) - Simple express server, required for advanced event listener handling
 <!-- * [btt-touchbar-widgets](https://github.com/Worie/btt-touchbar-widgets) - Working touchbar widgets, based on [btt](https://github.com/Worie/btt) -->
 * [btt-node](https://github.com/Worie/btt-node) Premature version of this package ([btt](https://github.com/Worie/btt)) - deprecated
 
