@@ -19,7 +19,7 @@ export default class AExecuteScript extends BaseAction {
     }
 
     // path to the executable, with slashes escaped
-    const escapedPath = binaryPath.replace(/\//g, '\/');
+    const escapedPath = (binaryPath ? binaryPath : this.config.nodeBinaryPath).replace(/\//g, '\/');
   
     // btt format for executable path 
     const shellScriptActionConfig = `${escapedPath}:::-e:::btt-generated-script`;
