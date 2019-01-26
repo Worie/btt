@@ -250,7 +250,7 @@ export default class Chain extends ActionInvoker {
   public wait(timeout: number) {
     // adds a promise to queue that'll resolve after given timeout
     this.addToQueue(
-      () =>
+      async () =>
         new Promise((res, rej) => {
           setTimeout(() => {
             res({

@@ -38,7 +38,7 @@ export class Widget {
     if (!data && !this.default) {
       // show a warning and stop the execution of the function
       console.warn('Nothing to do for widget ' + this.uuid);
-      return;
+      return undefined;
       // if there's no data passed but default function was passed
     } else if (!data) {
       // update the widget using the data from default function
@@ -92,7 +92,7 @@ export class Widget {
    * @param mode
    * @param payload
    */
-  private callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
+  private async callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool(mode, payload, this.config, false);
   }
 }

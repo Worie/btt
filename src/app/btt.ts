@@ -266,7 +266,7 @@ export class Btt extends ActionInvoker {
   /**
    * Sends a request to real BTT built in webserver with given data translated as GET query params
    */
-  public do(action: string, data: Types.BttPayload): Promise<any> {
+  public async do(action: string, data: Types.BttPayload): Promise<any> {
     return CommonUtils.callBetterTouchTool(action, data, this.config, true);
   }
 

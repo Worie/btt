@@ -45,7 +45,7 @@ export class Trigger {
   public async update(json: Types.BttPayload): Promise<Types.CallResult> {
     if (!json) {
       console.warn('No update data passed to Trigger');
-      return;
+      return undefined;
     }
 
     // update the trigger with given json
@@ -65,7 +65,7 @@ export class Trigger {
    * @param mode
    * @param payload
    */
-  private callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
+  private async callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool(mode, payload, this.config, false);
   }
 }
@@ -121,7 +121,7 @@ export class FTrigger {
    * @param mode
    * @param payload
    */
-  private callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
+  private async callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool(mode, payload, this.config, false);
   }
 }

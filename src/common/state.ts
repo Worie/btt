@@ -23,7 +23,7 @@ export default class VariableStore {
    * @param value new value of the variable
    * @param isPersistent whether the variable should persist after BTT reboot
    */
-  public set(key: string, value: string | number, isPersistent?: boolean) {
+  public async set(key: string, value: string | number, isPersistent?: boolean) {
     if (typeof value !== 'number' && typeof value !== 'string') {
       throw new Error('You can only set the variable value to string or number');
     }

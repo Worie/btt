@@ -10,7 +10,6 @@ export default class ADelayNextAction extends BaseAction {
 
   public get data() {
     const timeout: number = this.arguments[0];
-
     return {
       DelayNextActionBy: String(timeout / 1000),
     };

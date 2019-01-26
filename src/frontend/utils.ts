@@ -50,7 +50,7 @@ export default class FrontendUtilities extends Utilities {
    * @param data
    * @param translate
    */
-  private callBttWebViewFunctions(
+  private async callBttWebViewFunctions(
     action: string,
     data: Types.BttPayload,
     translate: boolean,
@@ -71,7 +71,7 @@ export default class FrontendUtilities extends Utilities {
         const end = Number(this.performanceNow().toFixed(3)) * 100;
         clearTimeout(timeout);
         res({
-          time: end / 100 - start / 100,
+          time: (end / 100) - (start / 100),
           value: result,
           note: 'Invoked using built in webview window functions',
         });

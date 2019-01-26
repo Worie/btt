@@ -15,7 +15,7 @@ export default class AExecuteScript extends BaseAction {
 
     if (!binaryPath && !this.config.nodeBinaryPath) {
       console.error('Sorry, you have to provide the node/bash binary path manually in the params');
-      return;
+      return undefined;
     }
 
     // path to the executable, with slashes escaped

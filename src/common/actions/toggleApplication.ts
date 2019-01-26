@@ -16,7 +16,7 @@ export default class AToggleApplication extends BaseAction {
 
     if (!mdlsValue) {
       console.error(`Sorry, you'll have to manually provide mdls name of the app for this action to work`);
-      return;
+      return undefined;
     }
 
     return {
