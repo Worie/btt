@@ -96,6 +96,7 @@ export abstract class BaseAction {
         json: JSON.stringify(this.json),
       },
       this.config.sharedKey,
+      this.config.sharedSecret,
     );
   }
 }

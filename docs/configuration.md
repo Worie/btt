@@ -31,6 +31,20 @@ const btt = new Btt({
 });
 ```
 
+## Shared secret
+
+If you have set up a `sharedSecret` in you BTT general config (recommended), you need to pass `sharedSecret` property as well.
+This will be used if you invoke functions inside a floatin webview context:
+
+```js
+const btt = new Btt({
+  domain: '127.0.0.1',
+  protocol: 'http',
+  port: 64472,
+  sharedSecret: 'ABCDEFGHIJKLMNOPRSTUVWXYZ',
+});
+```
+
 ## Blacklisting 
 
 If you read the **Staying secure** section you already know that you can disable some actions within particular `btt.js` instance.

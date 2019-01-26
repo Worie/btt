@@ -21,6 +21,17 @@ export default class FrontendUtilities extends Utilities {
   }
 
   /**
+   * Returns a base url for the BTT webserver endpoint
+   */
+  public getBaseUrl(config: Partial<Types.AppConfig>): string {
+    const { protocol, domain, port } = config;
+    if (this.isInBttWebView) {
+      return 'btt://';
+    }
+    return `${protocol}://${domain}:${port}/`;
+  }
+
+  /**
    * Sends a request to real BTT built in webserver with given data translated as GET query params
    */
   public async callBetterTouchTool(
@@ -30,6 +41,10 @@ export default class FrontendUtilities extends Utilities {
     translate: boolean = true,
   ): Promise<Types.CallResult> {
     if (this.isInBttWebView) {
+      // handles the shared secret for scripting (can be activated in BTT Advanced General settings)
+      if (config.sharedSecret) {
+        data.shared_secret = config.sharedSecret;
+      }
       return this.callBttWebViewFunctions(action, data, translate);
     }
     return this.callWebserverApi(action, data, config, translate);
@@ -37,7 +52,7 @@ export default class FrontendUtilities extends Utilities {
 
   public performanceNow = () => {
     return window.performance.now();
-  }
+  };
 
   private get isInBttWebView(): boolean {
     const WVWindow: Types.WebViewWindow = window as Types.WebViewWindow;
@@ -61,7 +76,7 @@ export default class FrontendUtilities extends Utilities {
 
     if (translate) {
       const properBttNotation = this.translateObjectKeysToBttNotation(data.json);
-      payload = { json: JSON.stringify(properBttNotation) };
+      payload = { ...payload, json: JSON.stringify(properBttNotation) };
     }
 
     return new Promise((res, rej) => {

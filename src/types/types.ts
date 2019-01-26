@@ -23,6 +23,7 @@ export interface AppConfig {
   port: number;
   protocol: string;
   sharedKey?: string;
+  sharedSecret?: string;
   version?: string;
   eventServer?: EventServerDefinition;
   nodeBinaryPath?: string;
