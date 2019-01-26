@@ -21,6 +21,17 @@ export default class FrontendUtilities extends Utilities {
   }
 
   /**
+   * Returns a base url for the BTT webserver endpoint
+   */
+  public getBaseUrl(config: Partial<Types.AppConfig>): string {
+    const { protocol, domain, port } = config;
+    if (this.isInBttWebView) {
+      return 'btt://';
+    }
+    return `${protocol}://${domain}:${port}/`;
+  }
+
+  /**
    * Sends a request to real BTT built in webserver with given data translated as GET query params
    */
   public async callBetterTouchTool(
