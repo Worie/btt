@@ -8,7 +8,7 @@ import CommonUtils from '../util';
  */
 export default class AShowWebView extends BaseAction {
   protected id: EActions = EActions.SHOW_WEB_VIEW;
-  
+
   public get data() {
     const actionConfig: Types.ShowWebViewConfig = this.arguments[0];
     const floatingHTMLConfig: Types.FloatingWebViewConfig = actionConfig.config || {};
@@ -22,30 +22,30 @@ export default class AShowWebView extends BaseAction {
       DoNotCache: floatingHTMLConfig.cache || true,
       Size: `{${width}, ${height}}`,
     };
-    
+
     // if user defined at least one partial of position, set this to absolute position
     if (typeof x !== 'undefined' || typeof y !== 'undefined') {
       actionFloatingHTMLConfig.Position = `{${x || 0}, ${y || 0}}`;
     }
-  
+
     const result: Partial<Types.AppPayload> = {
-      ActionFloatingHTMLConfig: JSON.stringify(
-        CommonUtils.translateObjectKeysToBttNotation(actionFloatingHTMLConfig)
-      ),
+      ActionFloatingHTMLConfig: JSON.stringify(CommonUtils.translateObjectKeysToBttNotation(actionFloatingHTMLConfig)),
       ActionFloatingHTMLName: name,
     };
-  
+
     if (url) {
       result.ActionURLToLoad = url;
     } else if (html) {
-      result.Files = [{
-        FileContent: Buffer.from(html).toString('base64'),
-        FileOther: "html"
-      }];
+      result.Files = [
+        {
+          FileContent: Buffer.from(html).toString('base64'),
+          FileOther: 'html',
+        },
+      ];
     } else {
       console.warn('Something went wrong - nor url nor html was passed');
     }
-  
+
     return result;
   }
 }

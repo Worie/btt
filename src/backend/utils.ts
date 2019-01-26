@@ -5,6 +5,7 @@ import * as Path from 'path';
 import * as PerformanceNow from 'performance-now';
 
 export default class BackendUtilities extends Utilities {
+  public performanceNow = PerformanceNow;
   protected type: 'frontend' | 'backend' = 'backend';
 
   public async fetch(url: string, options?: any): Promise<any> {
@@ -17,7 +18,12 @@ export default class BackendUtilities extends Utilities {
   }
 
   public getNodeBinaryPath(): string {
-    const path: string = Path.join(execSync('npm bin -g').toString().trim(), 'node');
+    const path: string = Path.join(
+      execSync('npm bin -g')
+        .toString()
+        .trim(),
+      'node',
+    );
     return path;
   }
 
@@ -27,16 +33,14 @@ export default class BackendUtilities extends Utilities {
   }
 
   /**
-  * Sends a request to real BTT built in webserver with given data translated as GET query params
-  */
+   * Sends a request to real BTT built in webserver with given data translated as GET query params
+   */
   public async callBetterTouchTool(
-    action: string, 
+    action: string,
     data: Types.BttPayload,
     config: Types.AppConfig,
     translate: boolean = true,
   ): Promise<Types.CallResult> {
     return this.callWebserverApi(action, data, config, translate);
   }
-
-  public performanceNow = PerformanceNow
 }

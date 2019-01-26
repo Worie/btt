@@ -12,20 +12,17 @@ export class Widget {
   public uuid: string;
 
   // stores the default update behaviour of the widget
-  private default: Function;    
+  private default: Function;
 
   // holds the config of the current instance
   private config: Types.AppConfig;
 
   /**
    * Creates an instance representing BTT Widget
-   * @param config 
-   * @param widgetConfig 
+   * @param config
+   * @param widgetConfig
    */
-  public constructor(
-    config: Types.AppConfig,
-    widgetConfig: Types.WidgetConfig,
-  ) {
+  public constructor(config: Types.AppConfig, widgetConfig: Types.WidgetConfig) {
     this.uuid = widgetConfig.uuid;
     this.default = widgetConfig.default;
 
@@ -34,7 +31,7 @@ export class Widget {
 
   /**
    * Updates the current widget with given data
-   * @param data 
+   * @param data
    */
   public async update(data?: Partial<BttPayload>): Promise<Types.CallResult> {
     // if there was no data passed, nor there was no default fallback
@@ -42,7 +39,7 @@ export class Widget {
       // show a warning and stop the execution of the function
       console.warn('Nothing to do for widget ' + this.uuid);
       return;
-    // if there's no data passed but default function was passed
+      // if there's no data passed but default function was passed
     } else if (!data) {
       // update the widget using the data from default function
       return this.update(this.default());
@@ -87,21 +84,18 @@ export class Widget {
    */
   public setDefaultCallback(cb: Function): void {
     this.default = cb.bind(this);
-  } 
+  }
 
   /**
    * Calls BTT with given payload using widget context
    * @TODO may be made reusable
-   * @param mode 
-   * @param payload 
+   * @param mode
+   * @param payload
    */
-  private callBTTWithContext(
-    mode: string, 
-    payload: BttPayload,
-  ): Promise<Types.CallResult> {
+  private callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool(mode, payload, this.config, false);
   }
-};
+}
 
 /**
  * Creates Widget class instance with given config
@@ -111,7 +105,7 @@ export class FWidget {
 
   /**
    * Takes an AppConfig as a constructor parameter
-   * @param config 
+   * @param config
    */
   public constructor(config: Types.AppConfig) {
     this.config = config;
@@ -119,7 +113,7 @@ export class FWidget {
 
   /**
    * Returns a new Widget class instance and automatically passes the current btt instance config
-   * @param config 
+   * @param config
    */
   public get(config: Types.WidgetConfig): Widget {
     return new Widget(this.config, config);
@@ -129,26 +123,26 @@ export class FWidget {
    * Creates a new BetterTouchTool touchbar widget and returns its instance
    * @param options: Types.ITouchbarWidgetCreateConfig
    */
-  public async create(options: Types.WidgetCreateConfig): Promise<Widget> {    
+  public async create(options: Types.WidgetCreateConfig): Promise<Widget> {
     const uuid = CommonUtils.generateUuidForString(JSON.stringify(options));
 
     const binaryPath = CommonUtils.getNodeBinaryPath();
 
     // path to the executable, with slashes escaped
-    const escapedPath = (options.path || binaryPath || '/bin/bash').replace(/\//g, '\/');
-    
-    const mode = (binaryPath === '/bin/bash' ? 'bash': false) || options.mode;
+    const escapedPath = (options.path || binaryPath || '/bin/bash').replace(/\//g, '/');
 
-    // btt format for executable path 
-    const shellScriptWidgetGestureConfig = `${escapedPath}:::${(mode === 'node' ? '-e' : '-c')}`;
+    const mode = (binaryPath === '/bin/bash' ? 'bash' : false) || options.mode;
+
+    // btt format for executable path
+    const shellScriptWidgetGestureConfig = `${escapedPath}:::${mode === 'node' ? '-e' : '-c'}`;
 
     // library payload that'll create a widget later
     const appPayload: Types.AppPayload = {
       WidgetName: options.name,
       TriggerType: ETouchBarWidgets.CREATE,
-      TriggerClass: "BTTTriggerTypeTouchBar",
+      TriggerClass: 'BTTTriggerTypeTouchBar',
       PredefinedActionType: -1,
-      PredefinedActionName: "No Action",
+      PredefinedActionName: 'No Action',
       ShellScriptWidgetGestureConfig: shellScriptWidgetGestureConfig,
       Enabled2: 1,
       UUID: uuid,
@@ -164,14 +158,19 @@ export class FWidget {
         TouchBarButtonColor: options.appearance.buttonColor,
         TouchBarAlwaysShowButton: String(Number(options.alwaysShow)),
         TouchBarShellScriptString: options.script,
-        TouchBarAlternateBackgroundColor: options.appearance.alternateBackgroundColor
+        TouchBarAlternateBackgroundColor: options.appearance.alternateBackgroundColor,
       },
     };
-    
+
     // make the request to the BTT API to create new widget
-    await CommonUtils.callBetterTouchTool(BTTEndpoint.WIDGET_CREATE, {
-      json: appPayload,
-    }, this.config, true);
+    await CommonUtils.callBetterTouchTool(
+      BTTEndpoint.WIDGET_CREATE,
+      {
+        json: appPayload,
+      },
+      this.config,
+      true,
+    );
 
     // get the instance representing the newly created widget
     return new Widget(this.config, { uuid, default: undefined });

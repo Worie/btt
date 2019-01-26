@@ -11,21 +11,18 @@ export abstract class BaseAction {
   protected config: Types.AppConfig;
   protected arguments: any[] = [];
   protected id: EActions;
-  
+
   /**
    * A constructor for the Action
-   * @param args 
+   * @param args
    */
-  public constructor(
-    config: Types.AppConfig,
-    ...args: any[]
-  ) {
+  public constructor(config: Types.AppConfig, ...args: any[]) {
     this.config = config;
     this.arguments = args;
   }
 
   /**
-   * Returns JSON structure for the current action. 
+   * Returns JSON structure for the current action.
    * Must be overriden by instances
    */
   public get json(): Types.BttPayload {
@@ -34,7 +31,7 @@ export abstract class BaseAction {
       ...this.data,
     });
   }
-  
+
   /**
    * Intended to be overriden by action implementation
    * If left as is, simply uses the id of the action and produces required json
@@ -42,18 +39,18 @@ export abstract class BaseAction {
   protected get data(): Partial<Types.BttPayload> {
     return this.baseData;
   }
-  
+
   /**
    * Returns the base data of every JSON, required for BTT to see the changes
    */
   private get baseData(): Partial<Types.BttPayload> {
     return {
-      PredefinedActionType : this.id,
-      Enabled2 : 1,
-      Enabled : 1,
-    }
-  };
-  
+      PredefinedActionType: this.id,
+      Enabled2: 1,
+      Enabled: 1,
+    };
+  }
+
   /**
    * Returns the url of the given action, that this library generates
    * Visiting the returned value in browser (or calling it from backend) will
@@ -62,18 +59,11 @@ export abstract class BaseAction {
   public get url(): string {
     // This is only a valid case if used as a built in wrapper
     // for webview. User don't need to specify the webserver config then
-    if (
-      !this.config.domain || 
-      !this.config.port || 
-      !this.config.protocol
-    ) {
+    if (!this.config.domain || !this.config.port || !this.config.protocol) {
       return '#badConfig';
     }
 
-    let url: string = Url.resolve(
-      CommonUtils.getBaseUrl(this.config),
-      'trigger_action/',
-    );
+    let url: string = Url.resolve(CommonUtils.getBaseUrl(this.config), 'trigger_action/');
 
     url = Url.resolve(url, `?${this.params}`);
     return url;
@@ -84,30 +74,28 @@ export abstract class BaseAction {
    */
   public async invoke(): Promise<Types.CallResult | any> {
     if (this.id === EActions.DUMMY) {
-      return new Promise((res, rej) => { 
-        const response = ({
+      return new Promise((res, rej) => {
+        const response = {
           time: null,
           note: `This action was was not performed due to blacklisting: ${(this as any).name}`,
           status: null,
-        }) as Types.CallResult;
-        res(response); 
+        } as Types.CallResult;
+        res(response);
       });
     }
 
-    return CommonUtils.callBetterTouchTool(
-      'trigger_action', 
-      { json: this.json },
-      this.config,
-      true
-    );
+    return CommonUtils.callBetterTouchTool('trigger_action', { json: this.json }, this.config, true);
   }
-  
+
   /**
    * Returns parameters needed for url generation
    */
   protected get params(): string {
-    return CommonUtils.params({
-      json: JSON.stringify(this.json),
-    }, this.config.sharedKey);
+    return CommonUtils.params(
+      {
+        json: JSON.stringify(this.json),
+      },
+      this.config.sharedKey,
+    );
   }
 }

@@ -16,8 +16,8 @@ import { AppPayload } from '../../types/types';
 
 /**
  * This class holds methods related to the wide term "events"
- * 
- * This includes creating a simple action in BetterTouchTool, as well as 
+ *
+ * This includes creating a simple action in BetterTouchTool, as well as
  * creating advanced event listeners which are going to be evaluated on btt-node-server side
  */
 export default class EventManager {
@@ -31,21 +31,21 @@ export default class EventManager {
 
   /**
    * Initializes the event manager with specific btt config
-   * @param config 
+   * @param config
    */
   constructor(config: Types.AppConfig) {
     this.config = config;
   }
 
   /**
-   * Adds event listener to BTT. Keep in mind this is persistent, so if you call this method twice, 
+   * Adds event listener to BTT. Keep in mind this is persistent, so if you call this method twice,
    * two entries will be added to BTT. Closing the browser / node process won't make the listeners die
-   * 
+   *
    * @param eventType string, created from action enum identifier
    * @param cb IEventParameter
    */
   public addTriggerAction(eventType: string, cb: Types.EventCallback): void {
-    let comment: string = '';
+    const comment: string = '';
 
     const event: Types.EventParameter = {
       actions: [],
@@ -57,9 +57,7 @@ export default class EventManager {
 
     cb(event);
 
-    const jsonUUID: string = (
-      event.additionalData.UUID ? event.additionalData.UUID : this.generateUUID(eventType, cb)
-    );
+    const jsonUUID: string = event.additionalData.UUID ? event.additionalData.UUID : this.generateUUID(eventType, cb);
 
     // handle required modifier keys (for 'trackpad', mouse related and 'other' categories )
     // @TODO: use requiredModifierKeys, map them, use KEYS module to calculate the BTTRequiredModifierKeys mask (or value?)
@@ -68,14 +66,12 @@ export default class EventManager {
     // upon detection of given eventType
     const batchAction: Partial<Types.AppPayload> = this.buildActionSequence(event.actions);
 
-    const listenerJSON: Partial<Types.AppPayload> = this.buildTriggerAction(
-      eventType, 
-      batchAction,
-      { comment: event.comment }
-    );
-    
+    const listenerJSON: Partial<Types.AppPayload> = this.buildTriggerAction(eventType, batchAction, {
+      comment: event.comment,
+    });
+
     _.merge(listenerJSON, event.config, event.additionalData);
-  
+
     listenerJSON.UUID = jsonUUID;
     listenerJSON.AdditionalActions = listenerJSON.AdditionalActions.map((action: Partial<AppPayload>) => {
       return _.merge(action, {
@@ -84,29 +80,33 @@ export default class EventManager {
     });
 
     // and set up ids
-    CommonUtils.callBetterTouchTool('add_new_trigger', {
-      json: _.cloneDeep(listenerJSON),
-    }, this.config, true);
+    CommonUtils.callBetterTouchTool(
+      'add_new_trigger',
+      {
+        json: _.cloneDeep(listenerJSON),
+      },
+      this.config,
+      true,
+    );
   }
-
 
   /**
    * Removes event listener
-   * 
+   *
    * @param eventType string, created from action enum identifier
-   * @param cb 
+   * @param cb
    */
-  public removeTriggerAction(eventType: string, cb: Types.EventCallback): void {    
+  public removeTriggerAction(eventType: string, cb: Types.EventCallback): void {
     // get the id from event type, callback and everything
     const triggerID: string = this.generateUUID(eventType, cb);
-  
+
     CommonUtils.deleteTrigger(triggerID);
   }
 
   /**
-   * 
-   * @param eventType 
-   * @param cb 
+   *
+   * @param eventType
+   * @param cb
    */
   public addEventListener(eventType: string, cb: Types.EventCallback): void {
     if (!this.config.eventServer) {
@@ -121,26 +121,23 @@ export default class EventManager {
     const { port, domain } = this.config.eventServer;
 
     // add script
-    const code = EventPayloadTemplate({data, domain, port});
+    const code = EventPayloadTemplate({ data, domain, port });
 
     // register a trigger in BetterTouchTool that'll make a request to the btt-node-server
     this.addTriggerAction(
-      eventType, 
+      eventType,
       (ev: Types.EventParameter): void => {
-        const actions = [
-          this.showNotification(),
-          this.executeScript(code),
-        ];
-        
+        const actions = [this.showNotification(), this.executeScript(code)];
+
         ev.actions.push(...actions);
         ev.additionalData = { UUID: triggerID };
       },
     );
-  };
-  
+  }
+
   /**
    * Removes the trigger that'd make a specific request to the btt-node-server
-   * 
+   *
    * @param eventType event that'd trigger the action
    * @param cb callback that you want to take off from the event
    */
@@ -149,10 +146,10 @@ export default class EventManager {
 
     // get the id from event type, callback and everything
     const triggerID: string = this.generateUUID(eventType, data);
-  
+
     // remove the specific trigger
     CommonUtils.deleteTrigger(triggerID);
-  };
+  }
 
   // @TODO: use BTT instance here
   // @TODO: create a BTT "service" or Action invoker here
@@ -169,30 +166,24 @@ export default class EventManager {
    * Shows a notification when user is invoking a valid, btt-node-server event
    */
   private showNotification() {
-    return new AShowNotification(this.config, { title: 'Triggering an event', content: 'Please wait...'});
+    return new AShowNotification(this.config, { title: 'Triggering an event', content: 'Please wait...' });
   }
 
   /**
    * Generates uuid for specific event / action trigger
-   * @param args 
+   * @param args
    */
   private generateUUID(...args: any[]) {
-    return CommonUtils.generateUuidForString(
-      args.map(a => String(a)).join(':'),
-      this.namespace,
-    );
+    return CommonUtils.generateUuidForString(args.map(a => String(a)).join(':'), this.namespace);
   }
 
   /**
    * Generates a payload, later interpreted by btt-node-server
-   * 
+   *
    * @param bttConfig config of certain btt instance
    * @param callback function to invoke
    */
-  private generatePayload(
-    bttConfig: Types.AppConfig,
-    callback: Function
-  ): string{
+  private generatePayload(bttConfig: Types.AppConfig, callback: Function): string {
     // create a payload object out of given params
     const payload: string = JSON.stringify({
       bttConfig: JSON.stringify(bttConfig),
@@ -206,26 +197,37 @@ export default class EventManager {
     const data = {
       payload: base64Payload,
     };
-    
-    return JSON.stringify(data);
-  };
 
+    return JSON.stringify(data);
+  }
 
   /**
    * Returns the trigger class proprerty, required for trigger actions to work
-   * 
-   * @param value 
+   *
+   * @param value
    */
   private getTriggerClassProperty(category: EventCategory): string {
     // we're returning the value of the json property that'll be dispatched to BTT
     // so we must use full "BTTTriggerType*" instead TriggerType*
     switch (category) {
-      case EventCategory.TRACKPAD: { return "BTTTriggerTypeTouchpadAll"; }
-      case EventCategory.OTHER_MOUSE: { return "BTTTriggerTypeNormalMouse"; }
-      case EventCategory.MAGIC_MOUSE: { return "BTTTriggerTypeMagicMouse"; }
-      case EventCategory.SIRI_REMOTE: { return "BTTTriggerTypeSiriRemote"; }
-      case EventCategory.OTHER: { return "BTTTriggerTypeOtherTriggers"; }
-      case EventCategory.KEY_COMBO: { return "BTTTriggerTypeKeyboardShortcut"; }
+      case EventCategory.TRACKPAD: {
+        return 'BTTTriggerTypeTouchpadAll';
+      }
+      case EventCategory.OTHER_MOUSE: {
+        return 'BTTTriggerTypeNormalMouse';
+      }
+      case EventCategory.MAGIC_MOUSE: {
+        return 'BTTTriggerTypeMagicMouse';
+      }
+      case EventCategory.SIRI_REMOTE: {
+        return 'BTTTriggerTypeSiriRemote';
+      }
+      case EventCategory.OTHER: {
+        return 'BTTTriggerTypeOtherTriggers';
+      }
+      case EventCategory.KEY_COMBO: {
+        return 'BTTTriggerTypeKeyboardShortcut';
+      }
     }
 
     return null;
@@ -233,8 +235,8 @@ export default class EventManager {
 
   /**
    * Builds a JSON out of given array of action objects
-   * 
-   * @param actions 
+   *
+   * @param actions
    */
   private buildActionSequence(actions: Partial<Types.AppPayload>[]): Partial<AppPayload> {
     const jsons: Partial<AppPayload> = actions
@@ -242,7 +244,7 @@ export default class EventManager {
       .map((action, index) => {
         return {
           ...action,
-          Order: index, 
+          Order: index,
           GestureNotes: this.defaultComment, // reconsider where to put that
         };
       });
@@ -252,25 +254,21 @@ export default class EventManager {
       Enabled2: 1,
       Enabled: 1,
       AdditionalActions: jsons,
-    }
+    };
   }
 
   /**
    * Builds trigger action, that can be added to BTT (event listener like)
-   * 
-   * @param eventName 
-   * @param batchAction 
-   * @param options 
+   *
+   * @param eventName
+   * @param batchAction
+   * @param options
    */
-  private buildTriggerAction(
-    eventName: string, 
-    actions: Partial<Types.AppPayload>, 
-    options: any = {},
-  ) { 
+  private buildTriggerAction(eventName: string, actions: Partial<Types.AppPayload>, options: any = {}) {
     const eventTriggerObject: Types.EventTrigger = EventTriggers.getByName(eventName);
 
     if (typeof eventTriggerObject === 'undefined') {
-      throw new Error(`Trying to use an event that does not exist, nor is a shortcut: ${eventName}`)
+      throw new Error(`Trying to use an event that does not exist, nor is a shortcut: ${eventName}`);
     }
 
     const json: Partial<Types.AppPayload> = {
@@ -286,10 +284,10 @@ export default class EventManager {
       Object.assign(json, {
         ShortcutModifierKeys: Keys.createBitmaskForShortcut(eventName, false),
         AdditionalConfiguration: String(Keys.createBitmaskForShortcut(eventName, true)),
-        ShortcutKeyCode: Keys.getKeyCode(eventName.split('+').pop())
+        ShortcutKeyCode: Keys.getKeyCode(eventName.split('+').pop()),
       });
 
-      // in case user has explicitly said that modifiers location matters, 
+      // in case user has explicitly said that modifiers location matters,
       // enable differentation
       if (Keys.isDifferentiating(eventName)) {
         Object.assign(json, {
