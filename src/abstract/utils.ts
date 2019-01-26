@@ -59,7 +59,7 @@ export default abstract class Utilities {
    * Parses given list of params (key-value object) and converts it
    * to query parameters
    */
-  public params(data: Record<string, string>, sharedKey?: string): string {
+  public params(data: Record<string, string>, sharedKey?: string, sharedSecret?: string): string {
     // parses keys of the object into query params
     const params = Object.keys(data)
       .map(param => {
@@ -70,6 +70,10 @@ export default abstract class Utilities {
     // if sharedKey was passed, add shared_key get parameter to enable the calls
     if (sharedKey) {
       return `${params}&shared_key=${sharedKey}`;
+    }
+    // if sharedSecret was passed, add shared_secret get parameter to enable the calls
+    if (sharedSecret) {
+      return `${params}&shared_secret=${sharedSecret}`;
     }
     return params;
   }
