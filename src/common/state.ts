@@ -3,7 +3,7 @@ import * as Types from '../types/types';
 
 /**
  * This class is responsible for managing BetterTouchTool variables.
- * It has similar usage to the ES6 Map object, but due to implementation specifics 
+ * It has similar usage to the ES6 Map object, but due to implementation specifics
  * every method retunrs a promise.
  */
 export default class VariableStore {
@@ -11,7 +11,7 @@ export default class VariableStore {
 
   /**
    * Used to instanitilize the variable store with given BTT config
-   * @param config 
+   * @param config
    */
   constructor(config: Types.AppConfig) {
     this.config = config;
@@ -23,21 +23,21 @@ export default class VariableStore {
    * @param value new value of the variable
    * @param isPersistent whether the variable should persist after BTT reboot
    */
-  public set(key: string, value: string | number, isPersistent?: boolean) {
+  public async set(key: string, value: string | number, isPersistent?: boolean) {
     if (typeof value !== 'number' && typeof value !== 'string') {
       throw new Error('You can only set the variable value to string or number');
     }
-  
-    let variableType: string = typeof value;
+
+    const variableType: string = typeof value;
     if (variableType === 'number' && Number.isNaN(value as number)) {
       throw new Error('You passed NaN. Aborting');
     }
-  
-    const persistent: string = (isPersistent ? 'persistent_': '');
-  
+
+    const persistent: string = isPersistent ? 'persistent_' : '';
+
     const method: string = `set_${persistent}${variableType}_variable`;
-  
-    return CommonUtils.callBetterTouchTool(method, { variableName: key, to: value }, this.config, false);  
+
+    return CommonUtils.callBetterTouchTool(method, { variableName: key, to: value }, this.config, false);
   }
 
   /**
@@ -47,15 +47,25 @@ export default class VariableStore {
    */
   public async get(key: string, mode?: 'string' | 'number'): Promise<number | string> {
     const getStringVariable = async () => {
-      const response = await CommonUtils.callBetterTouchTool(`get_string_variable`, { variableName: key}, this.config, false);
+      const response = await CommonUtils.callBetterTouchTool(
+        `get_string_variable`,
+        { variableName: key },
+        this.config,
+        false,
+      );
       return response.value.text();
     };
 
     const getNumberVariable = async () => {
-      const response = await CommonUtils.callBetterTouchTool(`get_number_variable`, { variableName: key}, this.config, false);
+      const response = await CommonUtils.callBetterTouchTool(
+        `get_number_variable`,
+        { variableName: key },
+        this.config,
+        false,
+      );
       return response.value.text();
     };
-    
+
     if (mode === 'string') {
       return getStringVariable();
     } else if (mode === 'number') {
@@ -64,7 +74,7 @@ export default class VariableStore {
       const finalValue: string | number = (await getStringVariable()) || (await getNumberVariable()) || undefined;
       return finalValue;
     }
-  };
+  }
 
   /**
    * "Deletes" specified variable. Depending on its type, it'll either be set to '' or -1
@@ -79,5 +89,5 @@ export default class VariableStore {
       this.set(key, '');
       this.set(key, -1);
     }
-  };
+  }
 }

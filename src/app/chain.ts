@@ -10,20 +10,9 @@ import CommonUtils from '../common/util';
 import { Chainable } from '../common/decorators';
 
 export default class Chain extends ActionInvoker {
-  
-  private config: Types.AppConfig;
-
-  constructor(config: Types.AppConfig) {
-    super();
-    this.config = config;
-  }
-  
-  // holds all entries ever passed to this chain
-  private totalQueue: Types.ChainEntry[] = [];
-
   /**
    * Sends shortcut to txhe application. Some apps need to have focus so they can recieve shortcuts.
-   * 
+   *
    * @param shortcut key identifiers separated by space
    * @param applicationPath absolute path pointing to the app which should recieve shortcut
    * @param applicationPath required for BTT to recognize the app, whithin browser env must be provided manually
@@ -33,7 +22,7 @@ export default class Chain extends ActionInvoker {
 
   /**
    * Executes passed nodejs script. Requires manual specificying of node executable binary if used on frontend
-   * 
+   *
    * @param code a code to run
    */
   @Chainable()
@@ -50,7 +39,7 @@ export default class Chain extends ActionInvoker {
    */
   @Chainable()
   public toggleTrueTone: Initializer.ChainToggleTrueTone;
-  
+
   /**
    * Toggles night shift
    */
@@ -61,7 +50,7 @@ export default class Chain extends ActionInvoker {
    * Triggers system wide keyboard shortcut
    * @param shortcut key identifiers separated by space
    */
-  @Chainable() 
+  @Chainable()
   public triggerShortcut: Initializer.ChainTriggerShortcut;
 
   /**
@@ -78,9 +67,9 @@ export default class Chain extends ActionInvoker {
 
   /**
    * Triggers a haptic response. Takes a number as a param due to BTT lack of information
-   * which ID represents which mode, in order to know what value represents what open BTT and map 
+   * which ID represents which mode, in order to know what value represents what open BTT and map
    * the order of selects options in config of "Perform Haptic Feedback on Trackpad" action
-   * 
+   *
    * @param hapticMode a number representing each mode.
    */
   @Chainable()
@@ -113,7 +102,7 @@ export default class Chain extends ActionInvoker {
   /**
    * Delays the next action. For most cases manually managing the execution of actions in JavaScript
    * should be sufficient - using this will block any new action that BTT will recieve
-   * 
+   *
    * @param timeout - time in miliseconds during any action execution will be delayed
    */
   @Chainable()
@@ -144,7 +133,7 @@ export default class Chain extends ActionInvoker {
   public toggleMouseSize: Initializer.ChainToggleMouseSize;
 
   /**
-   * Toggles the system dark mode 
+   * Toggles the system dark mode
    */
   @Chainable()
   public toggleDarkMode: Initializer.ChainToggleDarkMode;
@@ -185,31 +174,40 @@ export default class Chain extends ActionInvoker {
    */
   @Chainable()
   public sleepComputer: Initializer.ChainSleepComputer;
-  
+
   /**
    * Shows system wide notification. Keep in mind that it's presence depends on the DnD state in the system.
    */
   @Chainable()
   public showNotification: Initializer.ChainShowNotification;
-  
+
   /**
    * Quits BetterTouchTool
    */
   @Chainable()
   public quit: Initializer.ChainQuitBTT;
-  
+
   /**
    * Toggles the BetterTouchTool gesture recognition
    */
   @Chainable()
   public toggle: Initializer.ChainToggleBTT;
-  
+
   /**
    * Restarts BetterTouchTool
    */
   @Chainable()
   public restart: Initializer.ChainRestartBTT;
-  
+  private config: Types.AppConfig;
+
+  // holds all entries ever passed to this chain
+  private totalQueue: Types.ChainEntry[] = [];
+
+  constructor(config: Types.AppConfig) {
+    super();
+    this.config = config;
+  }
+
   /**
    * Allows to invoke previously prepared chain, returns promise
    */
@@ -218,7 +216,7 @@ export default class Chain extends ActionInvoker {
 
     // set current queue to the total list
     const queue = _.cloneDeep(this.totalQueue);
-    
+
     // complete the queue and get combined results
     const response = await this.runQueue(queue);
 
@@ -227,15 +225,15 @@ export default class Chain extends ActionInvoker {
 
     // check if status code of each call was successful, and only then consider it as success
     // @TODO: Find proper status code
-    const status = (response.every((r: Types.CallResult) => r.status === 200) ? 200 : null);
-    
-    // return nested call result 
+    const status = response.every((r: Types.CallResult) => r.status === 200) ? 200 : null;
+
+    // return nested call result
     return {
       value: response,
       status,
-      time: (endTime / 100) - (startTime / 100),
-    } as Types.CallResult; 
-  };
+      time: endTime / 100 - startTime / 100,
+    } as Types.CallResult;
+  }
 
   /**
    * Clears the current chain
@@ -247,20 +245,23 @@ export default class Chain extends ActionInvoker {
 
   /**
    * Allows to delay the action execution from JavaScript side. Time in ms
-   * @param timeout 
+   * @param timeout
    */
   public wait(timeout: number) {
     // adds a promise to queue that'll resolve after given timeout
-    this.addToQueue(() => new Promise((res, rej) => {
-      setTimeout(() => {
-        res({
-          value: null,
-          status: 200,
-          time: timeout,
-          note: `Explicit timeout`
-        } as Types.CallResult);
-      }, timeout);
-    }));
+    this.addToQueue(
+      async () =>
+        new Promise((res, rej) => {
+          setTimeout(() => {
+            res({
+              value: null,
+              status: 200,
+              time: timeout,
+              note: `Explicit timeout`,
+            } as Types.CallResult);
+          }, timeout);
+        }),
+    );
 
     // because this method is chainable, we're returning current instance
     return this;
@@ -273,7 +274,7 @@ export default class Chain extends ActionInvoker {
     // if queue is empty at this point, finish
     if (queue.length === 0) {
       return result;
-    };
+    }
 
     // get the item that should be processed now
     const currentStep = queue[0];
@@ -290,7 +291,7 @@ export default class Chain extends ActionInvoker {
 
   /**
    * Allows to add new entries to queue
-   * @param fn 
+   * @param fn
    */
   private addToQueue(fn: () => Promise<any>) {
     this.totalQueue.push(fn);

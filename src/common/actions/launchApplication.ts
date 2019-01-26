@@ -11,7 +11,7 @@ export default class ALaunchApplication extends BaseAction {
     const applicationPath: string = this.arguments[0];
 
     return {
-      LaunchPath : `file://${applicationPath}`,
+      LaunchPath: `file://${applicationPath}`,
     };
   }
 }

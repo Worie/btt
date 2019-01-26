@@ -23,6 +23,7 @@ export interface AppConfig {
   port: number;
   protocol: string;
   sharedKey?: string;
+  sharedSecret?: string;
   version?: string;
   eventServer?: EventServerDefinition;
   nodeBinaryPath?: string;
@@ -101,8 +102,8 @@ export interface FloatingWebViewConfig {
 
 export type ActionJSON = Partial<AppPayload>;
 
-export interface EventParameter { 
-  actions: ActionJSON[],
+export interface EventParameter {
+  actions: ActionJSON[];
   comment: string;
   additionalData: Partial<AppPayload>;
   requiredModifierKeys: ('fn' | 'cmd' | 'alt' | 'ctrl' | 'shift')[];
@@ -129,7 +130,7 @@ export interface WidgetCreateConfig {
     freeSpaceAfterButton: number; // "5.000000",
     buttonColor: string; // "0.000000, 0.000000, 0.000000, 255.000000",
     alternateBackgroundColor: string; // "128.829533, 128.829533, 128.829533, 255.000000"
-  },
+  };
 }
 
 export interface Class<T> {
@@ -144,12 +145,12 @@ export interface EventTrigger {
   id: number;
   category: EventCategory;
   name: string;
-  notices?: NoticeMessage[],
+  notices?: NoticeMessage[];
 }
 
 export interface NoticeMessage {
   text: string;
-  data?: Partial<AppPayload>,
+  data?: Partial<AppPayload>;
 }
 
 export type EventCallback = (e: EventParameter) => void;
@@ -162,13 +163,13 @@ export interface ETRNamedTrigger {
   triggerName: string;
 }
 
-export interface ETRLaunchingOnSerialNumber { 
+export interface ETRLaunchingOnSerialNumber {
   machineSerialNumber: string;
 }
 
 export interface ETRMoveMouseToCorner {
-  delayBeforeTriggering: number,
-  allowDragging: 0 | 1,
+  delayBeforeTriggering: number;
+  allowDragging: 0 | 1;
 }
 
 export type ETRMoveMouseToTopLeftCorner = ETRMoveMouseToCorner;
@@ -194,4 +195,4 @@ export enum BTTEndpoint {
   TRIGGER_JSON = 'trigger_action',
 }
 
-export type WebViewWindow = Window & { BTT: any }
+export type WebViewWindow = Window & { BTT: any };

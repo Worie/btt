@@ -3,7 +3,7 @@ import { EActions } from '../../types/enum';
 import { BaseAction } from '../../abstract/base-action';
 
 /**
- * This action is responsible for triggering a keyboard shortcut - for example, cmd+space for spotlight 
+ * This action is responsible for triggering a keyboard shortcut - for example, cmd+space for spotlight
  */
 export default class ATriggerShortcut extends BaseAction {
   protected id: EActions = EActions.SEND_SHORTCUT;

@@ -3,7 +3,7 @@ import Utilities from '../abstract/utils';
 
 export default class FrontendUtilities extends Utilities {
   protected type: 'frontend' | 'backend' = 'frontend';
-  
+
   public async fetch(url: string, options?: any): Promise<any> {
     return window.fetch(url, options);
   }
@@ -21,34 +21,51 @@ export default class FrontendUtilities extends Utilities {
   }
 
   /**
-  * Sends a request to real BTT built in webserver with given data translated as GET query params
-  */
+   * Returns a base url for the BTT webserver endpoint
+   */
+  public getBaseUrl(config: Partial<Types.AppConfig>): string {
+    const { protocol, domain, port } = config;
+    if (this.isInBttWebView) {
+      return 'btt://';
+    }
+    return `${protocol}://${domain}:${port}/`;
+  }
+
+  /**
+   * Sends a request to real BTT built in webserver with given data translated as GET query params
+   */
   public async callBetterTouchTool(
-    action: string, 
+    action: string,
     data: Types.BttPayload,
     config: Types.AppConfig,
     translate: boolean = true,
   ): Promise<Types.CallResult> {
     if (this.isInBttWebView) {
+      // handles the shared secret for scripting (can be activated in BTT Advanced General settings)
+      if (config.sharedSecret) {
+        data.shared_secret = config.sharedSecret;
+      }
       return this.callBttWebViewFunctions(action, data, translate);
     }
     return this.callWebserverApi(action, data, config, translate);
   }
 
-  public performanceNow = () => { return window.performance.now(); };
+  public performanceNow = () => {
+    return window.performance.now();
+  };
 
   private get isInBttWebView(): boolean {
     const WVWindow: Types.WebViewWindow = window as Types.WebViewWindow;
-    return (Boolean(WVWindow.BTT) && typeof WVWindow.BTT.callHandler === 'function');
+    return Boolean(WVWindow.BTT) && typeof WVWindow.BTT.callHandler === 'function';
   }
 
   /**
    * Available only on frontend, because this is valid only for built in BTT webview
-   * @param action 
-   * @param data 
-   * @param translate 
+   * @param action
+   * @param data
+   * @param translate
    */
-  private callBttWebViewFunctions(
+  private async callBttWebViewFunctions(
     action: string,
     data: Types.BttPayload,
     translate: boolean,
@@ -59,20 +76,20 @@ export default class FrontendUtilities extends Utilities {
 
     if (translate) {
       const properBttNotation = this.translateObjectKeysToBttNotation(data.json);
-      payload = { json: JSON.stringify(properBttNotation) }
-    };
+      payload = { ...payload, json: JSON.stringify(properBttNotation) };
+    }
 
     return new Promise((res, rej) => {
-      let timeout = setTimeout(() => rej('Error: timedout at webview window function'), 30000);
- 
+      const timeout = setTimeout(() => rej('Error: timedout at webview window function'), 30000);
+
       WVWindow.BTT.callHandler(action, payload, (result: any) => {
         const end = Number(this.performanceNow().toFixed(3)) * 100;
         clearTimeout(timeout);
         res({
           time: (end / 100) - (start / 100),
           value: result,
-          note: 'Invoked using built in webview window functions'
-        })
+          note: 'Invoked using built in webview window functions',
+        });
       });
     });
   }
