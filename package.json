@@ -73,6 +73,7 @@
   },
   "pre-commit": [
     "_precommit-msg",
-    "test"
+    "test",
+    "lint"
   ]
 }
