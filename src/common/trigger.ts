@@ -5,20 +5,17 @@ import { BttPayload, BTTEndpoint } from '../types/types';
 export class Trigger {
   // holds the uuid of the newly created / initialized trigger
   public uuid: string;
-  
+
   // holds the name of the newly created / initialized trigger
   private name: string;
 
   // holds the config of the current instance
   private config: Types.AppConfig;
-  
+
   /**
    * Constructs the Trigger instance, sets the uuid and name for further calls
    */
-  public constructor(
-    config: Types.AppConfig,
-    triggerConfig: Types.TriggerConfig
-  ) {
+  public constructor(config: Types.AppConfig, triggerConfig: Types.TriggerConfig) {
     this.uuid = triggerConfig.uuid;
     this.name = triggerConfig.name;
 
@@ -34,8 +31,8 @@ export class Trigger {
     if (this.name) {
       // perform a named trigger execution
       return this.callBTTWithContext(BTTEndpoint.TRIGGER_NAMED_INVOKE, { trigger_name: this.name });
-      
-    // if this was a generic trigger
+
+      // if this was a generic trigger
     } else if (this.uuid) {
       // executre the actions for this trigger
       return this.callBTTWithContext(BTTEndpoint.TRIGGER_INVOKE, { uuid: this.uuid });
@@ -65,16 +62,13 @@ export class Trigger {
   /**
    * Calls BTT with given payload using widget context
    * @TODO may be made reusable
-   * @param mode 
-   * @param payload 
+   * @param mode
+   * @param payload
    */
-  private callBTTWithContext(
-    mode: string, 
-    payload: BttPayload,
-  ): Promise<Types.CallResult> {
+  private callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool(mode, payload, this.config, false);
   }
-};
+}
 
 /**
  * Creates an instances of Trigger with specified config
@@ -88,15 +82,15 @@ export class FTrigger {
 
   /**
    * Deletes a trigger of given uuid
-   * @param uuid 
+   * @param uuid
    */
   public async delete(uuid: string) {
     return this.callBTTWithContext(BTTEndpoint.TRIGGER_DELETE, { uuid });
-  };
+  }
 
   /**
    * Creates a new trigger
-   * @param config 
+   * @param config
    */
   public async create(json: Types.TriggerConfig): Promise<Trigger> {
     // create a widget in BTT
@@ -108,7 +102,7 @@ export class FTrigger {
 
   /**
    * Returns existing trigger
-   * @param config 
+   * @param config
    */
   public get(config: Types.TriggerConfig): Trigger {
     return new Trigger(this.config, config);
@@ -124,13 +118,10 @@ export class FTrigger {
   /**
    * Calls BTT with given payload using widget context
    * @TODO may be made reusable
-   * @param mode 
-   * @param payload 
+   * @param mode
+   * @param payload
    */
-  private callBTTWithContext(
-    mode: string, 
-    payload: BttPayload,
-  ): Promise<Types.CallResult> {
+  private callBTTWithContext(mode: string, payload: BttPayload): Promise<Types.CallResult> {
     return CommonUtils.callBetterTouchTool(mode, payload, this.config, false);
   }
 }

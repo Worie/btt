@@ -4,6 +4,6 @@ import { BaseAction } from '../../abstract/base-action';
 /**
  * This action is responsible for toggling the mute state of your Mac
  */
-export default class AMute extends BaseAction { 
+export default class AMute extends BaseAction {
   protected id: EActions = EActions.MUTE;
 }

@@ -34,10 +34,7 @@ import ASaveSelectedText from '../common/actions/saveSelectedText';
 import Chain from '../app/chain';
 import * as Types from './types';
 
-export type EventMethod = (
-  eventType: string,
-  cb: Types.EventCallback,
-) => void;
+export type EventMethod = (eventType: string, cb: Types.EventCallback) => void;
 
 export type ToggleTrueTone = () => AToggleTrueTone;
 export type ToggleNightShift = () => AToggleNightShift;

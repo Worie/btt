@@ -9,7 +9,7 @@ import AToggleApplication from '../common/actions/toggleApplication';
 import AMute from '../common/actions/mute';
 import ATriggerShortcut from '../common/actions/triggerShortcut';
 import AToggleNightShift from '../common/actions/toggleNightShift';
-import AToggleDnD from '../common/actions/toggleDnD';  
+import AToggleDnD from '../common/actions/toggleDnD';
 import AToggleMouseSize from '../common/actions/toggleMouseSize';
 import AToggleMouseSpeed from '../common/actions/toggleMouseSpeed';
 import AToggleMouseCursor from '../common/actions/toggleMouseCursor';
@@ -31,10 +31,10 @@ import AToggleTrueTone from '../common/actions/toggleTrueTone';
 // decorator for creating actions
 import { Action } from '../common/decorators';
 
-export default abstract class ActionInvoker {  
+export default abstract class ActionInvoker {
   /**
    * Sends shortcut to txhe application. Some apps need to have focus so they can recieve shortcuts.
-   * 
+   *
    * @param shortcut key identifiers separated by space
    * @param applicationPath absolute path pointing to the app which should recieve shortcut
    * @param applicationPath required for BTT to recognize the app, whithin browser env must be provided manually
@@ -44,7 +44,7 @@ export default abstract class ActionInvoker {
 
   /**
    * Executes passed nodejs script. Requires manual specificying of node executable binary if used on frontend
-   * 
+   *
    * @param code a code to run
    */
   @Action(AExecuteScript)
@@ -61,7 +61,7 @@ export default abstract class ActionInvoker {
    */
   @Action(AToggleTrueTone)
   public abstract toggleTrueTone: any;
-  
+
   /**
    * Toggles night shift
    */
@@ -72,7 +72,7 @@ export default abstract class ActionInvoker {
    * Triggers system wide keyboard shortcut
    * @param shortcut key identifiers separated by space
    */
-  @Action(ATriggerShortcut) 
+  @Action(ATriggerShortcut)
   public abstract triggerShortcut: any;
 
   /**
@@ -89,9 +89,9 @@ export default abstract class ActionInvoker {
 
   /**
    * Triggers a haptic response. Takes a number as a param due to BTT lack of information
-   * which ID represents which mode, in order to know what value represents what open BTT and map 
+   * which ID represents which mode, in order to know what value represents what open BTT and map
    * the order of selects options in config of "Perform Haptic Feedback on Trackpad" action
-   * 
+   *
    * @param hapticMode a number representing each mode.
    */
   @Action(AHapticFeedback)
@@ -130,7 +130,7 @@ export default abstract class ActionInvoker {
   /**
    * Delays the next action. For most cases manually managing the execution of actions in JavaScript
    * should be sufficient - using this will block any new action that BTT will recieve
-   * 
+   *
    * @param timeout - time in miliseconds during any action execution will be delayed
    */
   @Action(ADelayNextAction)
@@ -161,7 +161,7 @@ export default abstract class ActionInvoker {
   public abstract toggleMouseSize: any;
 
   /**
-   * Toggles the system dark mode 
+   * Toggles the system dark mode
    */
   @Action(AToggleDarkMode)
   public abstract toggleDarkMode: any;

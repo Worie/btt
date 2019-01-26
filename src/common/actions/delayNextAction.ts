@@ -7,12 +7,12 @@ import { BaseAction } from '../../abstract/base-action';
  */
 export default class ADelayNextAction extends BaseAction {
   protected id: EActions = EActions.DELAY_NEXT_ACTION;
-  
+
   public get data() {
     const timeout: number = this.arguments[0];
 
     return {
-      DelayNextActionBy : String(timeout / 1000),
+      DelayNextActionBy: String(timeout / 1000),
     };
   }
 }
