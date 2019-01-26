@@ -30,6 +30,10 @@ export default class FrontendUtilities extends Utilities {
     translate: boolean = true,
   ): Promise<Types.CallResult> {
     if (this.isInBttWebView) {
+      // handles the shared secret for scripting (can be activated in BTT Advanced General settings)
+      if (config.sharedSecret) {
+        data.shared_secret = config.sharedSecret;
+      }
       return this.callBttWebViewFunctions(action, data, translate);
     }
     return this.callWebserverApi(action, data, config, translate);
@@ -37,7 +41,7 @@ export default class FrontendUtilities extends Utilities {
 
   public performanceNow = () => {
     return window.performance.now();
-  }
+  };
 
   private get isInBttWebView(): boolean {
     const WVWindow: Types.WebViewWindow = window as Types.WebViewWindow;
@@ -61,7 +65,7 @@ export default class FrontendUtilities extends Utilities {
 
     if (translate) {
       const properBttNotation = this.translateObjectKeysToBttNotation(data.json);
-      payload = { json: JSON.stringify(properBttNotation) };
+      payload = { ...payload, json: JSON.stringify(properBttNotation) };
     }
 
     return new Promise((res, rej) => {
