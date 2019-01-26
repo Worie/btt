@@ -11,8 +11,9 @@
     "only-arrow-functions": false,
     "no-console": false,
     "ban-types": false,
-    "max-line-length": [true, {"limit": 120, "ignore-pattern": "\\* |//"}],
+    "max-line-length": [true, { "limit": 120, "ignore-pattern": "\\* |//" }],
     "max-classes-per-file": false,
-    "no-var-requires": false
+    "no-var-requires": false,
+    "array-type": [true, "array"]
   }
 }

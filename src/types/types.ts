@@ -105,7 +105,7 @@ export interface EventParameter {
   actions: ActionJSON[];
   comment: string;
   additionalData: Partial<AppPayload>;
-  requiredModifierKeys: Array<'fn' | 'cmd' | 'alt' | 'ctrl' | 'shift'>;
+  requiredModifierKeys: ('fn' | 'cmd' | 'alt' | 'ctrl' | 'shift')[];
   // allows to specify the data that is not possible to pass
   // via simple event name
   config: BttPayload;

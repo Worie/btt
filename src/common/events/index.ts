@@ -238,7 +238,7 @@ export default class EventManager {
    *
    * @param actions
    */
-  private buildActionSequence(actions: Array<Partial<Types.AppPayload>>): Partial<AppPayload> {
+  private buildActionSequence(actions: Partial<Types.AppPayload>[]): Partial<AppPayload> {
     const jsons: Partial<AppPayload> = actions
       .map(action => action.json)
       .map((action, index) => {
