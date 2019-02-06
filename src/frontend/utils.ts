@@ -52,7 +52,7 @@ export default class FrontendUtilities extends Utilities {
 
   public performanceNow = () => {
     return window.performance.now();
-  };
+  }
 
   private get isInBttWebView(): boolean {
     const WVWindow: Types.WebViewWindow = window as Types.WebViewWindow;
@@ -79,7 +79,7 @@ export default class FrontendUtilities extends Utilities {
       payload = { ...payload, json: JSON.stringify(properBttNotation) };
     }
 
-    return new Promise((res, rej) => {
+    return new Promise<Types.CallResult>((res, rej) => {
       const timeout = setTimeout(() => rej('Error: timedout at webview window function'), 30000);
 
       WVWindow.BTT.callHandler(action, payload, (result: any) => {
