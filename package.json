@@ -1,6 +1,6 @@
 {
   "name": "btt",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "description": "Manage your BetterTouchTool in JavaScript, easly.",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
@@ -12,7 +12,8 @@
     "docs:build": "npm run inject; vuepress build docs",
     "inject": "browserify ./scripts/btt-window-inject.js > ./docs/.vuepress/public/btt.js",
     "test": "jest",
-    "lint": "tslint --project tsconfig.json"
+    "lint": "tslint --project tsconfig.json",
+    "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "author": "Wojciech Połowniak",
   "license": "MIT",
@@ -23,6 +24,7 @@
     "lodash": "^4.17.10",
     "node-fetch-polyfill": "^2.0.6",
     "performance-now": "^2.1.0",
+    "prettier-webpack-plugin": "^1.2.0",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
