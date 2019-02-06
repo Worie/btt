@@ -70,43 +70,43 @@
 				<p align="center">
 					<a href="https://nodei.co/npm/btt/">
 					<img src="https://nodei.co/npm/btt.png?downloads=true&downloadRank=true" alt="Vunerabilitiesn"></a>
-					</p><p align="center"><h2 align="center">Manage your BetterTouchTool in JavaScript, easly.
+					</p><p align="center"><h2 align="center">Manage your BetterTouchTool in JavaScript, easily.
 				</h2></p>
+				<h2 id="get-started">Get started</h2>
+				<p>See the <a href="https://worie.github.io/btt/guide/introduction.html">guide</a> and <a href="https://worie.github.io/btt/api">api</a> for <code>btt.js</code>. </p>
 				<h2 id="about">About</h2>
 				<p>This package is a handy wrapper over <a href="https://folivora.ai/">BetterTouchTool</a> built in webserver API. (by <a href="https://github.com/fifafu">@Andreas Hegenberg</a>)</p>
 				<p>This package will allow you to automate you MacOS-running machine using JavaScript. You&#39;ll be able to:</p>
 				<ul>
-					<li>Create event listeners that&#39;ll be run within operating system, outside browser!</li>
+					<li>Create event listeners that&#39;ll run within an operating system, outside the browser!</li>
 					<li>Toggle your do-not-disturb state</li>
 					<li>Show a system notification</li>
 					<li>Toggle Night Shift</li>
 					<li>Sleep your computer after timeout</li>
 					<li>Create your own <strong>touchbar widgets</strong></li>
 					<li>Feel a notification via <strong>haptic engine</strong></li>
-					<li>Control the brightness of the screen, keyboard</li>
+					<li>Control the brightness of the screen and keyboard</li>
 					<li>Control the volume levels</li>
-					<li>Use the content of your clipboard to be opened in specific url or application</li>
+					<li>Use the content of your clipboard to be opened in a specific url or application</li>
 					<li>Create your own UIs &quot;within system&quot; using web view </li>
-					<li>Trigger a system wide keyboard shortcut</li>
-					<li>Send a shortcut to specific application</li>
-					<li>Show / Hide / Open / Quit specific applcation</li>
-					<li>Move your mouse to specific position and click it</li>
+					<li>Trigger a system-wide keyboard shortcut</li>
+					<li>Send a shortcut to a specific application</li>
+					<li>Show / Hide / Open / Quit a specific applcation</li>
+					<li>Move your mouse to a specific position and click</li>
 					<li>Hide your cursor</li>
 					<li>Lock / Unlock your MacOS machine</li>
 					<li>Integrate your flow / touchbar with various APIs ...</li>
 				</ul>
-				<p><em>and anything else that BetterTouchTool or JavaScript specification will allow you to do!</em></p>
-				<h2 id="get-started">Get started</h2>
-				<p>See the <a href="https://github.io/Worie/btt/guide">guide</a> and <a href="https://github.io/Worie/api">api</a> for <code>btt.js</code>. </p>
+				<p><em>and anything else that BetterTouchTool or the JavaScript specification will allow you to do!</em></p>
 				<h2 id="typed-browser-server-side-library">Typed, browser/server side library</h2>
-				<p>This package provides it&#39;s own type definitions and can be run both on browser (using module bundlers) and nodejs environment.</p>
+				<p>This package provides its own type definitions and can be run both on browser (using module bundlers) and in a nodejs environment.</p>
 				<h2 id="requirements">Requirements</h2>
-				<p>This package depends on application <a href="https://folivora.ai/">BetterTouchTool</a> in at least version v2.0.0, you need to have it installed and running before going anywhere further.</p>
-				<p>Then, please enable and configure webserver in BetterTouchTool preferences. You&#39;re now ready to go!</p>
+				<p>This package depends on the application <a href="https://folivora.ai/">BetterTouchTool</a> in at least version v2.0.0, you need to have it installed and running before going further.</p>
+				<p>Then, please enable and configure the webserver in the BetterTouchTool preferences. You&#39;re now ready to go!</p>
 				<h2 id="installation">Installation</h2>
 				<p><code>npm install btt</code></p>
 				<h2 id="example-usage">Example usage</h2>
-				<p>First, you&#39;d need to create a btt instance passing the data for BTT webserver.</p>
+				<p>First, create a btt instance passing the required data for BTT webserver.</p>
 				<pre><code class="lang-ts"><span class="hljs-comment">// import Btt class from the package</span>
 <span class="hljs-keyword">import</span> { Btt } <span class="hljs-keyword">from</span> <span class="hljs-string">'btt'</span>;
 
@@ -119,9 +119,9 @@
   version: <span class="hljs-string">'2.525'</span>,
 });
 </code></pre>
-				<p>Now you can invoke the actions - there are plenty of way to do it, but all of those are promise based</p>
+				<p>Now you can invoke the actions - there are plenty of ways to do it, and all are promise-based.</p>
 				<pre><code class="lang-ts"><span class="hljs-comment">// sequentially run three actions - spotlight, type text and night shift</span>
-<span class="hljs-comment">// as all actions are promise based, you can use async/await notation without hussle</span>
+<span class="hljs-comment">// as all actions are promise-based, you can use async/await notation without hassle</span>
 btt
   .triggerShortcut(<span class="hljs-string">'cmd+space'</span>).invoke()
   .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> btt.sendText({ text: <span class="hljs-string">'Hello world!'</span>}).invoke())
@@ -129,17 +129,17 @@ btt
 
 </code></pre>
 				<h2 id="response-structure-for-every-action">Response structure for every action</h2>
-				<pre><code class="lang-ts"><span class="hljs-comment">// every single action returns an CallResult object containing various information about the Call</span>
+				<pre><code class="lang-ts"><span class="hljs-comment">// every single action returns a CallResult object containing information about the Call</span>
 
 <span class="hljs-keyword">interface</span> CallResult {
   time: <span class="hljs-built_in">number</span>;     <span class="hljs-comment">// contains time in MS that this action took to perform (including fetch time)</span>
   status: <span class="hljs-built_in">number</span>;   <span class="hljs-comment">// contains an HTTP status / string</span>
-  value: <span class="hljs-built_in">any</span>;       <span class="hljs-comment">// depending on the method used, may return array, object or fetch result</span>
-  note?: <span class="hljs-built_in">string</span>;    <span class="hljs-comment">// additional note for the user if someone needs it</span>
+  value: <span class="hljs-built_in">any</span>;       <span class="hljs-comment">// depending on the method used, may return an array, object or fetch result</span>
+  note?: <span class="hljs-built_in">string</span>;    <span class="hljs-comment">// an additional note for the user</span>
 }
 </code></pre>
 				<h2 id="chaining-methods">Chaining methods</h2>
-				<pre><code class="lang-ts"><span class="hljs-comment">// you can also use custom chain method to simplify it even more, without using async/await</span>
+				<pre><code class="lang-ts"><span class="hljs-comment">// you can also use a custom chain method to simplify even more and avoid using async/await</span>
 btt
   .invokeChain()                      <span class="hljs-comment">// 1)</span>
   .triggerShortcut(<span class="hljs-string">'cmd+space'</span>)       <span class="hljs-comment">// 2)</span>
@@ -151,16 +151,16 @@ btt
 
 <span class="hljs-comment">// Explanation:</span>
 <span class="hljs-comment">// 1) Starts method chaining</span>
-<span class="hljs-comment">// 2) Action that user want to perform</span>
-<span class="hljs-comment">// 3) Action that user want to perform</span>
+<span class="hljs-comment">// 2) Action that a user wants to perform</span>
+<span class="hljs-comment">// 3) Action that a user wants to perform</span>
 <span class="hljs-comment">// 4) Additional method available in chain only - wait before triggering next action</span>
-<span class="hljs-comment">// 5) Action that user want to perform</span>
-<span class="hljs-comment">// 6) Invokes all previously defined actions, ensuring the execution order</span>
+<span class="hljs-comment">// 5) Action that a user wants to perform</span>
+<span class="hljs-comment">// 6) Invokes all previously-defined actions, ensuring the execution order</span>
 <span class="hljs-comment">// 7) Returns a promise that resolves once all of the actions are fulfilled. </span>
 <span class="hljs-comment">//    Contains information about the status of the chain (time, value, status)</span>
 </code></pre>
 				<h2 id="event-listeners">Event listeners</h2>
-				<p>You can even register system-wide event listener within BTT that&#39;ll trigger particular actions</p>
+				<p>You can even register a system-wide event listener within BTT that&#39;ll trigger particular actions</p>
 				<pre><code class="lang-ts"><span class="hljs-comment">// creates a trigger in BetterTouchTool. Keep in mind that this is persistent until you manually delete it!</span>
 btt.addTriggerAction(<span class="hljs-string">'oneFingerForceClick'</span>, <span class="hljs-function">(<span class="hljs-params">ev</span>) =&gt;</span> {
 
@@ -179,20 +179,20 @@ btt.addTriggerAction(<span class="hljs-string">'oneFingerForceClick'</span>, <sp
 <span class="hljs-comment">// you can also delete an event listener - trigger: </span>
 btt.removeTriggerAction(<span class="hljs-string">'oneFingerForceClick'</span>, callbackFuntion);
 </code></pre>
-				<p>But the above method will trigger the callback upon running your script, not when particular event really occurs. If you need to call a function upon event recognition, you&#39;d need to use <a href="https://github.com/Worie/btt-node-server">btt-node-server</a> and use <code>addEventListener</code> and <code>removeEventListener</code> methods on btt instance. The callback you provide will be run in nodejs environment, within <code>vm</code>.</p>
+				<p>The above method will trigger the callback upon running your script, not when a particular event really occurs. If you need to call a function upon event recognition, you need to use <a href="https://github.com/Worie/btt-node-server">btt-node-server</a> and use the <code>addEventListener</code> and <code>removeEventListener</code> methods on the btt instance. The callback you provide will run in the nodejs environment, within <code>vm</code>.</p>
 				<pre><code class="lang-ts"><span class="hljs-keyword">const</span> btt = <span class="hljs-keyword">new</span> Btt({
   domain: <span class="hljs-string">'127.0.0.1'</span>,
   port: <span class="hljs-number">8000</span>,
   protocol: <span class="hljs-string">'http'</span>,
   version: <span class="hljs-string">'2.525'</span>,
-  <span class="hljs-comment">// you need to pass eventServer to use this part of the lib</span>
+  <span class="hljs-comment">// pass eventServer to use this part of the lib</span>
   eventServer: {
     domain: <span class="hljs-string">'localhost'</span>,
     port: <span class="hljs-number">8888</span>,
   },
 });
 
-<span class="hljs-comment">// adds real event listener, that'll be run once event occurs</span>
+<span class="hljs-comment">// adds real event listener, that'll run once event occurs</span>
 btt.addEventListener(<span class="hljs-string">'cmd+ctrl+alt+u'</span>, <span class="hljs-keyword">async</span> (ev) =&gt; {
   <span class="hljs-comment">// write the code as you'd normally do -&gt; trigger the action for some interval</span>
   <span class="hljs-keyword">const</span> intervalID = setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
@@ -201,7 +201,7 @@ btt.addEventListener(<span class="hljs-string">'cmd+ctrl+alt+u'</span>, <span cl
 
   <span class="hljs-comment">// you can use fetch API here or anything that your node version will support</span>
 
-  <span class="hljs-comment">// will stop the interval after 10 seconds</span>
+  <span class="hljs-comment">// stops the interval after 10 seconds</span>
   <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res, rej</span>) =&gt;</span> {
     setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
       clearTimeout(intervalID);
@@ -209,33 +209,33 @@ btt.addEventListener(<span class="hljs-string">'cmd+ctrl+alt+u'</span>, <span cl
     }, <span class="hljs-number">10000</span>);
   });
 
-  <span class="hljs-comment">// the value you return from the callback, will be the response of the btt-node-server </span>
+  <span class="hljs-comment">// the value you return from the callback will be the response of the btt-node-server </span>
   <span class="hljs-keyword">return</span> { messsage: <span class="hljs-string">'Hello world!'</span> };
 });
 </code></pre>
-				<p>To get all available events, you&#39;d have to look in the enums (list of all valid events is going to be available soon).
-				Still, most of the time you can just guess it, because all event names are a lowercased equivalent of triggers from within <code>BetterTouchTool</code>.</p>
+				<p>To get all available events, you have to look in the enums (list of all valid events will be available soon).
+				Most of the time you can just guess because all event names are the lowercased equivalent of the triggers from within <code>BetterTouchTool</code>.</p>
 				<h3 id="additional-action-information">Additional action information</h3>
-				<p>For use within browser, you can get the <code>url</code> that lies behind all actions and assign it to some <code>&lt;a href=&quot;${link}&quot;&gt;Link&lt;/a&gt;</code>. To get <code>link</code> you simply need to read the <code>.url</code> property of any action: </p>
+				<p>For use within the browser, you can get the <code>url</code> that lies behind all actions and assign it to some <code>&lt;a href=&quot;${link}&quot;&gt;Link&lt;/a&gt;</code>. To get <code>link</code> you simply need to read the <code>.url</code> property of any action: </p>
 				<pre><code class="lang-ts"><span class="hljs-built_in">console</span>.log(
   btt.triggerShortcut(<span class="hljs-string">'cmd+space'</span>).url
 );
 </code></pre>
-				<p>If you want to have a sneek peak on the generated action JSON, or want to share it with others who use <code>BetterTouchTool</code> you can read the <code>.json</code> property of any action. </p>
+				<p>If you want to have a peak at the generated action JSON, or want to share it with others who use <code>BetterTouchTool</code> you can read the <code>.json</code> property of any action. </p>
 				<pre><code class="lang-ts"><span class="hljs-built_in">console</span>.log(
   btt.showHUD({ title: <span class="hljs-string">'Hello!'</span> }).json
 );
 </code></pre>
 				<h2 id="more-examples">More examples</h2>
-				<p>For more advanced examples you can visit <a href="https://github.com/Worie/btt/tree/master/examples">the example section</a></p>
+				<p>For more advanced examples visit <a href="https://github.com/Worie/btt/tree/master/examples">the example section</a></p>
 				<h2 id="notice">Notice</h2>
-				<p>Keep in mind that this module only provides handy utility functions that underneath sends request to BTT built in webserver.
-				So depending on your BTT version some actions may be glitchy. Do not hestitate to report those issues here or in <a href="https://community.folivora.ai/categories">official BTT community forum</a>. </p>
+				<p>Keep in mind that this module only provides handy utility functions that send requests to BTT built in webserver.
+				So depending on your BTT version, some actions may be glitchy. Do not hestitate to report those issues here or in the <a href="https://community.folivora.ai/categories">official BTT community forum</a>. </p>
 				<p>Also, keep in mind that accessing any kind of low level APIs from JS may be dangerous, make sure to <a href="#">stay secure</a></p>
 				<h3 id="related-projects-">Related projects:</h3>
 				<ul>
 					<li><a href="https://github.com/Worie/btt">btt</a> - BetterTouchTool management in JS<!-- * [btt-json-loader](https://github.com/Worie/btt-json-loader) - JSON loader for BTT --></li>
-					<li><a href="https://github.com/Worie/btt-node-server">btt-node-server</a> - Simple express server, required for advanced event listeners handling<!-- * [btt-touchbar-widgets](https://github.com/Worie/btt-touchbar-widgets) - Working touchbar widgets, based on [btt](https://github.com/Worie/btt) --></li>
+					<li><a href="https://github.com/Worie/btt-node-server">btt-node-server</a> - Simple express server, required for advanced event listener handling<!-- * [btt-touchbar-widgets](https://github.com/Worie/btt-touchbar-widgets) - Working touchbar widgets, based on [btt](https://github.com/Worie/btt) --></li>
 					<li><a href="https://github.com/Worie/btt-node">btt-node</a> Premature version of this package (<a href="https://github.com/Worie/btt">btt</a>) - deprecated</li>
 				</ul>
 				<h2 id="license">License</h2>
@@ -674,6 +674,9 @@ btt.addEventListener(<span class="hljs-string">'cmd+ctrl+alt+u'</span>, <span cl
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#triggershortcut" class="tsd-kind-icon">Trigger<wbr>Shortcut</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#webviewwindow" class="tsd-kind-icon">Web<wbr>View<wbr>Window</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-is-not-exported">
 						<a href="globals.html#namespace" class="tsd-kind-icon">NAMESPACE</a>
