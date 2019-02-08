@@ -1,6 +1,6 @@
 {
   "name": "btt",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "description": "Manage your BetterTouchTool in JavaScript, easly.",
   "main": "./dist/index.js",
   "types": "./dist/src/index.d.ts",
@@ -21,7 +21,7 @@
     "@types/uuid": "^3.4.3",
     "child_process": "^1.0.2",
     "detect-node": "^2.0.3",
-    "lodash": "^4.17.10",
+    "lodash": ">=4.17.11",
     "node-fetch-polyfill": "^2.0.6",
     "performance-now": "^2.1.0",
     "prettier-webpack-plugin": "^1.2.0",
